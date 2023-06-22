@@ -25,6 +25,32 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+/*
+npm install @react-navigation/native
+npm install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view
+npm install @react-navigation/stack
+ */
+import "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+
+//페이지 불러오기
+import LoadPage from "./src/pages/Loading";
+import HomePage from "./src/pages/Home";
+import JoinPage from "./src/pages/Join";
+import DetailPage from "./src/pages/Detail";
+import EditPage from "./src/pages/Edit";
+import MyPage from "./src/pages/MyPage";
+import JoinCharPage from "./src/pages/JoinCharacter";
+import LikePage from "./src/pages/Like";
+import RecommendPage from "./src/pages/Recommend";
+import LoginPage from "./src/pages/Login";
+
+
+//Screen과 Navigator의 속성을 포함하는 객체를 반환하는 함수
+const Stack = createStackNavigator();
+
+
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
@@ -64,6 +90,18 @@ function App(): JSX.Element {
 
   return (
     <SafeAreaView style={backgroundStyle}>
+      <NavigationContainer>
+      <Stack.Navigator initialRouteName="LoadPage">
+        <Stack.Screen name="LoadPage" component={LoadPage} />
+        <Stack.Screen name="HomePage" component={HomePage} />
+        <Stack.Screen name="LoginPage" component={LoginPage} />
+      </Stack.Navigator>
+      <Stack.Navigator initialRouteName="LoginPage">
+        <Stack.Screen name="LoginPage" component={LoginPage} />
+        <Stack.Screen name="JoinPage" component={JoinPage} />
+      </Stack.Navigator>
+    </NavigationContainer>
+    
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
