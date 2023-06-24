@@ -13,8 +13,9 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
-  View,
+  View,route
 } from 'react-native';
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
 
 import {
   Colors,
@@ -44,6 +45,9 @@ import JoinCharPage from "./src/pages/JoinCharacter";
 import LikePage from "./src/pages/Like";
 import RecommendPage from "./src/pages/Recommend";
 import LoginPage from "./src/pages/Login";
+import Like from './src/pages/Like';
+import NavBar from './src/components/Nav';
+
 // 로그인, 회원가입
 const Auth = () => {
   return (
@@ -66,16 +70,23 @@ const DrawerNavigationRoutes = () => {
 };
 
 
-
 //Screen과 Navigator의 속성을 포함하는 객체를 반환하는 함수
 function App(){
   const Stack = createStackNavigator();
+  const Tab = createBottomTabNavigator();
   return (
-
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen name="Home" component={HomePage} options ={{title:'홈'}} />
-          <Stack.Screen name="DetailPage" component={DetailPage} />
+        <Stack.Navigator initialRouteName="Tab">
+          <Stack.Screen name="Home" component={HomePage}options={{headerShown: false}}   />
+          <Stack.Screen name="DetailPage" component={DetailPage} options={{title:'Detail',
+          headerStyle :{
+            backgroundColor: '#ffffff'
+          },
+        headerTintColor:'#1C140D',
+        headerTitleStyle:{fontWeight:'bold',fontSize:30,fontFamily:'Inter'},
+        headerTitleAlign:'center',
+      }}
+          />
               {/* SplashScreen which will come once for 5 Seconds */}   
           <Stack.Screen name="LoadPage" component={LoadPage} />  
             {/* Auth Navigator: Include Login and Signup */}
@@ -85,8 +96,10 @@ function App(){
        // Hiding header for Navigation Drawer
        options={{headerShown: false}}
      />
+     <Stack.Screen name ="Tab" component={NavBar}/>
    </Stack.Navigator>
-   </NavigationContainer>
+   
+   </NavigationContainer> 
  );
 };
 
