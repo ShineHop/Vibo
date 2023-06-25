@@ -1,12 +1,20 @@
-import React from 'react';
-import {Button,View, StyleSheet, Text} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {ActivityIndicator, Text, Button,View, StyleSheet, Image} from 'react-native';
+
+
+
 
 function App({navigation}){
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}> Loading Page</Text>
-      <Button title ="Login" 
-      onPress ={()=> navigation.navigate('Login')}/>
+      <Text>VIBO</Text>
+      <Image
+      style={{width: 300, height: 500}}
+      source={require('./images/vibo.png')} />
+      <Button title="OK"
+      onPress={() => navigation.navigate('Auth')}
+      />
     </View>
   );
 };
@@ -23,4 +31,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default App

@@ -5,7 +5,7 @@
  * @format
  */
 
-import React ,{useState} from 'react';
+import React ,{useState, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -24,6 +24,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import SplashScreen from 'react-native-splash-screen';
 
 /*
 npm install @react-navigation/native
@@ -52,8 +53,8 @@ import NavBar from './src/components/Nav';
 const Auth = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="LoginPage" component={LoginPage} />
-      <Stack.Screen name="JoinPage" component={JoinPage} />
+      <Stack.Screen name="LoginPage" component={LoginPage} options={{headerShown: false}}/>
+      <Stack.Screen name="JoinPage" component={JoinPage} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
@@ -69,37 +70,40 @@ const DrawerNavigationRoutes = () => {
   );
 };
 
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 //Screen과 Navigator의 속성을 포함하는 객체를 반환하는 함수
 function App(){
-  const Stack = createStackNavigator();
-  const Tab = createBottomTabNavigator();
+  useEffect(()=>{
+      setTimeout(()=>{
+        SplashScreen.hide();
+      },1500)
+    },[]);
   return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Tab">
-          <Stack.Screen name="Home" component={HomePage}options={{headerShown: false}}   />
-          <Stack.Screen name="DetailPage" component={DetailPage} options={{title:'Detail',
-          headerStyle :{
-            backgroundColor: '#ffffff'
-          },
+      <Stack.Navigator initialRouteName="Splash">
+        {/* SplashScreen which will come once for 5 Seconds */}
+        <Stack.Screen name="Splash" component={LoadPage} />
+        {/* Auth Navigator: Include Login and Signup */}
+        <Stack.Screen name="Auth"     component={Auth}     options={{headerShown: false}}  />
+        {/* Navigation Drawer as a landing page */}
+        <Stack.Screen name="Home" component={HomePage}  options={{headerShown: false}}   />
+        <Stack.Screen name="DetailPage" component={DetailPage} options={{title:'Detail',
+        headerStyle :{
+          backgroundColor: '#ffffff'
+        },
         headerTintColor:'#1C140D',
         headerTitleStyle:{fontWeight:'bold',fontSize:30,fontFamily:'Inter'},
         headerTitleAlign:'center',
-      }}
-          />
-              {/* SplashScreen which will come once for 5 Seconds */}   
-          <Stack.Screen name="LoadPage" component={LoadPage} />  
-            {/* Auth Navigator: Include Login and Signup */}
-          <Stack.Screen name="Auth"     component={Auth}     options={{headerShown: false}}  />
-            {/* Navigation Drawer as a landing page */}
-          <Stack.Screen name="DrawerNavigationRoutes" component={DrawerNavigationRoutes}
-       // Hiding header for Navigation Drawer
-       options={{headerShown: false}}
-     />
+      }} />
+
+      <Stack.Screen name="DrawerNavigationRoutes" component={DrawerNavigationRoutes}
+      // Hiding header for Navigation Drawer
+      options={{headerShown: false}} />
      <Stack.Screen name ="Tab" component={NavBar}/>
    </Stack.Navigator>
-   
-   </NavigationContainer> 
+   </NavigationContainer>
  );
 };
 
