@@ -30,9 +30,10 @@ const Nav=() => {
 
     })}>
 
-    <Tab.Screen name = "Home"       component = {HomePage}      options = {{title:'홈'}}/>
-    <Tab.Screen name = "Recommend"  component = {RecommendPage} options = {{title: '추천'}}/>
-    <Tab.Screen name = "Like"       component = {LikePage}      options = {{title: '찜'}}/>
+    <Tab.Screen name = "Home"       component = {HomePage}      options = {{title:'홈' ,headerShown:false}}/>
+    <Tab.Screen name = "Recommend"  component = {RecommendPage} options = {{title: '추천',headerShown:false}}/>
+    <Tab.Screen name = "Like"       component = {LikePage}      options = {{title: '찜',headerShown:false   }} />
+
     <Tab.Screen name = "MyPage"     component = {MyPage}        options = {{title: 'MY'}}/>
 
     </Tab.Navigator>

@@ -1,29 +1,57 @@
-import React from "react";
-import {SafeAreaView, View, Text ,Button,StatusBar} from "react-native";
+import React ,{useEffect} from "react";
+import {SafeAreaView, View, Text ,Button,StatusBar,StyleSheet,FlatList} from "react-native";
+import stylelist from '../style';
+import header from '../components/Header'
+import "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+const Stack = createStackNavigator();
+import NavBar from '../components/Nav';
 
-
+import RecoveryPage from './Home/Recovery'
+//페이지 불러오기
 //임의로 짬
 function Home({navigation}) {
-  return (
-    <SafeAreaView>
-    <View>
-      <Text>Best 5</Text>
-      <Button
-        title="Detail 1"
-        onPress={() => navigation.push('DetailPage',{id:1})}
-      />
-      <Text>ALL</Text>
-      <Button
-        title="Detail 2"
-        onPress={() => navigation.push('DetailPage',{id:2})}
-      />
-      <Button
-        title="Detail 3"
-        onPress={() => navigation.push('DetailPage',{id:3})}
-      />
-      <StatusBar style='auto' />
-    </View>
-    </SafeAreaView>
-  );
-}
+  
+  return (     
+    <SafeAreaView style={{flex:1}}   >    
+    <NavigationContainer independent={true}> 
+     <Stack.Navigator initialRouteName="header" >
+     <Stack.Screen name ="header" component={header}options={{headerShown: false}} />  
+
+     </Stack.Navigator>
+    </NavigationContainer> 
+       <StatusBar style='auto' />
+    </SafeAreaView> 
+    
+  )
+  };
+const styles_home = StyleSheet.create({
+  title:{
+    width:'100%',
+    alignItems: 'left',
+    marginLeft:10,
+    marginBottom:5,
+    marginTop:5,
+  
+  },
+  container: {
+    borderBottomWidth: 1,
+    height: 100,
+  },
+  text: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 50,
+  },  
+  item: {
+    marginTop:24,
+    padding:30,
+    backgroundColor:'pink',
+    fontSize: 24,
+    marginHorizontal:10,
+    marginTop:24,
+  }
+});
+
 export default Home;

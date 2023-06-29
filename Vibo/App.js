@@ -48,6 +48,7 @@ import RecommendPage from "./src/pages/Recommend";
 import LoginPage from "./src/pages/Login";
 import Like from './src/pages/Like';
 import NavBar from './src/components/Nav';
+import style from './src/style'
 
 // 로그인, 회원가입
 const Auth = () => {
@@ -82,7 +83,7 @@ function App(){
     },[]);
   return (
       <NavigationContainer>
-      <Stack.Navigator initialRouteName="Splash">
+      <Stack.Navigator initialRouteName="Tab" >
         {/* SplashScreen which will come once for 5 Seconds */}
         <Stack.Screen name="Splash" component={LoadPage} />
         {/* Auth Navigator: Include Login and Signup */}
@@ -101,7 +102,7 @@ function App(){
       <Stack.Screen name="DrawerNavigationRoutes" component={DrawerNavigationRoutes}
       // Hiding header for Navigation Drawer
       options={{headerShown: false}} />
-     <Stack.Screen name ="Tab" component={NavBar}/>
+      <Stack.Screen name ="Tab" component={NavBar} options={{headerShown: false}}/>
    </Stack.Navigator>
    </NavigationContainer>
  );

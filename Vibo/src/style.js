@@ -2,15 +2,22 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    //alignItems: 'center',
+    backgroundColor: 'white',
+  },
   Title_Bold: {
-    fontWeight: '700',
+    fontWeight:'bold',
     fontFamily: 'inter',
-    fontSize: '30',
+    fontSize: 30,
+    
   },
   Title_SemiBold: {
-    fontWeight: '600',
+    fontWeight: 600,
     fontFamily: 'inter',
-    fontSize: '30',
+    fontSize: 30,
   },
   Title_Medium: {
     fontWeight: '500',
@@ -18,34 +25,34 @@ const styles = StyleSheet.create({
     fontSize: '30',
   },
   Title_Regular: {
-    fontWeight: '400',
+    fontWeight: 400,
     fontFamily: 'inter',
-    fontSize: '30',
+    fontSize: 30,
   },
   Semi_Bold: {
-    fontWeight: '600',
+    fontWeight: 600,
     fontFamily: 'inter',
-    fontSize: '16',
+    fontSize: 16,
   },
   Semi_Medium: {
-    fontWeight: '500',
+    fontWeight: 500,
     fontFamily: 'inter',
-    fontSize: '16',
+    fontSize: 16,
   },
   Semi_Regular: {
-    fontWeight: '400',
+    fontWeight: 400,
     fontFamily: 'inter',
-    fontSize: '16',
+    fontSize: 16,
   },
   Text_Bold: {
-    fontWeight: '600',
+    fontWeight: 600,
     fontFamily: 'inter',
-    fontSize: '14',
+    fontSize: 14,
   },
   Text_Medium: {
-    fontWeight: '500',
+    fontWeight: 500,
     fontFamily: 'inter',
-    fontSize: '14',
+    fontSize: 14,
   },
   Text_Regular: {
     fontWeight: '400',
@@ -64,27 +71,29 @@ const styles = StyleSheet.create({
     fontSize: '8',
   },
   black: {
-    color: '181842',
+    color: '#000000' ,
   },
   white: {
-    color: 'ffffff',
+    color: '#ffffff',
   },
   Gray1: {
-    color: 'F6F6F6',
+    color: '#F6F6F6',
   },
   Gray2: {
-    color: 'E8E8E8',
+    color: '#E8E8E8',
   },
   Gray3: {
-    color: 'BDBDBD',
+    color: '#BDBDBD',
   },
   Gray4: {
-    color: '666666',
+    color: '#666666',
   },
   Green: {
-    color: '99A799',
+    color: '#99A799',
   },
   Blue: {
-    color: 'D3E0F7',
+    color: '#D3E0F7',
   },
+  
 });
+export default styles;
