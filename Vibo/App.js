@@ -12,6 +12,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  Image,
   useColorScheme,
   View,route
 } from 'react-native';
@@ -50,12 +51,14 @@ import Like from './src/pages/Like';
 import NavBar from './src/components/Nav';
 import style from './src/style'
 
+
 // 로그인, 회원가입
 const Auth = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="LoginPage" component={LoginPage} options={{headerShown: false}}/>
       <Stack.Screen name="JoinPage" component={JoinPage} options={{headerShown: false}} />
+      <Stack.Screen name="JoinCharPage" component={JoinCharPage} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
@@ -76,16 +79,20 @@ const Tab = createBottomTabNavigator();
 
 //Screen과 Navigator의 속성을 포함하는 객체를 반환하는 함수
 function App(){
-  useEffect(()=>{
-      setTimeout(()=>{
-        SplashScreen.hide();
-      },1500)
-    },[]);
+    useEffect(() => {
+        try {
+          setTimeout(() => {
+            SplashScreen.hide();
+          }, 5000); //스플래시 활성화 시간 2초
+        } catch (e) {
+          console.log(e.message);
+        }
+      });
   return (
       <NavigationContainer>
-      <Stack.Navigator initialRouteName="Tab" >
+      <Stack.Navigator initialRouteName="Splash" >
         {/* SplashScreen which will come once for 5 Seconds */}
-        <Stack.Screen name="Splash" component={LoadPage} />
+        <Stack.Screen name="Splash" component={LoadPage}  options={{headerShown: false}}/>
         {/* Auth Navigator: Include Login and Signup */}
         <Stack.Screen name="Auth"     component={Auth}     options={{headerShown: false}}  />
         {/* Navigation Drawer as a landing page */}
@@ -105,6 +112,7 @@ function App(){
       <Stack.Screen name ="Tab" component={NavBar} options={{headerShown: false}}/>
    </Stack.Navigator>
    </NavigationContainer>
+
  );
 };
 

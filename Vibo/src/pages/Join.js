@@ -28,8 +28,30 @@ const CustomInput = ({value, setValue, placeholder, secureTextEntry}) => {
         />
     );
 }
+const CustomInput2 = ({value, setValue, placeholder, secureTextEntry}) => {
+	return (
+        <TextInput
+            value={value}
+            onChangeText={setValue}
+            placeholder={placeholder}
+            style={styles.customInput2}
+            secureTextEntry={secureTextEntry}
+        />
+    );
+}
+const CustomInput3 = ({value, setValue, placeholder, secureTextEntry}) => {
+	return (
+        <TextInput
+            value={value}
+            onChangeText={setValue}
+            placeholder={placeholder}
+            style={styles.customInput3}
+            secureTextEntry={secureTextEntry}
+        />
+    );
+}
 
-// Sign Up custom button
+// Next custom button
 const CustomButton = ({ onPress, text }) => {
 	return (
     	<Pressable
@@ -51,6 +73,7 @@ const onProfilePressed = () => {
 function Join({navigation}) {
     const [username, setUsername] = useState('');
     const [birthday, setBirthday] = useState('');
+    const [sex, setSex] = useState('');
     const [id, setID] = useState('');
     const [password, setPassword] = useState('');
 
@@ -86,12 +109,23 @@ function Join({navigation}) {
                     setValue={setUsername}
                     placeholder="Username"
                 />
-                <Text> 생년월일 </Text>
-                <CustomInput
-                    value={birthday}
-                    setValue={setBirthday}
-                    placeholder="Birthday"
-                />
+                <Text style={{marginBottom: '2%'}}> 주민번호 앞 6자리 </Text>
+                <View  style={{flexDirection: "row", justifyContent: 'flex-end', marginRight: '5%'}}>
+                    <CustomInput2
+                        value={birthday}
+                        setValue={setBirthday}
+                        placeholder="Birthday"
+                        keyboardType="numeric"
+                    />
+                    <Text style={{alignSelf: 'center', fontSize: 40}}> - </Text>
+                    <CustomInput3
+                        value={sex}
+                        setValue={setSex}
+                        keyboardType="numeric"
+                    />
+                    <Text style={{alignSelf: 'center', fontSize: 20}}> ****** </Text>
+                </View>
+
                 <Text> ID </Text>
                 <CustomInput
                     value={id}
@@ -106,11 +140,15 @@ function Join({navigation}) {
                     secureTextEntry
                 />
                 </View>
-
-                <CustomButton
-                    onPress={()=>navigation.navigate('Home')}
-                    text="Sign Up"
-                />
+                <View style={{flexDirection: "row", alignSelf: 'flex-end'}}>
+                    <Image
+                        style={styles.icon}
+                        source={require('./images/paw.png')} />
+                    <CustomButton
+                        onPress={()=>navigation.navigate('JoinCharPage')}
+                        text="취향정보 입력하기"
+                    />
+                </View>
             </View>
 
         </View>
@@ -122,10 +160,10 @@ function Join({navigation}) {
 const styles = StyleSheet.create({
     joinTextContainer: {
             flex: 1,
-            marginLeft: '9%',
             justifyContent: 'flex-end'
         },
     joinText: {
+        marginLeft: '9%',
         fontFamily: 'inter',
         fontSize: 25,
         fontWeight: '700',
@@ -133,10 +171,11 @@ const styles = StyleSheet.create({
         lineHeight: 29.3,
     },
     joinTextS: {
+        marginLeft: '9%',
+        marginTop: 10,
         fontSize: 12,
         fontWeight: '500',
-        color: colors.Black,
-        marginTop: 10,
+        color: colors.Black
     },
     joinContainer: {
         flex:5,
@@ -161,19 +200,45 @@ const styles = StyleSheet.create({
         marginRight: '5%',
         alignSelf: 'flex-end'
     },
+    customInput2: {
+        backgroundColor: colors.White,
+        width: '47%',
+        height: 48,
+        paddingLeft: 15,
+        borderRadius: 5,
+        marginBottom: 5,
+        alignSelf: 'flex-end'
+    },
+    customInput3: {
+        backgroundColor: colors.White,
+        width: '10%',
+        height: 48,
+        paddingLeft: 15,
+        borderRadius: 5,
+        marginBottom: 5,
+        alignSelf: 'flex-end'
+    },
+    icon: {
+        width: 55, height: 55,
+        position: 'relative',
+        left: 30,
+        bottom: -5,
+        zIndex: 1
+    },
     customBtnContainer: {
-        width: '80%',
+        width: '50%',
         height: 50,
         alignItems: 'center',
         marginTop: 30,
         marginBottom: 11,
-        borderRadius: 5,
-        backgroundColor: colors.Green,
-        alignSelf: 'center',
+        marginRight: '5%',
+        borderRadius: 50,
+        backgroundColor: colors.Gray2,
+        alignSelf: 'flex-end',
         justifyContent: 'center'
     },
     customBtnText: {
-        color: colors.Gray2,
+        color: colors.Black,
         fontWeight: '700',
         fontSize: 15
     },
