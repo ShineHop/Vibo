@@ -1,13 +1,17 @@
 import React from "react";
-import { View, Text } from "react-native";
-//임의로 짬
+import {SafeAreaView, View, Text ,Button,StatusBar,StyleSheet,FlatList} from "react-native";
+import stylelist from '../style';
 
 function MyPage() {
-  return (
-    <View>
-      <Text>MyPAge!</Text>
-    </View>
-  );
-}
+  return (  <SafeAreaView  style={stylelist.container}>    
+<View style={stylelist.titlecontainer}>
+<Text style = {[stylelist.title,stylelist.Title_Bold,stylelist.black,stylelist.line]}>MyPage</Text>
+</View>
+<View>
+  
+</View>
+</SafeAreaView> 
+  )
+};
 
 export default MyPage;

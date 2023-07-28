@@ -1,38 +1,42 @@
 import React from "react"
-import {SafeAreaView, View, Text ,Button,StatusBar,StyleSheet,FlatList} from "react-native";
+import {SafeAreaView, View, Image,Text ,Button,StatusBar,StyleSheet,FlatList} from "react-native";
 import stylelist from '../style';
 //임의로 짬
 
-const DATA = ['First','Second','Third','Four','Five'
+const DATA = ['First','Secsdfasdfageraffdafsssssssssssssssssssssssewwwwwwwwwwwwzsdfsond','Third','Four','Five','Six','Seven'
 ];
 
-const Item = ({num}) => {
+const Item = ({title}) => {
 return (
   <View style={styles_home.container}>
-    <Text style={styles_home.item}>{num}</Text>
+    <View >
+    <Image source={require('./images/paw.png')} style = {styles_home.image}></Image>
+    </View>
+    <View style={styles_home.text}>
+    <Text style={stylelist.Text_Regular}>{title}</Text>
+    </View>
   </View>
 );
 };
 
 const All=()=>{
-  return(<View style={styles_home.container}>
-  <FlatList
-  data={DATA} // 필수 Props
-  numColumns={2}
-  renderItem= {({ item })=>(
-    <Item num={item} />)}/>
+  return(
+  <View >
+  <FlatList  data={DATA} // 필수 Props
+  numColumns={2}   renderItem= {({ item })=>(<Item title={item} />)}/>
   </View>
   );};
 
 
 function Recommend(){
   return(
-  <SafeAreaView >    
-<View style={styles_home.titlecontainer}>
-<Text style = {[styles_home.title,stylelist.Title_Bold,stylelist.black,styles_home.line]}>VIBO's Choice</Text>
+  <SafeAreaView  style={stylelist.container}>    
+<View style={stylelist.titlecontainer}>
+<Text style = {[stylelist.title,stylelist.Title_Bold,stylelist.black,stylelist.line]}>VIBO's Choice</Text>
 </View>
-<All />
-  <StatusBar style='auto' />
+<View style={stylelist.container}>
+      <All/>
+</View>
 </SafeAreaView> 
   )
 };
@@ -40,38 +44,35 @@ function Recommend(){
 
 
 const styles_home = StyleSheet.create({
-titlecontainer:{
-  marginTop:32,
-  justifyContent:'center',
-  alignItems:'center'
+text:{
+  
+  display:'flex',
+  width:'80%',
+  height:'20%',
+  flexWrap:"nowrap",
+  marginTop:15,
+  marginLeft:30,
+  marginRight:20,
+  marginBottom:10,
 },
-line:{
-  borderColor: '#D3E0F7',
-  textAlign:'center',
-  justifyContent:'center',
-  width:'60%',
-  borderWidth: 3,
-  borderTopWidth: 0,
-  borderRightWidth: 0,
-  borderLeftWidth: 0,
-},
-container: {
-  justifyContent:'center',
-  alignItems:'center',
-},
-text: {
-textAlign: 'center',
-textAlignVertical: 'center',
-fontSize: 50,
-},  
-item: {
-marginTop:24,
-padding:30,
-backgroundColor:'pink',
-fontSize: 24,
-marginHorizontal:10,
-marginTop:24,
-}
+container:{
+    alignItems: 'center',
+    alignContent:'center',
+    width:150,
+    margin:5,
+    height:160,
+    //backgroundColor: 'yellow',
+  
+    justifyContent:'space-around'
+  },  
+  image:{
+    width:100,
+    height:100,
+    padding:40,
+    backgroundColor:'#f6f6f6',
+    resizeMode:'contain',
+   
+  },
 });
 
 export default Recommend;

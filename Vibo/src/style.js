@@ -5,8 +5,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    //alignItems: 'center',
-    backgroundColor: 'white',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
   },
   Title_Bold: {
     fontWeight:'bold',
@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   Text_Regular: {
-    fontWeight: '400',
+    fontWeight:'400' ,
     fontFamily: 'inter',
-    fontSize: '14',
+    fontSize: 14,
   },
   p_Regular: {
     fontWeight: '500',
@@ -94,6 +94,22 @@ const styles = StyleSheet.create({
   Blue: {
     color: '#D3E0F7',
   },
-  
+  titlecontainer:{
+    marginTop:52,
+    justifyContent:'center',
+    alignItems:'center',
+    marginBottom:25
+  },
+  line:{
+    borderColor: '#D3E0F7',
+    textAlign:'center',
+    justifyContent:'center',
+    width:'60%',
+    paddingBottom:15,
+    borderWidth: 3,
+    borderTopWidth: 0,
+    borderRightWidth: 0,
+    borderLeftWidth: 0,
+  },
 });
 export default styles;

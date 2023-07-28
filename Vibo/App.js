@@ -79,20 +79,18 @@ const Tab = createBottomTabNavigator();
 
 //Screen과 Navigator의 속성을 포함하는 객체를 반환하는 함수
 function App(){
-    useEffect(() => {
         try {
           setTimeout(() => {
-            SplashScreen.hide();
+            SplashScreen;
           }, 5000); //스플래시 활성화 시간 2초
         } catch (e) {
           console.log(e.message);
         }
-      });
+    
   return (
       <NavigationContainer>
-      <Stack.Navigator initialRouteName="Splash" >
+      <Stack.Navigator initialRouteName="Tab" >
         {/* SplashScreen which will come once for 5 Seconds */}
-        <Stack.Screen name="Splash" component={LoadPage}  options={{headerShown: false}}/>
         {/* Auth Navigator: Include Login and Signup */}
         <Stack.Screen name="Auth"     component={Auth}     options={{headerShown: false}}  />
         {/* Navigation Drawer as a landing page */}

@@ -16,6 +16,14 @@
     "@react-navigation/material-top-tabs": "^6.6.3",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
+    "axios": "^1.4.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "events": "^3.3.0",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1",
+    "net": "^1.0.2",
     "react": "18.2.0",
     "react-native": "0.72.0",
     "react-native-gesture-handler": "^2.12.0",
@@ -25,7 +33,10 @@
     "react-native-screens": "^3.21.1",
     "react-native-splash-screen": "^3.3.0",
     "react-native-tab-view": "^3.5.2",
-    "react-native-vector-icons": "^9.2.0"
+    "react-native-vector-icons": "^9.2.0",
+    "tls": "^0.0.1",
+    "url": "^0.11.1",
+    "util": "^0.12.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -1,53 +1,87 @@
-import React ,{useEffect} from "react";
-import {SafeAreaView, View, Text ,Button,StatusBar,StyleSheet,FlatList} from "react-native";
+import React ,{useEffect,useState} from "react";
+import {SafeAreaView, View, Text ,Image,Button,StatusBar,StyleSheet,FlatList} from "react-native";
 import stylelist from '../../style';
+import axios from 'axios'
 
-const DATA = ['First','Second','Third','Four','Five'
-];
 
-const Item = ({num}) => {
-return (
-  <View style={styles_home.container}>
-    <Text style={styles_home.item}>{num}</Text>
-  </View>
-);
-};
+
 
 const Best=()=>{
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // 서버에서 데이터 가져오기
+    axios.get('http://192.168.142.1:3001/api/data')
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+  const dietdata = data.filter((item)=>item.기능.includes('질건강'));
+  const bestdiet = dietdata.slice(0,5);
+
     return(
-    <View style={styles_home.title }> 
-    <Text style = {[stylelist.black, stylelist.Semi_Bold] }> Best 5 </Text>
-    <FlatList
-    data={DATA} // 필수 Props
-    renderItem= {({ item })=>(
-     <Text style={styles_home.item}><Item num={item} /></Text> )}
-          // 필수 Props
-// Multiple Columns
-    horizontal={true} // numColumns를 사용할 때 값을 false로 지정해줘야 한다.
-  />
-    </View>
-    
+      <View style={styles_home.container}>
+        <View style={styles_home.title }> 
+          <Text style = {[stylelist.black, stylelist.Semi_Bold] }> Best 5 </Text>
+        </View>
+        <FlatList
+        data={bestdiet} // 필수 Props
+        renderItem= {({ item })=>(
+        <View style={styles_home.item_container}>
+          <View >
+          <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
+          </View>
+          <View style={styles_home.text}>
+          <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>
+          </View>
+        </View>)} horizontal={true} // numColumns를 사용할 때 값을 false로 지정해줘야 한다.
+        />
+      </View>
     );
   };
 const All=()=>{
-    return(<View>
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // 서버에서 데이터 가져오기
+    axios.get('http://192.168.142.1:3001/api/data')
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+  const dietdata = data.filter((item)=>item.기능.includes('다이어트'));
+  const notbest = dietdata.slice(5,-1) //best 5이외의 상품들만 
+    return(
+      <View style={styles_home.container}>
       <View style={styles_home.title }> 
-      <Text style = {[stylelist.black, stylelist.Semi_Bold] }> ALL </Text>
+        <Text style = {[stylelist.black, stylelist.Semi_Bold] }> ALL </Text>
       </View>
-      <View style={styles_home.container}><FlatList
-    data={DATA} // 필수 Props
-    numColumns={2}
-    renderItem= {({ item })=>(
-      <Item num={item} />)}/>
-    </View></View>
-    
+    <FlatList data={notbest} // 필수 Props  
+      numColumns={2}
+      keyExtractor={(item) => item.ItemID}
+      renderItem= {({ item })=>(<View style={styles_home.item_container}>
+        <View >
+        <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
+        </View>
+        <View style={styles_home.text}>
+        <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>
+        </View>
+      </View>)} />
+    </View>
     );};
   
 
 function Vagina({navigation}) {
-  return (       <SafeAreaView style={{flex:1}}   >    
+  return (      
+    <SafeAreaView style={{flex:1}}   >    
     <Best/><All/> 
-       <StatusBar style='auto' />
+    <StatusBar style='auto' />
     </SafeAreaView> 
     
   )
@@ -56,28 +90,41 @@ const styles_home = StyleSheet.create({
   title:{
     width:'100%',
     alignItems: 'left',
-    marginLeft:10,
-    marginBottom:5,
-    marginTop:5,
-  
+    marginLeft:20,
+    marginBottom:25,
+    
   },
   container: {
-  alignContent:'center',
-  alignItems:'center'
+    paddingTop:20,
+    paddingHorizontal:10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
   },
-  text: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: 50,
-  },  
-  item: {
-    marginTop:24,
-    padding:30,
-    backgroundColor:'pink',
-    fontSize: 24,
-    marginHorizontal:10,
-    marginTop:24,
-  }
+  item_container:{
+      alignItems: 'center',
+      //alignContent:'center',
+      width:150,
+      margin:5,
+      height:185,
+      backgroundColor:'#f6f6f6',
+      paddingTop:10,
+    },  
+    text:{
+      display:'flex',
+      width:'80%',
+      height:'20%',
+      flexWrap:"nowrap",
+      marginTop:10,
+      marginLeft:30,
+      marginRight:20,
+    },
+  image:{
+    width:120,
+    height:120,
+    resizeMode:'contain',
+   
+  },
+  
 });
-
 export default Vagina;

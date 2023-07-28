@@ -14,14 +14,15 @@ const Nav=() => {
             let iconName;
 
             if (route.name === 'Home') {
-               iconName = focused? 'home' : 'home-outline';
-           } else if (route.name === 'Recommend') {
-               iconName = focused? 'planet' : 'planet-outline';
-           } else if(route.name ==='Like'){
-               iconName = focused? 'heart' : 'heart-outline';
-           } else if(route.name ==='MyPage'){
-               iconName =focused?'person':'person-outline';
-           }
+            iconName = focused? 'home' : 'home-outline';}
+            else if (route.name === 'Recommend') {
+            iconName = focused? 'planet' : 'planet-outline';
+        } else if(route.name ==='Like'){
+            iconName = focused? 'heart' : 'heart-outline';
+            iconName
+        } else if(route.name ==='MyPage'){
+            iconName =focused?'person':'person-outline';
+        }
 
             return <Icon name={iconName} size={size} color={color} />;
             },
@@ -34,7 +35,7 @@ const Nav=() => {
     <Tab.Screen name = "Recommend"  component = {RecommendPage} options = {{title: '추천',headerShown:false}}/>
     <Tab.Screen name = "Like"       component = {LikePage}      options = {{title: '찜',headerShown:false   }} />
 
-    <Tab.Screen name = "MyPage"     component = {MyPage}        options = {{title: 'MY'}}/>
+    <Tab.Screen name = "MyPage"     component = {MyPage}        options = {{title: 'MY',headerShown:false}}/>
 
     </Tab.Navigator>
     );

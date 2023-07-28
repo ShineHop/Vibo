@@ -10,7 +10,9 @@ import NavBar from '../components/Nav';
 
 import RecoveryPage from './Home/Recovery'
 //페이지 불러오기
-//임의로 짬
+
+
+    
 function Home({navigation}) {
   
   return (     
@@ -18,7 +20,7 @@ function Home({navigation}) {
     <NavigationContainer independent={true}> 
      <Stack.Navigator initialRouteName="header" >
      <Stack.Screen name ="header" component={header}options={{headerShown: false}} />  
-
+      
      </Stack.Navigator>
     </NavigationContainer> 
        <StatusBar style='auto' />
