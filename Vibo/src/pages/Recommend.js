@@ -1,29 +1,29 @@
-import React from "react"
+import React ,{useState,useEffect} from "react"
 import {SafeAreaView, View, Image,Text ,Button,StatusBar,StyleSheet,FlatList} from "react-native";
 import stylelist from '../style';
-//임의로 짬
+import axios from 'axios'
 
-const DATA = ['First','Secsdfasdfageraffdafsssssssssssssssssssssssewwwwwwwwwwwwzsdfsond','Third','Four','Five','Six','Seven'
-];
 
-const Item = ({title}) => {
-return (
-  <View style={styles_home.container}>
+const All=(userID)=>{
+  const [recitems, setItems] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => { 
+    axios.get('http://192.168.142.1:3001/api/user/${userID}/recommend').then((response)=>{
+      setItems(response.data);}).catch((error)=>{console.error(error);});
+}, [userID]); // 로그인된 사용자 ID가 변경될 때마다 실행
+
+  return(
+  <View >
+  <FlatList  data={recitems} // 필수 Props
+  numColumns={2}   renderItem= {({ item })=>(<View style={styles_home.container}>
     <View >
     <Image source={require('./images/paw.png')} style = {styles_home.image}></Image>
     </View>
     <View style={styles_home.text}>
-    <Text style={stylelist.Text_Regular}>{title}</Text>
+    <Text style={stylelist.Text_Regular}>{item}</Text>
     </View>
-  </View>
-);
-};
-
-const All=()=>{
-  return(
-  <View >
-  <FlatList  data={DATA} // 필수 Props
-  numColumns={2}   renderItem= {({ item })=>(<Item title={item} />)}/>
+  </View>)}/>
   </View>
   );};
 
@@ -48,12 +48,12 @@ text:{
   
   display:'flex',
   width:'80%',
-  height:'20%',
+  height:'25%',
   flexWrap:"nowrap",
   marginTop:15,
   marginLeft:30,
   marginRight:20,
-  marginBottom:10,
+  marginBottom:20,
 },
 container:{
     alignItems: 'center',
@@ -66,8 +66,8 @@ container:{
     justifyContent:'space-around'
   },  
   image:{
-    width:100,
-    height:100,
+    width:120,
+    height:110,
     padding:40,
     backgroundColor:'#f6f6f6',
     resizeMode:'contain',

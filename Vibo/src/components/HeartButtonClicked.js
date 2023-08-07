@@ -4,9 +4,10 @@ import {TouchableOpacity,SafeAreaView, View, Text ,Button,StatusBar,StyleSheet,F
 
 class HeartButton extends Component{
        constructor(props){
-        super(props); // constructor 정의 시 반드시 필요!
+        super(props);
+        this.userID = "" // constructor 정의 시 반드시 필요!
         this.state = { // state의 초기값 설정 부분
-            ButtonClicked: false
+            ButtonClicked: false,
         };
     }
 //찜하면 callAddWishAPI 호출하여 userID와 상품ID를 GET 방식으로 서버로 보낸다.
@@ -18,7 +19,8 @@ class HeartButton extends Component{
     }
 //찜 삭제하는 경우
     async callRemoveWishAPI(){
-        let manager = new WebServiceManager(Constant.serviceURL+"/RemoveWishList?user_id="+this.id+"&goods_id="+this.item.id)
+
+        axios.use('http://192.168.142.1:3001/api/user/${userID}/like/${ItemID}/update')
         let response = await manager.start();
         if(response.ok){
             return response.json();
@@ -36,7 +38,7 @@ class HeartButton extends Component{
         }
         return( 
             <TouchableOpacity onPress ={this.ButtonClicked}>
-               
+        
            <Icon name={this.state.ButtonClicked ? "heart-outline" : "heart"} color = '#FCA6C5' size={35}></Icon>
        </TouchableOpacity>)}
     

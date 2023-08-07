@@ -45,8 +45,8 @@ const Best=()=>{
         console.error(error);
       });
   }, []);
-  const dietdata = data.filter((item)=>item.기능.includes('다이어트'));
-  const bestdiet = dietdata.slice(0,5);
+  const guthealth = data.filter((item)=>item.기능.includes('장건강'));
+  const bestgut = guthealth.slice(0,5);
 
     return(
       <View style={styles_home.container}>
@@ -54,7 +54,7 @@ const Best=()=>{
           <Text style = {[stylelist.black, stylelist.Semi_Bold] }> Best 5 </Text>
         </View>
         <FlatList
-        data={bestdiet} // 필수 Props
+        data={bestgut} // 필수 Props
         renderItem= {({ item })=>(
         <View style={styles_home.item_container}>
           <View >
@@ -81,7 +81,7 @@ const All=()=>{
         console.error(error);
       });
   }, []);
-  const dietdata = data.filter((item)=>item.기능.includes('다이어트'));
+  const dietdata = data.filter((item)=>item.기능.includes('장건강'));
   const notbest = dietdata.slice(5,-1) //best 5이외의 상품들만 
     return(
       <View style={styles_home.container}>
