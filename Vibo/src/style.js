@@ -15,24 +15,24 @@ const styles = StyleSheet.create({
     
   },
   Title_SemiBold: {
-    fontWeight: 600,
+    fontWeight: '700',
     fontFamily: 'inter',
-    fontSize: 30,
+    fontSize: 25,
   },
   Title_Medium: {
     fontWeight: '500',
     fontFamily: 'inter',
-    fontSize: '30',
+    fontSize: 30,
   },
   Title_Regular: {
-    fontWeight: 400,
+    fontWeight: '400',
     fontFamily: 'inter',
     fontSize: 30,
   },
   Semi_Bold: {
-    fontWeight: 600,
+    fontWeight: '600',
     fontFamily: 'inter',
-    fontSize: 16,
+    fontSize: 20,
   },
   Semi_Medium: {
     fontWeight: 500,

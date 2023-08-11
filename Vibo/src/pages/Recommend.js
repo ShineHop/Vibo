@@ -1,29 +1,36 @@
 import React ,{useState,useEffect} from "react"
-import {SafeAreaView, View, Image,Text ,Button,StatusBar,StyleSheet,FlatList} from "react-native";
+import {SafeAreaView, View, Image,Text ,TouchableOpacity,Button,StatusBar,StyleSheet,FlatList} from "react-native";
 import stylelist from '../style';
 import axios from 'axios'
+import { useNavigation } from "@react-navigation/native";
 
 
 const All=(userID)=>{
   const [recitems, setItems] = useState([]);
   const [error, setError] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => { 
-    axios.get('http://192.168.142.1:3001/api/user/${userID}/recommend').then((response)=>{
+    axios.get('http://192.168.142.1:3001/api/user/2023052702/recommend').then((response)=>{
+      console.log(response.data)
       setItems(response.data);}).catch((error)=>{console.error(error);});
 }, [userID]); // 로그인된 사용자 ID가 변경될 때마다 실행
 
   return(
   <View >
   <FlatList  data={recitems} // 필수 Props
-  numColumns={2}   renderItem= {({ item })=>(<View style={styles_home.container}>
+  numColumns={2}   renderItem= {
+    
+    ({ item })=>(
+      <TouchableOpacity onPress={()=>navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})}>
+      <View style={styles_home.container}>
     <View >
     <Image source={require('./images/paw.png')} style = {styles_home.image}></Image>
     </View>
     <View style={styles_home.text}>
-    <Text style={stylelist.Text_Regular}>{item}</Text>
+    <Text style={stylelist.Text_Regular}>{item.item}</Text>
     </View>
-  </View>)}/>
+  </View></TouchableOpacity>)}/>
   </View>
   );};
 

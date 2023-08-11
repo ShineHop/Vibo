@@ -38,7 +38,7 @@ app.get('/api/user/:userID/recommend', (req, res) => {
 
       const { userID } = req.params;
       const query = 'SELECT userTaste,userTasteDetail,userRebuy,userTexture,userFunction FROM userinfo WHERE userID = ? ;';
-      const query2 = 'SELECT item FROM itemdb WHERE ItemID in (?) ;';
+      const query2 = 'SELECT * FROM itemdb WHERE ItemID in (?) ;';
 
       itemdb.query(query,[userID],function(err,rows) {
         featurelist = Object.values(rows[0]);
@@ -70,7 +70,7 @@ app.get('/api/user/:userID/recommend', (req, res) => {
                     for (i= 0 ; i < resultarr.length; i++) {   
                       //console.log(Object.values(rows[i]));
                       if (Object.values(rows[i])){
-                      recommendItemList[j]= Object.values(rows[i]).toString(); 
+                      recommendItemList[j]= Object(rows[i]); 
                       j++;
                       //console.log(recommendItemList)
                       //console.log('i:' ,i);
@@ -92,8 +92,107 @@ app.get('/api/user/:userID/recommend', (req, res) => {
 });
 
 app.use('/api/user/:userID/like/:itemID/update',(req,res,next)=>{
-  console.log(req.params)
+  const UID  = req.params.userID;
+  const iID = req.params.itemID;
+  let itemID = Number(iID);
+  let userID = Number(UID);
+  const querycheck = 'SELECT * FROM likedb WHERE UID = ?;'
+  const query = "UPDATE likedb SET `?` = 0 WHERE UID = ? ;"
+  const query1 = "UPDATE likedb SET `?` = 1 WHERE UID = ? ;"
+  itemdb.query(querycheck,[userID],function(err,rows){
+    //console.log(rows);
+    likearr = Object.values(rows[0]);
+    for (i = 0 ; i <likearr.length;i++){
+      if (i == itemID){  
+        console.log(likearr[itemID])
+        if(likearr[i] == 1)
+        { 
+          itemdb.query(query,[itemID,userID]);
+        }  
+      else{
+        itemdb.query(query1,[itemID,userID]);
+      } 
+     }
+}})
+next()
 
+});
+
+app.get('/api/user/:userID/like', (req, res) => {
+    const { userID } = req.params;
+
+    const query = 'SELECT * FROM likedb WHERE UID = ? ;';
+    const query2 = 'SELECT item FROM itemdb WHERE ItemID = ?;';
+    let userItemlist = [];
+    let id = [];
+    itemdb.query(query,[userID],function(err,rows) {
+      if (err) {
+        console.log("데이터 가져오기 실패");
+      } else {
+        likearr = Object.values(rows[0]);
+        var j = 0;
+        var k = 0;
+        for (i= 0 ; i < likearr.length; i++)
+        {
+        if (likearr[i] == 1){
+            id[k]= i
+            k++;
+            itemdb.query(query2, [i],function(err,rows){
+            if (err){console.error('Error executing second query:',err);}
+            else{ 
+              userItemlist[j]={itemID:id[j], title: Object.values(rows[0])}; 
+              j++;
+              //console.log('k=',k);
+
+              //console.log('j=',j);
+              if (j==k){
+               // console.log(userItemlist);
+                res.send(userItemlist);
+             }}
+          }
+          );}
+        }
+}});
+})
+app.get('/api/user/:userID/like/:itemID', (req, res) => {
+  const  UID  = req.params.userID;
+  const iID = req.params.itemID;
+  let itemID = Number(iID);
+  let userID = Number(UID);
+  const query = 'SELECT * FROM likedb WHERE UID = ? ;';
+  let id = [];
+  try{
+  itemdb.query(query,[userID],function(err,rows) {
+    if (err) {
+      console.log("데이터 가져오기 실패");
+    } else {
+      var k = 0;
+     // res.send(rows[0]);
+      likearr = Object.values(rows[0]);
+      for (i= 0 ; i < likearr.length; i++)
+      {if (likearr[i] == 1){
+          id[k]= i
+          k++;}
+        }
+      console.log('itemID: ',itemID);
+      for (i = 0 ; i< id.length; i++){
+        if( id[i] == itemID ){
+          res.send(true);
+         // console.log('id[i]:',id[i])
+          break
+        }
+            }
+      }}
+);}catch(err){
+  console.log('err',err);
+  }
+
+})
+
+
+//평점 수정하기
+app.use('/api/user/:userID/ratings/:itemID/update',(req,res,next)=>{
+  console.log(req.params)
   const  UID  = req.params.userID;
   const iID = req.params.itemID;
   let itemID = Number(iID);
@@ -104,9 +203,13 @@ app.use('/api/user/:userID/like/:itemID/update',(req,res,next)=>{
   next()
 });
 
-app.get('/api/user/:userID/like', (req, res) => {
-    const { userID } = req.params;
+//평점 불러오기
+app.get('/api/user/:userID/ratings/:itemID/', (req, res) => {
 
+  const  UID  = req.params.userID;
+  const iID = req.params.itemID;
+  let itemID = Number(iID);
+  let userID = Number(UID);
     const query = 'SELECT * FROM likedb WHERE UID = ? ;';
     const query2 = 'SELECT item FROM itemdb WHERE ItemID = ?;';
     let userItemlist = [];

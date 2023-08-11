@@ -13,16 +13,13 @@ import RecoveryPage from './Home/Recovery'
 
 
     
-function Home({navigation}) {
-  
+function Home() {
   return (     
     <SafeAreaView style={{flex:1}}   >    
-    <NavigationContainer independent={true}> 
      <Stack.Navigator initialRouteName="header" >
      <Stack.Screen name ="header" component={header}options={{headerShown: false}} />  
       
      </Stack.Navigator>
-    </NavigationContainer> 
        <StatusBar style='auto' />
     </SafeAreaView> 
     

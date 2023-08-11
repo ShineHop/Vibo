@@ -68,7 +68,7 @@ const DrawerNavigationRoutes = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="HomePage" component={HomePage} />
-      <Stack.Screen name="DetailPage" component={DetailPage} />
+      <Stack.Screen name="DetailPage" component={DetailPage} options={{headerShown: false}}/>
       {/*나머지 추가*/}
     </Stack.Navigator>
   );
@@ -93,22 +93,11 @@ function App(){
         {/* SplashScreen which will come once for 5 Seconds */}
         {/* Auth Navigator: Include Login and Signup */}
         <Stack.Screen name="Auth"     component={Auth}     options={{headerShown: false}}  />
-        {/* Navigation Drawer as a landing page */}
         <Stack.Screen name="Home" component={HomePage}  options={{headerShown: false}}   />
-        <Stack.Screen name="DetailPage" component={DetailPage} options={{title:'Detail',
-        headerStyle :{
-          backgroundColor: '#ffffff'
-        },
-        headerTintColor:'#1C140D',
-        headerTitleStyle:{fontWeight:'bold',fontSize:30,fontFamily:'Inter'},
-        headerTitleAlign:'center',
-      }} />
-
-      <Stack.Screen name="DrawerNavigationRoutes" component={DrawerNavigationRoutes}
-      // Hiding header for Navigation Drawer
-      options={{headerShown: false}} />
-      <Stack.Screen name ="Tab" component={NavBar} options={{headerShown: false}}/>
-   </Stack.Navigator>
+        <Stack.Screen name="DrawerNavigationRoutes" component={DrawerNavigationRoutes}
+          options={{headerShown: false}} />
+        <Stack.Screen name ="Tab" component={NavBar} options={{headerShown: false}}/>
+    </Stack.Navigator>
    </NavigationContainer>
 
  );

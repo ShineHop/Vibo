@@ -2,39 +2,15 @@ import React ,{useEffect,useState} from "react";
 import {SafeAreaView, View, Text ,Image,Button,StatusBar,StyleSheet,FlatList} from "react-native";
 import stylelist from '../../style';
 import axios from 'axios'
+import { useNavigation } from "@react-navigation/native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 
 
-
-const Item = (item) => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    // 서버에서 데이터 가져오기
-    axios.get('http://192.168.142.1:3001/api/data')
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-const dietdata = data.filter((item)=>item.기능.includes('다이어트'));
-  return (
-    <View style={styles_home.item_container}>
-      <View >
-      <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
-      </View>
-      <View style={styles_home.text}>
-      <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>
-      </View>
-    </View>
-  );
-  };
   
 const Best=()=>{
   const [data, setData] = useState([]);
-
+  const navigation = useNavigation();
   useEffect(() => {
     // 서버에서 데이터 가져오기
     axios.get('http://192.168.142.1:3001/api/data')
@@ -45,8 +21,8 @@ const Best=()=>{
         console.error(error);
       });
   }, []);
-  const dietdata = data.filter((item)=>item.기능.includes('피로회복'));
-  const bestdiet = dietdata.slice(0,5);
+  const Recovery = data.filter((item)=>item.기능.includes('피로회복'));
+  const bestrecover = Recovery.slice(0,5);
 
     return(
       <View style={styles_home.container}>
@@ -54,22 +30,26 @@ const Best=()=>{
           <Text style = {[stylelist.black, stylelist.Semi_Bold] }> Best 5 </Text>
         </View>
         <FlatList
-        data={bestdiet} // 필수 Props
+        data={bestrecover} // 필수 Props
         renderItem= {({ item })=>(
-        <View style={styles_home.item_container}>
+          <TouchableOpacity onPress={()=>navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})}>
+          <View style={styles_home.item_container} >
           <View >
           <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
           </View>
           <View style={styles_home.text}>
           <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>
           </View>
-        </View>)} horizontal={true} // numColumns를 사용할 때 값을 false로 지정해줘야 한다.
+          </View>
+          </TouchableOpacity>
+        )} horizontal={true} // numColumns를 사용할 때 값을 false로 지정해줘야 한다.
         />
       </View>
     );
   };
 const All=()=>{
   const [data, setData] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     // 서버에서 데이터 가져오기
@@ -81,8 +61,8 @@ const All=()=>{
         console.error(error);
       });
   }, []);
-  const dietdata = data.filter((item)=>item.기능.includes('다이어트'));
-  const notbest = dietdata.slice(5,-1) //best 5이외의 상품들만 
+  const Recovery = data.filter((item)=>item.기능.includes('피로회복'));
+  const notbest = Recovery.slice(5,-1) //best 5이외의 상품들만 
     return(
       <View style={styles_home.container}>
       <View style={styles_home.title }> 
@@ -91,14 +71,19 @@ const All=()=>{
     <FlatList data={notbest} // 필수 Props  
       numColumns={2}
       keyExtractor={(item) => item.ItemID}
-      renderItem= {({ item })=>(<View style={styles_home.item_container}>
+      renderItem= {({ item })=>(
+        <TouchableOpacity onPress={()=>navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})}>
+
+      <View style={styles_home.item_container}>
+        
         <View >
         <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
         </View>
         <View style={styles_home.text}>
         <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>
         </View>
-      </View>)} />
+      </View>
+      </TouchableOpacity>)} />
     </View>
     );};
   

@@ -4,26 +4,37 @@ import stylelist from '../style';
 import HeartButton from "../components/HeartButtonClicked";
 import axios from 'axios'
 import Icon from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 
 //자신의 user_Id 에 해당하는 찜 아이템 목록 값들 불러오기
  
 const All=({userID})=>{
   const [useritems, setItems] = useState([]);
-  const [likeState, setState] = useState(true);
+  const [likeState, setState] = useState([true]);
 
   useEffect(() => { 
-    axios.get('http://192.168.142.1:3001/api/user/2023052720/like').then((response)=>{
-      setItems(response.data);}).catch((error)=>{console.error(error);});
-}, [{userID,likeState}]); // 로그인된 사용자 ID가 변경될 때마다 실행
+    axios.get('http://192.168.142.1:3001/api/user/2023052706/like').then((response)=>{
+      setItems(response.data);}).catch((error)=>{console.log(error);});
+}, [likeState]); // 로그인된 사용자 ID가 변경될 때마다 실행
+
 
   const ButtonClicked=(id)=>{
-    <Icon name={"heart-outline" } />
-      axios.post('http://192.168.142.1:3001/api/user/2023052720/like/'+ id +'/update').then((response)=>
-    { 
+    if ( likeState == true){
+      setState(false);
+    }
+    else{
+      setState(true);
+    }
+    
+    axios.post('http://192.168.142.1:3001/api/user/2023052706/like/'+ id +'/update').then((response)=>
+    {    
       console.log(response);
         if(response.ok){
-          return response.json();     
-      }})}
+          return response.json();  
+             
+      };   
+    })   
+}
   
   const renderLikeItems = ({item})=>{
     //if(!likeState) return;
@@ -37,9 +48,10 @@ const All=({userID})=>{
             <Text style={styles_home.item}  key={item.id}> {item.title} </Text>
           </View>
           <View>
-            <TouchableOpacity onPress ={()=>ButtonClicked(item.itemID)} >
-              <Icon name={likeState === true ? "heart" : "heart-outline" } color = '#FCA6C5' size={35} key = {item.itemID} ></Icon>
-            </TouchableOpacity>
+          
+      <TouchableOpacity onPress ={()=>[ButtonClicked(item.itemID)]} >    
+    <Icon name={"heart" } color = '#FCA6C5' size={35} key = {item.itemId} ></Icon>
+    </TouchableOpacity>
           </View>
           </View>
     )}

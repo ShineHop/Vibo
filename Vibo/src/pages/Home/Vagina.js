@@ -1,13 +1,15 @@
 import React ,{useEffect,useState} from "react";
-import {SafeAreaView, View, Text ,Image,Button,StatusBar,StyleSheet,FlatList} from "react-native";
+import {SafeAreaView, View, Text ,Image,TouchableOpacity,Button,StatusBar,StyleSheet,FlatList} from "react-native";
 import stylelist from '../../style';
 import axios from 'axios'
+import { useNavigation } from "@react-navigation/native";
 
 
 
 
 const Best=()=>{
   const [data, setData] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     // 서버에서 데이터 가져오기
@@ -19,8 +21,8 @@ const Best=()=>{
         console.error(error);
       });
   }, []);
-  const dietdata = data.filter((item)=>item.기능.includes('질건강'));
-  const bestdiet = dietdata.slice(0,5);
+  const Vaginadata = data.filter((item)=>item.기능.includes('질건강'));
+  const bestdiet = Vaginadata.slice(0,5);
 
     return(
       <View style={styles_home.container}>
@@ -30,6 +32,8 @@ const Best=()=>{
         <FlatList
         data={bestdiet} // 필수 Props
         renderItem= {({ item })=>(
+          <TouchableOpacity onPress={()=>navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})}>
+
         <View style={styles_home.item_container}>
           <View >
           <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
@@ -37,13 +41,14 @@ const Best=()=>{
           <View style={styles_home.text}>
           <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>
           </View>
-        </View>)} horizontal={true} // numColumns를 사용할 때 값을 false로 지정해줘야 한다.
+        </View></TouchableOpacity>)} horizontal={true} // numColumns를 사용할 때 값을 false로 지정해줘야 한다.
         />
       </View>
     );
   };
 const All=()=>{
   const [data, setData] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     // 서버에서 데이터 가져오기
@@ -55,8 +60,8 @@ const All=()=>{
         console.error(error);
       });
   }, []);
-  const dietdata = data.filter((item)=>item.기능.includes('다이어트'));
-  const notbest = dietdata.slice(5,-1) //best 5이외의 상품들만 
+  const Vaginadata = data.filter((item)=>item.기능.includes('질건강'));
+  const notbest = Vaginadata.slice(5,-1) //best 5이외의 상품들만 
     return(
       <View style={styles_home.container}>
       <View style={styles_home.title }> 
@@ -65,14 +70,16 @@ const All=()=>{
     <FlatList data={notbest} // 필수 Props  
       numColumns={2}
       keyExtractor={(item) => item.ItemID}
-      renderItem= {({ item })=>(<View style={styles_home.item_container}>
+      renderItem= {({ item })=>(
+        <TouchableOpacity onPress={()=>navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})}>
+        <View style={styles_home.item_container}>
         <View >
         <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
         </View>
         <View style={styles_home.text}>
         <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>
         </View>
-      </View>)} />
+      </View></TouchableOpacity>)} />
     </View>
     );};
   
