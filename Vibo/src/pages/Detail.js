@@ -1,27 +1,17 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useRef} from "react";
 import { View, Text, StyleSheet,TouchableOpacity,Image,Modal,Pressable, PanResponder} from "react-native";
 import stylelist from '../style';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import Icon from "react-native-vector-icons/Ionicons";
+import Stars from '../pages/images/TransparentStarGroup.svg';
+import StarRating from '../components/StarRating';
 
-const StarRates=()=>{
-  const [rate,setRate] = useState([])
-  useEffect(() => { 
-
-  axios.get('http://192.168.142.1:3001/api/user/${UserID}/${itemID}').then((response)=>
-  {setRate(response.data).catch((error)=>{console.error(error);}),[itemID]}
-  )
-  })
-}
-
-
-
-function Detail({route}) {
+function Detail({route},props) {
   const navigation = useNavigation();
   const [likeState, setState] = useState(false);
-  
+  const [scores, setScore] = useState(0);
   const youtube=()=>{
     if   (route.params.item.youtube == 1){
       return <Text style={styles.text2}>youtube</Text>
@@ -51,12 +41,20 @@ function Detail({route}) {
       }})
  };
  useEffect(() => { 
-  axios.get('http://192.168.142.1:3001/api/user/2023052706/like/'+itemid).then((response)=>{
+  async function fetchScore(){
+    await axios.get(`http://192.168.142.1:3001/api/user/2023052706/ratings/`+itemid).then((response)=>
+    { 
+      console.log(response.data);
+      setScore(response.data);
+     })}
+  async function Likeornot(){
+    await axios.get('http://192.168.142.1:3001/api/user/2023052706/like/'+itemid).then((response)=>{
     setState(response.data);
-  console.log(response.data)}).catch((error)=>{console.error(error);});
-},[itemid]); // 로그인된 사용자 ID가 변경될 때마다 실행
+    console.log(response.data)}).catch((error)=>{console.error(error);});
+    }
+  Likeornot(),
+  fetchScore()},[itemid]); // 로그인된 사용자 ID가 변경될 때마다 실행
 
-  
   return(
     <SafeAreaView style={{flex:1, backgroundColor:'#ffffff'}}   >    
     <View style={styles.backcontainer}> 
@@ -80,6 +78,20 @@ function Detail({route}) {
           {youtube}
           {instagram}
         </View>
+        <View>
+          <Text style={styles.text}>{route.params.item.원료}</Text> 
+          <Text style={styles.text}>{route.params.item.섭취방법 }</Text>
+          <Text style={styles.text}>{route.params.item.주의사항}</Text>
+          <Text style={styles.text}> 상품에 대한 상세 정보 </Text>
+        </View>
+        <View style={styles.itemcontainer}>
+          <Text style = {[stylelist.Semi_Bold,stylelist.black]}>평가하기</Text>
+          <View style={styles.rootContainer}>
+            <Text>{scores}</Text>
+          {/* <StarRating/> */}
+    </View>
+    </View>
+        
       </View>
     </SafeAreaView>
 )}
@@ -107,11 +119,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   
+
+  rootContainer: {
+      flex: 1,
+      backgroundColor: "#ffffff",
+      justifyContent: "center",
+      alignItems: "center",
+  }
+,
+
   itemcontainer: {
     marginTop:20,
     paddingTop:20,
     backgroundColor: '#ffffff',
-    justifyContent:'flex-start',
+    justifyContent:'space-around',
     alignItems:'center',
     width:'90%',
     flexDirection:'row'
@@ -123,9 +144,7 @@ const styles = StyleSheet.create({
     width:'90%',
     flexDirection:'row'
   },
-  heart:{
 
-  },
   
   imagecontainer: {
     marginTop:20,

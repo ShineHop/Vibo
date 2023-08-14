@@ -204,48 +204,31 @@ app.use('/api/user/:userID/ratings/:itemID/update',(req,res,next)=>{
 });
 
 //평점 불러오기
-app.get('/api/user/:userID/ratings/:itemID/', (req, res) => {
+app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
 
   const  UID  = req.params.userID;
   const iID = req.params.itemID;
   let itemID = Number(iID);
   let userID = Number(UID);
-    const query = 'SELECT * FROM likedb WHERE UID = ? ;';
-    const query2 = 'SELECT item FROM itemdb WHERE ItemID = ?;';
-    let userItemlist = [];
-    let id = [];
+    const query = 'SELECT * FROM collabdb WHERE UID = ? ;';
     itemdb.query(query,[userID],function(err,rows) {
       if (err) {
         console.log("데이터 가져오기 실패");
       } else {
        // res.send(rows[0]);
-        likearr = Object.values(rows[0]);
-        var j = 0;
-        var k = 0;
-        for (i= 0 ; i < likearr.length; i++)
-        {
-          if (likearr[i] == 1){
-            id[k]= i
-            k++;
-           // console.log(id);
-            itemdb.query(query2, [i],function(err,rows){
-            if (err){console.error('Error executing second query:',err);}
-            else{ 
-              userItemlist[j]={itemID:id[j], title: Object.values(rows[0])}; 
-              j++;
-              //console.log('k=',k);
-
-              //console.log('j=',j);
-              if (j==k){
-                res.send(userItemlist);
-              }
+        ratings = Object.values(rows[0]);
+       for (i = 0; i<ratings.length; i++){
+        if(i == itemID){
+          res.send(ratings[i].toString())
+          break
+        }
+               }
 }
             
           }
           );}
-        }
-}});
-})
+);
+
 
   // 서버 시작
   const port = 3001;
