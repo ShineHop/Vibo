@@ -191,43 +191,67 @@ app.get('/api/user/:userID/like/:itemID', (req, res) => {
 
 
 //평점 수정하기
-app.use('/api/user/:userID/ratings/:itemID/update',(req,res,next)=>{
+app.use('/api/user/:userID/ratings/:itemID/update/:scores',(req,res,next)=>{
   console.log(req.params)
   const  UID  = req.params.userID;
   const iID = req.params.itemID;
+  const myscore = req.params.scores;
+
   let itemID = Number(iID);
   let userID = Number(UID);
-  const query = "UPDATE likedb SET `?` = 0 WHERE UID = ? ;"
+  let score =Number(myscore);
+  const query = "UPDATE collabdb SET `?` = ? WHERE UID = ? ;"
+  itemdb.query(query,[itemID,score,userID]);
 
-  itemdb.query(query,[itemID,userID]);
   next()
 });
 
 //평점 불러오기
 app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
-
+  
   const  UID  = req.params.userID;
   const iID = req.params.itemID;
   let itemID = Number(iID);
   let userID = Number(UID);
+  let k = 0;
+
     const query = 'SELECT * FROM collabdb WHERE UID = ? ;';
-    itemdb.query(query,[userID],function(err,rows) {
-      if (err) {
-        console.log("데이터 가져오기 실패");
-      } else {
-       // res.send(rows[0]);
-        ratings = Object.values(rows[0]);
-       for (i = 0; i<ratings.length; i++){
-        if(i == itemID){
-          res.send(ratings[i].toString())
-          break
+    const query2 = 'SELECT `?` FROM collabdb;'
+    itemdb.query(query2,[itemID], function(err,rows){
+      if (err){
+        console.log("query2 구문 에러");  
+      }
+      else{
+        let revnum = 0;
+        scores = Object.values(rows);
+        //console.log('scores:',scores);
+        for (j = 0; j< scores.length;j++){
+          score = Number(Object.values(rows[j]));
+         // console.log('score:',score)
+          if (score != 0){
+            k +=  Number(score);
+            revnum ++;
+        
         }
-               }
-}
-            
-          }
-          );}
-);
+        //console.log('out_if_revnum:',revnum);
+      }
+        aver_score = k/revnum;
+      //  console.log(aver_score);
+        itemdb.query(query,[userID],function(err,rows) {
+          if (err) {
+            console.log("데이터 가져오기 실패");
+          } else {
+           // res.send(rows[0]);
+           console.log('Object.values(rows[0]:',Object.values(rows[0]))
+            ratings = Object.values(rows[0]);
+           for (i = 0; i<ratings.length; i++){
+            if(i == itemID){
+              user_score = ratings[i]
+              res.send([aver_score,user_score])
+              break
+            }}} })}})})
+    
+      
 
 
   // 서버 시작

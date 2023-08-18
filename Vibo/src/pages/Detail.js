@@ -5,13 +5,69 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import Icon from "react-native-vector-icons/Ionicons";
-import Stars from '../pages/images/TransparentStarGroup.svg';
-import StarRating from '../components/StarRating';
+import Slider from '@react-native-community/slider';
 
 function Detail({route},props) {
   const navigation = useNavigation();
   const [likeState, setState] = useState(false);
-  const [scores, setScore] = useState(0);
+  const[myscore,setScore] = useState();
+  const[averscore,setAverScore] =useState(0);
+  const[scores, setMyScore] = useState(myscore);
+
+  function Stars(rating){
+    
+        if(0.3<= rating && rating <=0.7){
+            return(
+            <Image style={styles.stars} source={require("./images/stars/0.5.png")}/> 
+            )}
+        else if( 0.8<= rating && rating <=1.2){
+            return(
+                  <Image style={styles.stars} source={require("./images/stars/1.png")}/> 
+            )}
+        else if (1.3<= rating  && rating <=1.7)
+{            return(
+                  <Image  style={styles.stars} source={require("./images/stars/1.5.png")}/> 
+            )
+}        else if(1.8<= rating && rating <=2.2)
+{            return(
+                  <Image  style={styles.stars} source={require("./images/stars/2.png")}/> 
+            )}
+        else if  (2.3<= rating && rating <=2.7)
+{            return(
+                <Image  style={styles.stars} source={require("./images/stars/2.5.png")}/> 
+                
+            )
+}        else if ( 2.8<= rating && rating<=3.2)
+{            return(
+                  <Image  style={styles.stars} source={require("./images/stars/3.png")}/> 
+            )}
+        else if (3.3<= rating && rating<=3.7)
+{            return(
+                  <Image style={styles.stars} source={require("./images/stars/3.5.png")}/> 
+            )}
+        else if (3.8<= rating && rating<=4.2)
+{            return(
+                  <Image style={styles.stars} source={require("./images/stars/4.png")}/> 
+            )}
+            else if (4.3<= rating && rating<=4.7)
+            {            
+            return(
+          <Image style={styles.stars} source={require("./images/stars/4.5.png")}/> 
+                        )}
+            else if (4.8<= rating )
+{            return(
+                <Image style={styles.stars} source={require("./images/stars/5.png")}/> 
+            )}
+          else {
+              return(
+              
+                  <Image style={styles.stars} source={require("./images/stars/0.png")}/> 
+         
+            )
+            }
+            
+    }
+  
   const youtube=()=>{
     if   (route.params.item.youtube == 1){
       return <Text style={styles.text2}>youtube</Text>
@@ -40,20 +96,38 @@ function Detail({route},props) {
           return response.json();     
       }})
  };
- useEffect(() => { 
+ const RatingUpdated=([id,scores])=>{
+  try{  axios.post('http://192.168.142.1:3001/api/user/2023052706/ratings/'+ id +'/update/'+scores).then((response)=>
+  { 
+    console.log(response);
+      if(response.ok){
+        return response.json(); 
+
+    }}
+    )
+    console.log('score updated')
+  }
+catch{
+  console.log(error)
+}};
+
+useEffect(() => { 
   async function fetchScore(){
     await axios.get(`http://192.168.142.1:3001/api/user/2023052706/ratings/`+itemid).then((response)=>
     { 
       console.log(response.data);
-      setScore(response.data);
-     })}
+      setAverScore(Math.round(response.data[0]*10)/10);
+      setScore(response.data[1]);
+      console.log('response.data[1]',response.data[1])
+    })}
   async function Likeornot(){
     await axios.get('http://192.168.142.1:3001/api/user/2023052706/like/'+itemid).then((response)=>{
     setState(response.data);
     console.log(response.data)}).catch((error)=>{console.error(error);});
     }
   Likeornot(),
-  fetchScore()},[itemid]); // 로그인된 사용자 ID가 변경될 때마다 실행
+  fetchScore()
+},[itemid]); // 로그인된 사용자 ID가 변경될 때마다 실행
 
   return(
     <SafeAreaView style={{flex:1, backgroundColor:'#ffffff'}}   >    
@@ -63,10 +137,10 @@ function Detail({route},props) {
           </TouchableOpacity>
     </View>
     <View style={styles.container}> 
-        <Text style={[stylelist.Title_Bold,stylelist.black,stylelist.line]} >DETAILS</Text>
+        <Text style={[stylelist.Title_Bold,stylelist.black,stylelist.line]} >About</Text>
         <View style={styles.imagecontainer}>
           <Image source={require('./images/paw.png')} style = {styles.image}></Image>
-          <Text style={[stylelist.Semi_Bold,stylelist.black,styles.text1]} >평점</Text></View>
+          </View>
       <View style={styles.itemcontainer}>
         <Text style={[stylelist.Title_SemiBold,stylelist.black,styles.text ]}>{route.params.item.item}</Text>
             <TouchableOpacity onPress ={()=>ButtonClicked(route.params.item.ItemID)} >
@@ -78,21 +152,32 @@ function Detail({route},props) {
           {youtube}
           {instagram}
         </View>
-        <View>
-          <Text style={styles.text}>{route.params.item.원료}</Text> 
-          <Text style={styles.text}>{route.params.item.섭취방법 }</Text>
-          <Text style={styles.text}>{route.params.item.주의사항}</Text>
-          <Text style={styles.text}> 상품에 대한 상세 정보 </Text>
-        </View>
-        <View style={styles.itemcontainer}>
+          <View style = {styles.ratingscontainer}>
+          <Text style={[stylelist.Semi_Bold,stylelist.black,styles.text1]} >전체 평점</Text>
+              {Stars(averscore)}
+          <Text style= {[stylelist.Semi_Bold,stylelist.Green]}>{averscore}</Text>
+          </View>
+          <View style = {[styles.ratingscontainer]}>
           <Text style = {[stylelist.Semi_Bold,stylelist.black]}>평가하기</Text>
-          <View style={styles.rootContainer}>
-            <Text>{scores}</Text>
-          {/* <StarRating/> */}
-    </View>
-    </View>
+          {/* 여기가 이제 스크롤하면 변하도록 */}
+          {Stars(scores)}
+          <Slider
+                style={styles.slider}
+                value={scores} // == this.state.value
+                onValueChange={(value) => [setMyScore(value),RatingUpdated([route.params.item.ItemID,value])]} // 슬라이더를 움질일때 출력값 변환
+                minimumValue={0} // 최소값 설정
+                maximumValue={6} // 최대값 설정
+                maximumTrackTintColor="#FCD53F"
+                minimumTrackTintColor='#FCD53F' 
+                thumbTintColor='#FCD53F'
+                step={0.5}
+                 // 0.5단위로 값이 변경 
+            />
+          </View>
+            
+       
+        </View>
         
-      </View>
     </SafeAreaView>
 )}
 
@@ -106,6 +191,7 @@ const styles = StyleSheet.create({
   },
   
   backcontainer: {
+    //flex:1,
     marginTop:30,
     paddingHorizontal:20,
     alignItems: 'left',
@@ -113,29 +199,34 @@ const styles = StyleSheet.create({
   },
   container: {
    // paddingTop:10,
+    
     paddingHorizontal:10,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffffff',
-  },
-  
-
-  rootContainer: {
-      flex: 1,
-      backgroundColor: "#ffffff",
-      justifyContent: "center",
-      alignItems: "center",
   }
 ,
-
-  itemcontainer: {
-    marginTop:20,
-    paddingTop:20,
+ratingscontainer: {
+  marginTop:10,
+    paddingTop:10,
     backgroundColor: '#ffffff',
     justifyContent:'space-around',
     alignItems:'center',
     width:'90%',
+    height:70,
     flexDirection:'row'
+
+},
+
+  itemcontainer: {
+    marginTop:20,
+    paddingTop:10,
+    backgroundColor: '#ffffff',
+    justifyContent:'space-between',
+    alignItems:'center',
+    width:'90%',
+    flexDirection:'row'
+
   },
   itemcontainer1: {
     paddingTop:15,
@@ -145,20 +236,24 @@ const styles = StyleSheet.create({
     flexDirection:'row'
   },
 
+  stars:{
+    resizeMode:'contain',
+    width:'60%'
   
+  },
   imagecontainer: {
     marginTop:20,
-    width:'90%',
-    justifyContent:'space-between',
-    flexDirection:'row',
+    width:'80%',
     backgroundColor: '#ffffff',
+    alignItems:'center'
   },
 button:{
   backgroundColor:'white',
 },
 text1:{
   display:'flex',
-  marginTop:40,},
+//  marginTop:40,
+},
 
 text2:{
   display:'flex',
@@ -168,15 +263,22 @@ text2:{
   color:'#ffffff'
 },
 text:{
-    width:'90%',
+    width:'80%',
     flexWrap:"nowrap",
   },
   image:{
-    width:200,
-    height:120,
+    width:250,
+    height:150,
     resizeMode:'contain',
    
   },
-  
+  slider:{
+    height: 20
+     , width: 305 ,
+      opacity:0,
+      position:'absolute',
+      left :110
+
+  },
 });
 export default Detail;
