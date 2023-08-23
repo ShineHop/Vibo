@@ -226,9 +226,17 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
         console.log('scores:',scores);
         for (j = 1; j< scores.length;j++){
           score = Number(Object.values(rows[j]));
-         console.log('score:',score)
+          console.log('score:',score)
+
           if (score != 0){
-            k +=  Number(score);
+            if (Number(score)>=5){
+              k+= 5
+              console.log('5로 통일')
+            }
+            else{
+              k +=  Number(score);
+            }
+            console.log('k',k)
             revnum ++;
         
         }

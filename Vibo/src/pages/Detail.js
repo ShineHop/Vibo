@@ -149,13 +149,13 @@ function showflatlist(){
 }
 
 //사용자의 상품에 대한 평점 업데이트
-const RatingUpdated=([id,scores])=>{
-  try{  axios.post('http://192.168.142.1:3001/api/user/2023052706/ratings/'+ id +'/update/'+scores).then((response)=>
+const RatingUpdated=([scores])=>{
+  axios.post('http://192.168.142.1:3001/api/user/2023052706/ratings/'+ itemid +'/update/'+scores).then((response)=>
   { console.log(response);
     if(response.ok){
-      return response.json();}},[scores])
+      return response.json();}},[itemid])
     console.log('score updated')  }
-    catch{  console.log(error)}}
+  
 
   return(    
     <SafeAreaView style={{flex:1, backgroundColor:'#ffffff'}}   >
@@ -190,11 +190,12 @@ const RatingUpdated=([id,scores])=>{
           <View style = {[styles.ratingscontainer]}>
           <Text style = {[stylelist.Semi_Bold,stylelist.black]}>평가하기</Text>
           {/* 여기가 이제 스크롤하면 변하도록 */}
+         
           {Stars(scores)}
           <Slider
                 style={styles.slider}
                 value={scores} // == this.state.value
-                onValueChange={(value) => [setMyScore(value),RatingUpdated([route.params.item.ItemID,value])]} // 슬라이더를 움질일때 출력값 변환
+                onValueChange={(value) => [setMyScore(value),RatingUpdated([value])]} // 슬라이더를 움질일때 출력값 변환
                 minimumValue={0} // 최소값 설정
                 maximumValue={6} // 최대값 설정
                 maximumTrackTintColor="#FCD53F"
