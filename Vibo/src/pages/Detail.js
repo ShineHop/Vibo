@@ -1,20 +1,44 @@
-import React,{useState,useEffect,useRef} from "react";
-import { View, Text, StyleSheet,TouchableOpacity,Image,Modal,Pressable, PanResponder} from "react-native";
+import React,{useState,useEffect, useRef,useMemo ,useCallback} from "react";
+import { View, Text, StyleSheet,TouchableOpacity,Image,FlatList,ScrollView,Modal,Pressable,} from "react-native";
 import stylelist from '../style';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation ,NavigationContainer} from "@react-navigation/native";
 import axios from 'axios';
 import Icon from "react-native-vector-icons/Ionicons";
 import Slider from '@react-native-community/slider';
 
-function Detail({route},props) {
+
+function Detail({route}) {
   const navigation = useNavigation();
   const [likeState, setState] = useState(false);
   const[myscore,setScore] = useState();
   const[averscore,setAverScore] =useState(0);
   const[scores, setMyScore] = useState(myscore);
+  const[IBCFitemlist, setIBCFitems] = useState();
 
-  function Stars(rating){
+  const itemid = route.params.item.ItemID;
+useEffect(() => { 
+  async function fetchScore(){
+    await axios.get(`http://192.168.142.1:3001/api/user/2023052706/ratings/`+itemid).then((response)=>
+    { 
+      console.log(response.data);
+      setAverScore(Math.round(response.data[0]*10)/10);
+      setScore(response.data[1]);
+      console.log('response.data[1]',response.data[1])
+    })}
+
+  async function Likeornot(){
+    await axios.get('http://192.168.142.1:3001/api/user/2023052706/like/'+itemid).then((response)=>{
+    setState(response.data);
+    console.log(response.data)}).catch((error)=>{console.error(error);},[itemid]);
+    }
+
+  Likeornot(),
+  fetchScore()
+  },[itemid]
+  ); 
+
+function Stars(rating){
     
         if(0.3<= rating && rating <=0.7){
             return(
@@ -78,59 +102,64 @@ function Detail({route},props) {
       return <Text style={styles.text2}>instagram</Text>
     }
   }
-  const itemid = route.params.item.ItemID;
-  const ButtonClicked=(id)=>{
-    if (likeState== true){
-      setState(false);
-      console.log(likeState)
-    }
-    else{
-      setState(true);
-      console.log(likeState)
 
-    }
-    axios.post('http://192.168.142.1:3001/api/user/2023052706/like/'+ id +'/update').then((response)=>
-    { 
-      console.log(response);
+
+  //좋아요 버튼 누를 시 서버 전송
+  const ButtonClicked=(id)=>{
+   
+    
+    //likedb의 좋아요 state 업데이트
+    async function updatelike()
+    {await axios.post('http://192.168.142.1:3001/api/user/2023052706/like/'+ itemid +'/update').then((response)=>
+      {console.log(response);
         if(response.ok){
           return response.json();     
-      }})
- };
- const RatingUpdated=([id,scores])=>{
+        }})}
+    
+    // 좋아요 클릭시 해당 제품과 비슷한 속성의 아이템 추천해주는 IBCF 알고리즘 백에서 실행
+    async function IBCFList(){
+      await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+itemid).then((response)=>{
+        console.log(response.data);
+        setIBCFitems(response.data);  }
+      ) ,[itemid]
+   }
+    updatelike()
+    if (likeState == false){
+    IBCFList()
+   
+  }};
+function showflatlist(){
+  if (likeState == true){
+    return    (<FlatList data={IBCFitemlist}
+    keyExtractor={(item) => item.ItemID}
+    horizontal = {true}
+    
+    renderItem= {({ item })=>(
+        
+        <TouchableOpacity onPress={()=>[navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})]}>
+        <View style={styles.flatlistcontainer}>
+        <View >
+          <Image source={require('./images/paw.png')} style = {styles.image}></Image>
+        </View>
+          <View style={styles.flatlisttext}>
+            <Text style={[stylelist.Text_Regular]} key={item.ItemID}>{item.item}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>)}/>)}
+}
+
+//사용자의 상품에 대한 평점 업데이트
+const RatingUpdated=([id,scores])=>{
   try{  axios.post('http://192.168.142.1:3001/api/user/2023052706/ratings/'+ id +'/update/'+scores).then((response)=>
-  { 
-    console.log(response);
-      if(response.ok){
-        return response.json(); 
+  { console.log(response);
+    if(response.ok){
+      return response.json();}},[scores])
+    console.log('score updated')  }
+    catch{  console.log(error)}}
 
-    }}
-    )
-    console.log('score updated')
-  }
-catch{
-  console.log(error)
-}};
-
-useEffect(() => { 
-  async function fetchScore(){
-    await axios.get(`http://192.168.142.1:3001/api/user/2023052706/ratings/`+itemid).then((response)=>
-    { 
-      console.log(response.data);
-      setAverScore(Math.round(response.data[0]*10)/10);
-      setScore(response.data[1]);
-      console.log('response.data[1]',response.data[1])
-    })}
-  async function Likeornot(){
-    await axios.get('http://192.168.142.1:3001/api/user/2023052706/like/'+itemid).then((response)=>{
-    setState(response.data);
-    console.log(response.data)}).catch((error)=>{console.error(error);});
-    }
-  Likeornot(),
-  fetchScore()
-},[itemid]); // 로그인된 사용자 ID가 변경될 때마다 실행
-
-  return(
-    <SafeAreaView style={{flex:1, backgroundColor:'#ffffff'}}   >    
+  return(    
+    <SafeAreaView style={{flex:1, backgroundColor:'#ffffff'}}   >
+      <ScrollView>    
     <View style={styles.backcontainer}> 
         <TouchableOpacity onPress={()=>navigation.pop()} style={styles.button}>
           <Text style={[stylelist.Gray3,stylelist.Semi_Regular]}>목록으로</Text>
@@ -140,18 +169,19 @@ useEffect(() => {
         <Text style={[stylelist.Title_Bold,stylelist.black,stylelist.line]} >About</Text>
         <View style={styles.imagecontainer}>
           <Image source={require('./images/paw.png')} style = {styles.image}></Image>
-          </View>
-      <View style={styles.itemcontainer}>
-        <Text style={[stylelist.Title_SemiBold,stylelist.black,styles.text ]}>{route.params.item.item}</Text>
-            <TouchableOpacity onPress ={()=>ButtonClicked(route.params.item.ItemID)} >
-              <Icon name={likeState === true ? "heart" : "heart-outline" } color = '#FCA6C5' size={35} style={styles.heart} ></Icon>
-            </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.itemcontainer}>
+          <Text style={[stylelist.Title_SemiBold,stylelist.black,styles.text ]}>{route.params.item.item}</Text>
+              <TouchableOpacity onPress ={()=>[ButtonClicked(route.params.item.ItemID),setState(!likeState)]} >
+                <Icon name={likeState === true ? "heart" : "heart-outline" } color = '#FCA6C5' size={35} style={styles.heart} ></Icon>
+              </TouchableOpacity>
+        </View>
         <View style={styles.itemcontainer1}>
           <Text style={styles.text2}>{route.params.item.기능.split("\n").join("  |  ")}</Text>
           {youtube}
           {instagram}
         </View>
+   
           <View style = {styles.ratingscontainer}>
           <Text style={[stylelist.Semi_Bold,stylelist.black,styles.text1]} >전체 평점</Text>
               {Stars(averscore)}
@@ -174,11 +204,13 @@ useEffect(() => {
                  // 0.5단위로 값이 변경 
             />
           </View>
-            
-       
-        </View>
-        
+              </View>
+              {showflatlist()}      
+        </ScrollView>
+
+              
     </SafeAreaView>
+
 )}
 
 const styles = StyleSheet.create({
@@ -196,6 +228,24 @@ const styles = StyleSheet.create({
     paddingHorizontal:20,
     alignItems: 'left',
     backgroundColor: '#ffffff',
+  },
+  flatlistcontainer:{
+    alignItems: 'center',
+    //alignContent:'center',
+    width:150,
+    margin:5,
+    height:200,
+    backgroundColor:'#f6f6f6',
+    paddingTop:10,
+    marginBottom:30,
+    marginTop:30,
+
+    paddingBottom:10
+  },
+  flatlisttext:{
+    width:'80%',
+    flexWrap:"nowrap",
+    height:40,
   },
   container: {
    // paddingTop:10,
@@ -280,5 +330,12 @@ text:{
       left :110
 
   },
+  modalContainer: {
+    height: 300,
+    backgroundColor: 'red',
+    borderTopLeftRadius: 7,
+    borderTopRightRadius: 7,
+    padding: 20
+},  // 모달 스타일
 });
 export default Detail;

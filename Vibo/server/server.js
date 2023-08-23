@@ -74,7 +74,7 @@ app.get('/api/user/:userID/recommend', (req, res) => {
                       j++;
                       //console.log(recommendItemList)
                       //console.log('i:' ,i);
-                      console.log('j: ',j);
+                     //console.log('j: ',j);
                       if (j==resultarr.length){
                         res.send(recommendItemList);
                       }
@@ -83,7 +83,6 @@ app.get('/api/user/:userID/recommend', (req, res) => {
                         j++;
                       }
       }}})
-           
       });
       recommendlist.stderr.on('data', function(data) {
         console.log("222", data.toString());
@@ -224,19 +223,19 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
       else{
         let revnum = 0;
         scores = Object.values(rows);
-        //console.log('scores:',scores);
-        for (j = 0; j< scores.length;j++){
+        console.log('scores:',scores);
+        for (j = 1; j< scores.length;j++){
           score = Number(Object.values(rows[j]));
-         // console.log('score:',score)
+         console.log('score:',score)
           if (score != 0){
             k +=  Number(score);
             revnum ++;
         
         }
-        //console.log('out_if_revnum:',revnum);
+        console.log('out_if_revnum:',revnum);
       }
         aver_score = k/revnum;
-      //  console.log(aver_score);
+      console.log(aver_score);
         itemdb.query(query,[userID],function(err,rows) {
           if (err) {
             console.log("데이터 가져오기 실패");
@@ -250,9 +249,33 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
               res.send([aver_score,user_score])
               break
             }}} })}})})
-    
-      
 
+            
+//모달창에 보일 ItemBasedCommand 아이템들
+app.get('/api/user/IBCF/:itemID', (req, res) => {
+  const { itemID } = req.params;
+  console.log('itemID', itemID)
+  const IBCFList = spawn('python',['./models/IBCF.py',itemID]);
+  const query = 'Select * From itemdb WHERE ItemID in (?);';
+
+  IBCFList.stdout.on('data',function(data){
+    rs = iconv.decode(data, 'euc-kr');
+    rsarr = rs.split(/\'|\, |\ |\]|\[/,-1);
+    rsarr = rsarr.slice(1,-1);
+    resultarr = rsarr.filter(Boolean)
+    resultarr =  resultarr.map(Number);
+
+    console.log(resultarr);
+      
+    
+    itemdb.query(query,[resultarr],function(err,rows) {
+
+        console.log('rows:',Object.values(rows))
+        res.send(rows)      
+     
+    }
+  )})  
+  })
 
   // 서버 시작
   const port = 3001;
