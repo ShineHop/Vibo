@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
     SafeAreaView,
     TouchableWithoutFeedback,
@@ -15,46 +15,60 @@ import {
 import colors from './colors/colors';
 import fonts from './fonts/fonts';
 
-
-//ID, PW custom
-const CustomInput = ({value, setValue, placeholder, secureTextEntry}) => {
-	return (
-        <TextInput
-            value={value}
-            onChangeText={setValue}
-            placeholder={placeholder}
-            style={styles.customInput}
-            secureTextEntry={secureTextEntry}
-        />
-    );
-}
-
-// SignIn custom button
-const CustomButton = ({ onPress, text }) => {
-	return (
-    	<Pressable
-        	onPress={onPress}
-            style={styles.customBtnContainer}
-        >
-        	<Text style={styles.customBtnText}>
-            	{text}
-            </Text>
-        </Pressable>
-    );
-}
-
-// 임시 확인용
-const onSignInPressed = () => {
-	console.warn("onSignInPressed");
-};
-const onFindPasswordPressed = () => {
-	console.warn("onFindPasswordPressed");
-};
-
+import axios from 'axios';
 
 function Login({navigation}) {
-    const [id, setID] = useState('');
-    const [password, setPassword] = useState('');
+    const [loginInputs, setLoginInputs] = useState({
+        id: '',
+        password: ''
+    });
+
+    const handleInputChange=(key:string, value:string)=>{
+        setLoginInputs(prevState => ({
+            ...prevState,
+            [key]:value,
+        }));
+    };
+
+    // SignIn custom button
+    const CustomButton = ({ onPress, text }) => {
+    	return (
+        	<Pressable
+            	onPress={onPress}
+                style={styles.customBtnContainer}
+            >
+            	<Text style={styles.customBtnText}>
+                	{text}
+                </Text>
+            </Pressable>
+        );
+    }
+
+    // Sign In button_pressed
+    const onSignInPressed = () => {
+        console.log(loginInputs)
+        try{
+            axios.post('http://172.30.1.35:3001/api/login',
+                {'id': loginInputs.id, 'password': loginInputs.password})
+                .then(function (response) {
+                    console.log(response.data);
+                    if (response.data.status === 'success'){
+                        console.log(response.data.data.id)      //2023052120
+                        navigation.replace('Tab');   // 해당 id의 home으로 접속해야 함 !!!!!
+                    } else{
+                        console.warn('아이디와 비밀번호를 다시 확인해주세요');
+                    }
+                });
+        } catch (err){
+            console.log(err)
+        };
+    };
+
+
+    const onFindPasswordPressed = () => {
+    	console.warn("onFindPasswordPressed");
+    };
+
   return (
     <SafeAreaView style={{flex:1}}>
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -65,14 +79,16 @@ function Login({navigation}) {
                 <Text style={styles.logInTextS}>서비스 이용을 위해 로그인 해주세요.</Text>
             </View>
             <View style={styles.logInContainer}>
-                <CustomInput
-                    value={id}
-                    setValue={setID}
+                <TextInput
+                    style={styles.customInput}
+                    value={loginInputs.id}
+                    onChangeText={(text) => {handleInputChange('id', text)}}
                     placeholder="ID"
                 />
-                <CustomInput
-                    value={password}
-                    setValue={setPassword}
+                <TextInput
+                    style={styles.customInput}
+                    value={loginInputs.password}
+                    onChangeText={(text) => {handleInputChange('password',text)}}
                     placeholder="Password"
                     secureTextEntry
                 />

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
     SafeAreaView,
     TouchableWithoutFeedback,
@@ -16,66 +16,69 @@ import {
 import colors from './colors/colors';
 import fonts from './fonts/fonts';
 
-//Name, Birthday, ID, PW custom
-const CustomInput = ({value, setValue, placeholder, secureTextEntry}) => {
-	return (
-        <TextInput
-            value={value}
-            onChangeText={setValue}
-            placeholder={placeholder}
-            style={styles.customInput}
-            secureTextEntry={secureTextEntry}
-        />
-    );
-}
-const CustomInput2 = ({value, setValue, placeholder, secureTextEntry}) => {
-	return (
-        <TextInput
-            value={value}
-            onChangeText={setValue}
-            placeholder={placeholder}
-            style={styles.customInput2}
-            secureTextEntry={secureTextEntry}
-        />
-    );
-}
-const CustomInput3 = ({value, setValue, placeholder, secureTextEntry}) => {
-	return (
-        <TextInput
-            value={value}
-            onChangeText={setValue}
-            placeholder={placeholder}
-            style={styles.customInput3}
-            secureTextEntry={secureTextEntry}
-        />
-    );
-}
+import { useNavigation } from "@react-navigation/native";
 
-// Next custom button
-const CustomButton = ({ onPress, text }) => {
-	return (
-    	<Pressable
-        	onPress={onPress}
-            style={styles.customBtnContainer}
-        >
-        	<Text style={styles.customBtnText}>
-            	{text}
-            </Text>
-        </Pressable>
-    );
-}
+import axios from 'axios';
 
-// 임시 확인용
-const onProfilePressed = () => {
-	console.warn("onProfilePressed");
-};
+function Join({route, navigation}) {
+    const [joinInputs, setJoinInputs] = useState({
+        username: '',
+        birthday: '',
+        sex: '',
+        id: '',
+        password: ''
+    });
 
-function Join({navigation}) {
-    const [username, setUsername] = useState('');
-    const [birthday, setBirthday] = useState('');
-    const [sex, setSex] = useState('');
-    const [id, setID] = useState('');
-    const [password, setPassword] = useState('');
+    const handleInputChange=(key:string, value:string)=>{
+        setJoinInputs(prevState => ({
+            ...prevState,
+            [key]:value,
+        }));
+    };
+
+    // Next custom button
+    const CustomButton = ({ onPress, text }) => {
+        return (
+            <Pressable
+                onPress={onPress}
+                style={styles.customBtnContainer}
+            >
+                <Text style={styles.customBtnText}>
+                    {text}
+                </Text>
+            </Pressable>
+        );
+    }
+
+    // 임시 확인용
+    const onProfilePressed = () => {
+        console.warn("onProfilePressed");
+    };
+
+    // port 전송 코드
+    const onJoinNextPressed = () => {
+        console.log(joinInputs)
+            try{
+                axios.post('http://172.30.1.35:3001/api/join/'+joinInputs.id,
+                    {'username': joinInputs.username, 'birthday': joinInputs.birthday, 'sex': joinInputs.sex,
+                    'id': joinInputs.id, 'password': joinInputs.password})
+                .then((response)=> {
+                    if  (response.data.status == 'check_success'){
+                        joinID = response.data.data['id'];
+                        navigation.navigate('JoinCharPage');
+                        console.log("joinID: ", joinID);
+                        //return joinID
+                    } else {
+                        console.log(response.data.status);
+                        console.warn('이미 존재하는 아이디입니다.')     // 재입력 문구 띄우기
+                    }
+                })
+
+            } catch (err){
+                console.log(err)
+            };
+    };
+
 
     return (
         <SafeAreaView style={{flex:1}}>
@@ -104,38 +107,43 @@ function Join({navigation}) {
 
                 <View>
                 <Text> 닉네임 </Text>
-                <CustomInput
-                    value={username}
-                    setValue={setUsername}
+                <TextInput
+                    style={styles.customInput}
+                    value={joinInputs.username}
+                    onChangeText={(text) => {handleInputChange('username', text)}}
                     placeholder="Username"
                 />
                 <Text style={{marginBottom: '2%'}}> 주민번호 앞 6자리 </Text>
                 <View  style={{flexDirection: "row", justifyContent: 'flex-end', marginRight: '5%'}}>
-                    <CustomInput2
-                        value={birthday}
-                        setValue={setBirthday}
+                    <TextInput
+                        style={styles.customInput2}
+                        value={joinInputs.birthday}
+                        onChangeText={(text) => {handleInputChange('birthday', text)}}
                         placeholder="Birthday"
                         keyboardType="numeric"
                     />
                     <Text style={{alignSelf: 'center', fontSize: 40}}> - </Text>
-                    <CustomInput3
-                        value={sex}
-                        setValue={setSex}
+                    <TextInput
+                        style={styles.customInput3}
+                        value={joinInputs.sex}
+                        onChangeText={(text) => handleInputChange('sex', text)}
                         keyboardType="numeric"
                     />
                     <Text style={{alignSelf: 'center', fontSize: 20}}> ****** </Text>
                 </View>
 
                 <Text> ID </Text>
-                <CustomInput
-                    value={id}
-                    setValue={setID}
+                <TextInput
+                    style={styles.customInput}
+                    value={joinInputs.id}
+                    onChangeText={(text) => {handleInputChange('id', text)}}
                     placeholder="ID"
                 />
                 <Text> PW </Text>
-                <CustomInput
-                    value={password}
-                    setValue={setPassword}
+                <TextInput
+                    style={styles.customInput}
+                    value={joinInputs.password}
+                    onChangeText={(text) => {handleInputChange('password', text)}}
                     placeholder="Password"
                     secureTextEntry
                 />
@@ -145,7 +153,7 @@ function Join({navigation}) {
                         style={styles.icon}
                         source={require('./images/paw.png')} />
                     <CustomButton
-                        onPress={()=>navigation.navigate('JoinCharPage')}
+                        onPress={onJoinNextPressed}
                         text="취향정보 입력하기"
                     />
                 </View>

@@ -2,8 +2,19 @@ module.exports = function(app)
 {
     app.get('/',function(req,res){
         res.render('index.js')
-     });
-     app.get('/Diet',function(req,res){
+    });
+
+    /*
+    app.get('/Login',function(req,res){
+            res.render('Login.js')
+    }
+
+    app.get('/Join',function(req,res){
+        res.render('Join.js')
+    });
+    */
+
+    app.get('/Diet',function(req,res){
         res.render('Diet.js');
     });
 

@@ -6,6 +6,8 @@
  */
 
 import React ,{useState, useEffect} from 'react';
+import Axios from 'axios';
+
 import {
   SafeAreaView,
   ScrollView,
@@ -89,7 +91,7 @@ function App(){
     
   return (
       <NavigationContainer>
-      <Stack.Navigator initialRouteName="Tab" >
+      <Stack.Navigator initialRouteName="Splash" >
         {/* SplashScreen which will come once for 5 Seconds */}
         {/* Auth Navigator: Include Login and Signup */}
         <Stack.Screen name="Auth"     component={Auth}     options={{headerShown: false}}  />

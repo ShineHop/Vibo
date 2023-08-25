@@ -13,7 +13,7 @@ const Best=()=>{
   const navigation = useNavigation();
   useEffect(() => {
     // 서버에서 데이터 가져오기
-    axios.get('http://192.168.142.1:3001/api/data')
+    axios.get('http://172.30.1.35:3001/api/data')
       .then((response) => {
         setData(response.data);
       })
@@ -53,7 +53,7 @@ const All=()=>{
 
   useEffect(() => {
     // 서버에서 데이터 가져오기
-    axios.get('http://192.168.142.1:3001/api/data')
+    axios.get('http://172.30.1.35:3001/api/data')
       .then((response) => {
         setData(response.data);
       })
@@ -62,7 +62,7 @@ const All=()=>{
       });
   }, []);
   const Recovery = data.filter((item)=>item.기능.includes('피로회복'));
-  const notbest = Recovery.slice(5,-1) //best 5이외의 상품들만 
+  const notbest = Recovery.slice(5,-1) //best 5이외의 상품들만
     return(
       <View style={styles_home.container}>
       <View style={styles_home.title }> 
@@ -75,7 +75,7 @@ const All=()=>{
         <TouchableOpacity onPress={()=>navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})}>
 
       <View style={styles_home.item_container}>
-        
+
         <View >
         <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
         </View>

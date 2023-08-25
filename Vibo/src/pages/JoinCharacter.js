@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
     SafeAreaView,
     TouchableWithoutFeedback,
@@ -16,35 +16,57 @@ import CheckBox from '@react-native-community/checkbox';
 import colors from './colors/colors';
 import fonts from './fonts/fonts';
 
+import axios from 'axios';
 
-// Sign Up custom button
-const CustomButton = ({ onPress, text }) => {
-	return (
-    	<Pressable
-        	onPress={onPress}
-            style={styles.customBtnContainer}
-        >
-        	<Text style={styles.customBtnText}>
-            	{text}
-            </Text>
-        </Pressable>
-    );
-}
+function JoinCharacter({route, navigation}) {
+    const [joinInfoInputs, setJoinInfoInputs] = useState({
+        joinID: joinID,
+        taste: false, repurchase: false, texture: false,
+        sweet: false, sour: false, fruit: false, milk: false,
+        vita: false, bio: false, diet: false, vagina: false
+    })
 
-function JoinCharacter({navigation}) {
-    const [taste, setTaste] = useState(false);
-    const [repurchase, setRepurchase] = useState(false);
-    const [func, setFunc] = useState(false);
+    const changeCheck = (key:string, value) => {
+        setJoinInfoInputs(prevState => ({
+             ...prevState,
+             [key]: value,
+        }));
+    };
 
-    const [sweet, setSweet] = useState(false);
-    const [sour, setSour] = useState(false);
-    const [fruit, setFruit] = useState(false);
-    const [milk, setMilk] = useState(false);
+    // port 전송 코드
+    const onJoinFinalPressed = () => {
+        console.log(joinInfoInputs)
+            try{
+                axios.post('http://172.30.1.35:3001/api/join/:joinID/final',
+                    {'joinID': joinID, 'taste': joinInfoInputs.taste, 'repurchase': joinInfoInputs.repurchase, 'texture': joinInfoInputs.texture,
+                    'sweet': joinInfoInputs.sweet, 'sour': joinInfoInputs.sour, 'fruit': joinInfoInputs.fruit, 'milk': joinInfoInputs.milk,
+                    'vita': joinInfoInputs.vita, 'bio': joinInfoInputs.bio, 'diet': joinInfoInputs.diet, 'vagina': joinInfoInputs.vagina})
+                .then((response)=> {
+                    if  (response.data.status == 'detail_success'){
+                        navigation.replace('Tab');      // 해당 id의 home으로 접속해야 함 !!!!!
+                    } else {
+                        console.log(err);
+                    }
+                    console.log(response);
+                })
+            } catch (err){
+                console.log(err)
+            };
+    };
 
-    const [vita, setVita] = useState(false);
-    const [bio, setBio] = useState(false);
-    const [diet, setDiet] = useState(false);
-    const [vagina, setVagina] = useState(false);
+    // Sign Up custom button
+    const CustomButton = ({ onPress, text }) => {
+    	return (
+        	<Pressable
+            	onPress={onJoinFinalPressed}
+                style={styles.customBtnContainer}
+            >
+            	<Text style={styles.customBtnText}>
+                	{text}
+                </Text>
+            </Pressable>
+        );
+    }
 
     return (
         <SafeAreaView style={{flex:1}}>
@@ -66,46 +88,46 @@ function JoinCharacter({navigation}) {
                 <Text style={styles.titleText1}> 고려사항 </Text>
                 <View style={{flexDirection: 'row'}}>
                          <CheckBox
-                            value={taste}
-                            onValueChange={setTaste}
+                            value={joinInfoInputs.taste}
+                            onValueChange={(status) => {changeCheck('taste', status)}}
                          />
                         <Text style={styles.checkText}>맛</Text>
                         <CheckBox
-                            value={repurchase}
-                            onValueChange={setRepurchase}
+                            value={joinInfoInputs.repurchase}
+                            onValueChange={(status) => {changeCheck('repurchase', status)}}
                         />
                         <Text style={styles.checkText}>재구매 의사</Text>
                         <CheckBox
-                            value={func}
-                            onValueChange={setFunc}
+                            value={joinInfoInputs.texture}
+                            onValueChange={(status) => {changeCheck('texture', status)}}
                         />
                         <Text style={styles.checkText}>목넘김</Text>
                     </View>
 
-                    {taste ? (
+                    {joinInfoInputs.taste ? (
                         <View style={{flexDirection: 'row', marginLeft: '5%', marginTop: 12, marginBottom: 5}}>
                             <CheckBox
-                                value={sweet}
-                                onValueChange={setSweet}
-                                onPress={(isChecked: boolean) => {}}
+                                value={joinInfoInputs.sweet}
+                                onValueChange={(status) => {changeCheck('sweet', status)}}
+
                             />
                             <Text style={styles.checkText}>단맛</Text>
                             <CheckBox
-                                value={sour}
-                                onValueChange={setSour}
-                                onPress={(isChecked: boolean) => {}}
+                                value={joinInfoInputs.sour}
+                                onValueChange={(status) => {changeCheck('sour', status)}}
+
                             />
                             <Text style={styles.checkText}>새콤한맛</Text>
                             <CheckBox
-                                value={fruit}
-                                onValueChange={setFruit}
-                                onPress={(isChecked: boolean) => {}}
+                                value={joinInfoInputs.fruit}
+                                onValueChange={(status) => {changeCheck('fruit', status)}}
+
                             />
                             <Text style={styles.checkText}>과일맛</Text>
                             <CheckBox
-                                value={milk}
-                                onValueChange={setMilk}
-                                onPress={(isChecked: boolean) => {}}
+                                value={joinInfoInputs.milk}
+                                onValueChange={(status) => {changeCheck('milk', status)}}
+
                             />
                             <Text style={styles.checkText}>우유맛</Text>
                         </View>
@@ -114,29 +136,28 @@ function JoinCharacter({navigation}) {
                     <Text style={styles.titleText2}>기능</Text>
                     <View style={{flexDirection: 'row'}}>
                         <CheckBox
-                            value={vita}
-                            onValueChange={setVita}
+                            value={joinInfoInputs.vita}
+                            onValueChange={(status) => {changeCheck('vita', status)}}
                         />
                         <Text style={styles.checkText}>피로회복</Text>
                         <CheckBox
-                            value={bio}
-                            onValueChange={setBio}
+                            value={joinInfoInputs.bio}
+                            onValueChange={(status) => {changeCheck('bio', status)}}
                         />
                         <Text style={styles.checkText}>장 건강</Text>
                         <CheckBox
-                            value={diet}
-                            onValueChange={setDiet}
+                            value={joinInfoInputs.diet}
+                            onValueChange={(status) => {changeCheck('diet', status)}}
                         />
                         <Text style={styles.checkText}>다이어트</Text>
                         <CheckBox
-                            value={vagina}
-                            onValueChange={setVagina}
+                            value={joinInfoInputs.vagina}
+                            onValueChange={(status) => {changeCheck('vagina', status)}}
                         />
                         <Text style={styles.checkText}>질 건강</Text>
                     </View>
                 </ScrollView>
                 <CustomButton
-                    onPress={()=>navigation.navigate('Home')}
                     text="Sign Up"
                 />
                 </View>
