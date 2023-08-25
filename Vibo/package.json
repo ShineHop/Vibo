@@ -15,7 +15,7 @@
     "@lumino/coreutils": "^2.1.2",
     "@react-native-community/checkbox": "^0.5.16",
     "@react-native-community/masked-view": "^0.1.11",
-    "@react-native-community/slider": "^4.4.2",
+    "@react-native-community/slider": "^4.4.3",
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/material-top-tabs": "^6.6.3",
     "@react-navigation/native": "^6.1.6",

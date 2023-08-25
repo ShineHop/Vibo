@@ -20,7 +20,7 @@ import axios from 'axios';
 
 function JoinCharacter({route, navigation}) {
     const [joinInfoInputs, setJoinInfoInputs] = useState({
-        joinID: joinID,
+        joinID: joinID, joinName: joinName, joinPwd: joinPwd,
         taste: false, repurchase: false, texture: false,
         sweet: false, sour: false, fruit: false, milk: false,
         vita: false, bio: false, diet: false, vagina: false
@@ -37,12 +37,13 @@ function JoinCharacter({route, navigation}) {
     const onJoinFinalPressed = () => {
         console.log(joinInfoInputs)
             try{
-                axios.post('http://172.30.1.35:3001/api/join/:joinID/final',
-                    {'joinID': joinID, 'taste': joinInfoInputs.taste, 'repurchase': joinInfoInputs.repurchase, 'texture': joinInfoInputs.texture,
+                axios.post('http://172.30.1.35:3001/api/join/:joinID/:joinName/:joinPwd/final',
+                    {'joinID': joinID, 'joinName': joinName, 'joinPwd': joinPwd,
+                    'taste': joinInfoInputs.taste, 'repurchase': joinInfoInputs.repurchase, 'texture': joinInfoInputs.texture,
                     'sweet': joinInfoInputs.sweet, 'sour': joinInfoInputs.sour, 'fruit': joinInfoInputs.fruit, 'milk': joinInfoInputs.milk,
                     'vita': joinInfoInputs.vita, 'bio': joinInfoInputs.bio, 'diet': joinInfoInputs.diet, 'vagina': joinInfoInputs.vagina})
                 .then((response)=> {
-                    if  (response.data.status == 'detail_success'){
+                    if  (response.data.status == 'value_success'){
                         navigation.replace('Tab');      // 해당 id의 home으로 접속해야 함 !!!!!
                     } else {
                         console.log(err);

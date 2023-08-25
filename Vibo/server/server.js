@@ -67,7 +67,7 @@ app.post('/api/login/', (req,res, next)=>{
 });
 
 // 회원가입 정보 express -> mysql로 데이터 저장
-app.post('/api/join/:joinID', (req, res) => {
+app.post('/api/join/:joinID/:joinName/:joinPwd', (req, res) => {
     const userName = req.body.username;
     const userID = req.body.id;
     const userPwd = req.body.password;
@@ -98,22 +98,18 @@ app.post('/api/join/:joinID', (req, res) => {
 
             });
 
-        itemdb.query(joinQuery, [userID, userPwd, userName], function(err, join_res){
-            if (err) {
-                console.log("err: ", err);
-                // id 중복, id에 숫자 이외의 것을 쓰거나, 등 각종 오류 처리해야 함
-            } else {
-                console.log("Inserted values successfully!");
-            }
-
-        });
         }
 
     });
 });
 
-app.post('/api/join/:joinID/final', (req, res)=> {
+app.post('/api/join/:joinID/:joinName/:joinPwd/final', (req, res)=> {
+    console.log("what? ", req.body);
+
     const joinID = req.body.joinID;
+    const joinName = req.body.joinName;
+    const joinPwd = req.body.joinPwd;
+
     userTaste = req.body.taste;
     userRebuy = req.body.repurchase;
     userTexture = req.body.texture;
@@ -130,10 +126,8 @@ app.post('/api/join/:joinID/final', (req, res)=> {
     userDiet = req.body.diet;
     userVagina = req.body.vagina;
 
-    const joinFinalCheckQuery = 'SELECT (userID) from itemdb.user_info where userID = ?'
-    const joinFinalQuery = 'UPDATE itemdb.user_info SET userTaste=?, userRebuy=?, userTexture=?, userTasteDetail=?, userFunction=? WHERE userID = ?'
+    const joinQuery = 'INSERT INTO itemdb.user_info (userID, userPwd, userName, userTaste, userRebuy, userTexture, userTasteDetail, userFunction) VALUES (?,?,?,?,?,?,?,?)'
 
-    console.log(userTaste);
     if (userTaste){
         userTaste = "맛있다"
     } else{
@@ -184,28 +178,18 @@ app.post('/api/join/:joinID/final', (req, res)=> {
     console.log(userTasteDetail);
     console.log(userFunction);
 
-    itemdb.query(joinFinalCheckQuery, [joinID], function(err, select_res){
-            if (err){
-                console.log("err: ", err);
-            }
-            if (select_res.length){              // 회원가입한 id와 일치하는 row 선택
-                console.log("found the same ID");
-                itemdb.query(joinFinalQuery, [userTaste, userRebuy, userTexture, JSON.stringify(userTasteDetail), JSON.stringify(userFunction), joinID], function(err, detail_res){
-                    if (err) {
-                        console.log("err: ", err);
-                    } else {
-                        console.log("Inserted detail values successfully!");    // 사용자 취향 db에 삽입
-                        res.send({
-                            message: "Insert details successfully!",
-                            status: 'detail_success'
-                        });
-                    }
-                });
-            } else{
-                console.log("No ID");
-            }
+    itemdb.query(joinQuery, [joinID, joinPwd, joinName, userTaste, userRebuy, userTexture, JSON.stringify(userTasteDetail), JSON.stringify(userFunction)], function(err, join_res){
+        if (err) {
+            console.log("err: ", err);
+        } else {
+            console.log("Inserted values successfully!");
+            res.send({
+                message: "Insert values successfully!",
+                status: 'value_success'
+            });
+        }
 
-        });
+    });
 });
 
 

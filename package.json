@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@react-native-community/slider": "^4.4.3",
     "react-native-splash-screen": "^3.3.0"
   }
 }

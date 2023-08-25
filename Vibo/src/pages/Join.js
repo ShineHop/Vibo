@@ -59,15 +59,17 @@ function Join({route, navigation}) {
     const onJoinNextPressed = () => {
         console.log(joinInputs)
             try{
-                axios.post('http://172.30.1.35:3001/api/join/'+joinInputs.id,
+                axios.post('http://172.30.1.35:3001/api/join/' + joinInputs.id + '/' + joinInputs.username + '/' + joinInputs.password,
                     {'username': joinInputs.username, 'birthday': joinInputs.birthday, 'sex': joinInputs.sex,
                     'id': joinInputs.id, 'password': joinInputs.password})
                 .then((response)=> {
                     if  (response.data.status == 'check_success'){
                         joinID = response.data.data['id'];
+                        joinName = response.data.data['username'];
+                        joinPwd = response.data.data['password']
+
                         navigation.navigate('JoinCharPage');
-                        console.log("joinID: ", joinID);
-                        //return joinID
+
                     } else {
                         console.log(response.data.status);
                         console.warn('이미 존재하는 아이디입니다.')     // 재입력 문구 띄우기
