@@ -11,7 +11,7 @@ const All=(userID)=>{
   const navigation = useNavigation();
 
   useEffect(() => { 
-    axios.get('http://192.168.142.1:3001/api/user/2023052702/recommend').then((response)=>{
+    axios.get('http://172.30.1.36:3001/api/user/2023052702/recommend').then((response)=>{
       console.log(response.data)
       setItems(response.data);}).catch((error)=>{console.error(error);});
 }, [userID]); // 로그인된 사용자 ID가 변경될 때마다 실행

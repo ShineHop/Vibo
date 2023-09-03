@@ -53,7 +53,7 @@ app.post('/api/login/', (req,res, next)=>{
                 });
             } else {        // 어차피 여기서 안 먹힘. query에서 에러처리 해야함
                 res.send({
-                    message: "Login success",
+                    message: "Login unsuccess",
                     status: 'unsuccess',
                     data: {
                         'id':userID,
@@ -62,8 +62,6 @@ app.post('/api/login/', (req,res, next)=>{
                 });
             }
     }); //일치하지 않는 경우 에러처리 해야함
-
-
 });
 
 // 회원가입 정보 express -> mysql로 데이터 저장
@@ -152,11 +150,11 @@ app.post('/api/join/:joinID/:joinName/:joinPwd/final', (req, res)=> {
         userTasteDetail.push(userSour)
     }
     if (userFruit){
-        userFruit = "과일맛"
+        userFruit = "과일 맛"
         userTasteDetail.push(userFruit)
     }
     if (userMilk){
-        userMilk = "우유맛"
+        userMilk = "우유 맛"
         userTasteDetail.push(userMilk)
     }
     if (userVita){
@@ -192,7 +190,233 @@ app.post('/api/join/:joinID/:joinName/:joinPwd/final', (req, res)=> {
     });
 });
 
+// Mypage
+app.get('/api/onLogin/:userID/mypage', (req, res)=> {
+    const userID = req.params;
+    const userInfoQuery = 'SELECT * from itemdb.user_info WHERE userID = (?)'
 
+    itemdb.query(userInfoQuery, [userID.userID], function(err, info_res){
+
+        console.log("info_res: ", info_res);
+        if (err){
+            console.log("err: ", err);
+        }
+        if (info_res.length){              // 존재하면
+            console.log("found userInfo : ", info_res[0]);
+            res.send({
+                status: 'found_userInfo',
+                data: {
+                    'userID': info_res[0].userID,
+                    'userPwd' : info_res[0].userPwd,
+                    'userName' : info_res[0].userName,
+                    'userTaste' : info_res[0].userTaste,
+                    'userTasteDetail' : info_res[0].userTasteDetail,
+                    'userRebuy' : info_res[0].userRebuy,
+                    'userTexture' : info_res[0].userTexture,
+                    'userFunction' : info_res[0].userFunction
+                }
+            });
+        } else{
+            res.send({
+                message: "No user information",
+                status: 'failed_userInfo',
+            });
+
+        }
+
+    });
+
+});
+
+// update : username
+app.use('/api/user/:userID/mypage/edit/username', (req, res) => {
+    const  { userID } = req.params;
+    console.log(userID);
+    console.log("req: ", req.body);
+
+    usernameUpdate = req.body.username;
+
+    const updateQuery = 'UPDATE itemdb.user_info SET userName=? WHERE userID=?'
+
+    itemdb.query(updateQuery, [usernameUpdate, userID], function(err, update_res){
+        if (err) {
+            console.log("update_username_err: ", err);
+        } else {
+            console.log("Update username values successfully!");
+            res.send({
+                message: "Update username values successfully!",
+                status: 'update_username_success'
+            });
+        }
+
+    });
+});
+
+// update : taste
+app.use('/api/user/:userID/mypage/edit/taste', (req, res) => {
+    const  { userID } = req.params;
+    console.log(userID);
+    console.log("req: ", req.body);
+
+    tasteUpdate = req.body.taste;
+
+    updateTasteDetail = [];
+    sweetUpdate = req.body.sweet;
+    sourUpdate = req.body.sour;
+    fruitUpdate = req.body.fruit;
+    milkUpdate = req.body.milk;
+
+    if (tasteUpdate=='yes'){
+        tasteUpdate = '맛있다'
+        if (sweetUpdate){
+            sweetUpdate = "달콤"
+            updateTasteDetail.push(sweetUpdate)
+        }
+        if (sourUpdate){
+            sourUpdate = "새콤"
+            updateTasteDetail.push(sourUpdate)
+        }
+        if (fruitUpdate){
+            fruitUpdate = "과일 맛"
+            updateTasteDetail.push(fruitUpdate)
+        }
+        if (milkUpdate){
+            milkUpdate = "우유 맛"
+            updateTasteDetail.push(milkUpdate)
+        }
+    } else{
+        tasteUpdate = '';
+    }
+
+
+    console.log(updateTasteDetail)
+
+    const updateQuery = 'UPDATE itemdb.user_info SET userTaste=?, userTasteDetail=? WHERE userID=?'
+
+    itemdb.query(updateQuery, [tasteUpdate, JSON.stringify(updateTasteDetail), userID], function(err, update_res){
+        if (err) {
+            console.log("update_taste_err: ", err);
+        } else {
+            console.log("Update taste values successfully!");
+            res.send({
+                message: "Update taste values successfully!",
+                status: 'update_taste_success'
+            });
+        }
+
+    });
+});
+
+// update : texture
+app.use('/api/user/:userID/mypage/edit/texture', (req, res) => {
+    const  { userID } = req.params;
+    console.log(userID);
+    console.log("req: ", req.body);
+
+    textureUpdate = req.body.texture;
+
+    if (textureUpdate=='yes'){
+        textureUpdate = "목넘김"
+    } else {
+        textureUpdate = ""
+    }
+
+    console.log(textureUpdate)
+
+    const updateQuery = 'UPDATE itemdb.user_info SET userTexture=? WHERE userID=?'
+
+    itemdb.query(updateQuery, [textureUpdate, userID], function(err, update_res){
+        if (err) {
+            console.log("update_texture_err: ", err);
+        } else {
+            console.log("Update texture value successfully!");
+            res.send({
+                message: "Update texture value successfully!",
+                status: 'update_texture_success'
+            });
+        }
+
+    });
+});
+
+// update : repurchase
+app.use('/api/user/:userID/mypage/edit/repurchase', (req, res) => {
+    const  { userID } = req.params;
+    console.log(userID);
+    console.log("req: ", req.body);
+
+    repurchUpdate = req.body.repurchase;
+
+    if (repurchUpdate=='yes'){
+        repurchUpdate = "재구매의사"
+    } else {
+        repurchUpdate = ""
+    }
+
+    console.log(repurchUpdate)
+
+    const updateQuery = 'UPDATE itemdb.user_info SET userRebuy=? WHERE userID=?'
+
+    itemdb.query(updateQuery, [repurchUpdate, userID], function(err, update_res){
+        if (err) {
+            console.log("update_repurch_err: ", err);
+        } else {
+            console.log("Update repurchase value successfully!");
+            res.send({
+                message: "Update repurchase value successfully!",
+                status: 'update_repurchase_success'
+            });
+        }
+
+    });
+});
+
+// update : function
+app.use('/api/user/:userID/mypage/edit/function', (req, res) => {
+    const  { userID } = req.params;
+    console.log(userID);
+    console.log("req: ", req.body);
+
+    updateFuncDetail = [];
+    vitaUpdate = req.body.vita;
+    bioUpdate = req.body.bio;
+    dietUpdate = req.body.diet;
+    vaginaUpdate = req.body.vagina;
+
+    if (vitaUpdate){
+        vitaUpdate = "피로회복"
+        updateFuncDetail.push(vitaUpdate)
+    }
+    if (bioUpdate){
+        bioUpdate = "장건강"
+        updateFuncDetail.push(bioUpdate)
+    }
+    if (dietUpdate){
+        dietUpdate = "다이어트"
+        updateFuncDetail.push(dietUpdate)
+    }
+    if (vaginaUpdate){
+        vaginaUpdate = "질건강"
+        updateFuncDetail.push(vaginaUpdate)
+    }
+
+    console.log(updateFuncDetail)
+
+    const updateQuery = 'UPDATE itemdb.user_info SET userFunction=? WHERE userID=?'
+
+    itemdb.query(updateQuery, [JSON.stringify(updateFuncDetail), userID], function(err, update_res){
+        if (err) {
+            console.log("update_func_err: ", err);
+        } else {
+            console.log("Update func values successfully!");
+            res.send({
+                message: "Update func values successfully!",
+                status: 'update_func_success'
+            });
+        }
+
+    });
+});
 
 
 app.get('/api/data', (req, res) => {

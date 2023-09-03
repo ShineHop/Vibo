@@ -13,6 +13,13 @@ module.exports = function(app)
         res.render('Join.js')
     });
     */
+    app.get('/Mypage',function(req,res){
+        res.render('Mypage.js');
+    });
+
+    app.get('/Edit',function(req,res){
+        res.render('Edit.js');
+    });
 
     app.get('/Diet',function(req,res){
         res.render('Diet.js');

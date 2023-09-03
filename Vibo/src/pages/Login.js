@@ -17,7 +17,7 @@ import fonts from './fonts/fonts';
 
 import axios from 'axios';
 
-function Login({navigation}) {
+function Login({navigation, props}) {
     const [loginInputs, setLoginInputs] = useState({
         id: '',
         password: ''
@@ -48,17 +48,39 @@ function Login({navigation}) {
     const onSignInPressed = () => {
         console.log(loginInputs)
         try{
-            axios.post('http://172.30.1.35:3001/api/login',
+            axios.post('http://172.30.1.36:3001/api/login',
                 {'id': loginInputs.id, 'password': loginInputs.password})
                 .then(function (response) {
                     console.log(response.data);
                     if (response.data.status === 'success'){
                         console.log(response.data.data.id)      //2023052120
                         navigation.replace('Tab');   // 해당 id의 home으로 접속해야 함 !!!!!
+                        axios.post('http://172.30.1.36:3001/api/onLogin/' + loginInputs.id, {'userID':loginInputs.id})
+                        .then((res) => {userID = res.data.data['userID']})
+                        .catch()
                     } else{
                         console.warn('아이디와 비밀번호를 다시 확인해주세요');
                     }
-                });
+                })
+                .catch(error => {
+                        if (error.response) {
+                          // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
+                          console.log('response')
+                          console.log(error.response.data)
+                          console.log(error.response.status)
+                          console.log(error.response.headers)
+                        } else if (error.request) {
+                          // 요청이 이루어 졌으나 응답을 받지 못했습니다.
+                          // `error.request`는 브라우저의 XMLHttpRequest 인스턴스 또는
+                          // Node.js의 http.ClientRequest 인스턴스입니다.
+                          console.log('request')
+                          console.log(error.request)
+                        } else {
+                          // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다.
+                          console.log('Error', error.message)
+                        }
+                        console.log(error.config)
+                      });
         } catch (err){
             console.log(err)
         };

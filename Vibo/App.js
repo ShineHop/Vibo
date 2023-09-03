@@ -65,13 +65,14 @@ const Auth = () => {
   );
 };
 
+
 //일단 기타 나머지들
 const DrawerNavigationRoutes = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="HomePage" component={HomePage} />
+      <Stack.Screen name="HomePage" component={HomePage}/>
       <Stack.Screen name="DetailPage" component={DetailPage} options={{headerShown: false}}/>
-      {/*나머지 추가*/}
+      <Stack.Screen name="EditPage" component={EditPage} options={{headerShown: false}}/>
     </Stack.Navigator>
   );
 };

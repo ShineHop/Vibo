@@ -4,7 +4,7 @@ import {ActivityIndicator, Text, Button,View, StyleSheet, Image} from 'react-nat
 
 import SplashScreen from 'react-native-splash-screen';
 
-function App({navigation}){
+function Loading({navigation}){
     useEffect(() => {
         try {
           setTimeout(() => {
@@ -40,4 +40,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App
+export default Loading;

@@ -26,7 +26,7 @@ const All=({userID})=>{
       setState(true);
     }
     
-    axios.post('http://192.168.142.1:3001/api/user/2023052706/like/'+ id +'/update').then((response)=>
+    axios.post('http://172.30.1.35:3001/api/user/2023052706/like/'+ id +'/update').then((response)=>
     {    
       console.log(response);
         if(response.ok){
