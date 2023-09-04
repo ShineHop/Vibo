@@ -16,6 +16,7 @@ import colors from './colors/colors';
 import fonts from './fonts/fonts';
 
 import axios from 'axios';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Login({navigation, props}) {
     const [loginInputs, setLoginInputs] = useState({
@@ -44,18 +45,31 @@ function Login({navigation, props}) {
         );
     }
 
+    const storeUserID = async (key: string, value: any) => {
+      try {
+        const stringValue = JSON.stringify(value);
+        await AsyncStorage.setItem(key, stringValue);
+        console.log("local: ", stringValue);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     // Sign In button_pressed
     const onSignInPressed = () => {
         console.log(loginInputs)
         try{
-            axios.post('http://172.30.1.36:3001/api/login',
+            axios.post('http://172.30.1.35:3001/api/login',
                 {'id': loginInputs.id, 'password': loginInputs.password})
                 .then(function (response) {
                     console.log(response.data);
                     if (response.data.status === 'success'){
                         console.log(response.data.data.id)      //2023052120
+
+                        storeUserID('userID', response.data.data.id);   // 로컬저장소에 저장
+
                         navigation.replace('Tab');   // 해당 id의 home으로 접속해야 함 !!!!!
-                        axios.post('http://172.30.1.36:3001/api/onLogin/' + loginInputs.id, {'userID':loginInputs.id})
+                        axios.post('http://172.30.1.35:3001/api/onLogin/' + loginInputs.id, {'userID':loginInputs.id})
                         .then((res) => {userID = res.data.data['userID']})
                         .catch()
                     } else{

@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import {
     SafeAreaView, ScrollView,
     TouchableWithoutFeedback,
@@ -25,6 +25,10 @@ import RepurchaseModal from '../components/RepurchaseModal';
 import TextureModal from '../components/TextureModal';
 import FunctionModal from '../components/FunctionModal';
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { containsKey, getData, removeData, storeData } from "./AsyncService";
+import { storeUserData, getUserData } from './UserData';
+
 
 const Edit = ({route, navigation, props}) => {
     // modal 부분
@@ -33,9 +37,20 @@ const Edit = ({route, navigation, props}) => {
     const [textureModalVisible, setTextureModalVisible] = useState(false);
     const [functionModalVisible, setFunctionModalVisible] = useState(false);
 
-    // 닉네임, 프로필
+    const [userName, setUserName] = useState([]);
+    useEffect(() => {
+        async function getData() {
+          const _persons = await getUserData();
+          setUserName(_persons);
+        }
+        getData();
+    }, []);
+    //console.log("edit: ", userName.user.userName);
+    //const defaultName = JSON.Stringify(userName.user.userName);
+
+   // 닉네임, 프로필
     const [editInputs, setEditInputs] = useState({
-       username: '',    //기존 user의 닉네임
+       username: '',
     });
 
     const handleInputChange=(key:string, value:string)=>{
@@ -51,9 +66,11 @@ const Edit = ({route, navigation, props}) => {
     };
 
     // port 전송 코드
-    const onUpdatePressed = () => {
+    const onUpdatePressed = async() => {
         try{
-            axios.post('http://172.30.1.36:3001/api/user/2023052702/mypage/edit/username',
+            const userID = JSON.parse(await AsyncStorage.getItem("userID"));
+            console.log("edit_userid: ", userID);
+            axios.post('http://172.30.1.35:3001/api/user/'+userID+'/mypage/edit/username',
                 {'username': editInputs.username})
             .then((response)=> {
                 if  (response.data.status == 'update_username_success'){
@@ -62,10 +79,10 @@ const Edit = ({route, navigation, props}) => {
                 }
             })
             .catch(error => {
-                console.log(err);
+                console.log("edit: ", err);
             });
         } catch (err){
-            console.log(err)
+            console.log("edit: ", err);
         };
     };
 
@@ -146,7 +163,7 @@ const Edit = ({route, navigation, props}) => {
                             style={styles.customInput}
                             value={editInputs.username}
                             onChangeText={(text) => {handleInputChange('username', text)}}
-                            placeholder="Username"
+                            placeholder={'Username'}
                         />
                     </View>
                     <ChangeInfoButton
@@ -184,12 +201,15 @@ const Edit = ({route, navigation, props}) => {
 
 const styles = StyleSheet.create({
     editTopContainer: {
-        flex: 1.5,
+        flex: 1,
         backgroundColor: colors.Blue,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     joinText: {
-        justifyContent: 'center',
+        marginRight: '30%',
+        alignSelf: 'center',
         fontFamily: 'inter',
         fontSize: 25,
         fontWeight: '700',
@@ -197,8 +217,6 @@ const styles = StyleSheet.create({
         lineHeight: 29.3,
     },
     logoutBtnText: {
-        marginRight: '10%',
-        justifyContent: 'flex-end',
         color: colors.White
     },
     infoContainer: {

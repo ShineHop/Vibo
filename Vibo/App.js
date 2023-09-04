@@ -94,7 +94,6 @@ function App(){
       <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash" >
         {/* SplashScreen which will come once for 5 Seconds */}
-        {/* Auth Navigator: Include Login and Signup */}
         <Stack.Screen name="Auth"     component={Auth}     options={{headerShown: false}}  />
         <Stack.Screen name="Home" component={HomePage}  options={{headerShown: false}}   />
         <Stack.Screen name="DrawerNavigationRoutes" component={DrawerNavigationRoutes}

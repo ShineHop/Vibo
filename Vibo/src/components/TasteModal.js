@@ -36,7 +36,7 @@ const TasteModal = (props) => {
     // port 전송 코드
     const onTasteUpdatePressed = () => {
             try{
-                axios.post('http://172.30.1.36:3001/api/user/2023052702/mypage/edit/taste',
+                axios.post('http://172.30.1.35:3001/api/user/2023052702/mypage/edit/taste',
                     {'taste': tasteUpdate.taste,
                     'sweet': tasteUpdate.sweet, 'sour': tasteUpdate.sour, 'fruit': tasteUpdate.fruit, 'milk': tasteUpdate.milk })
                 .then((response)=> {

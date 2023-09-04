@@ -28,7 +28,7 @@ const RepurchaseModal = (props) => {
     // port 전송 코드
     const onRepurchUpdatePressed = () => {
             try{
-                axios.post('http://172.30.1.36:3001/api/user/2023052702/mypage/edit/repurchase',
+                axios.post('http://172.30.1.35:3001/api/user/2023052702/mypage/edit/repurchase',
                     {'repurchase': repurchaseUpdate})
                 .then((response)=> {
                     if  (response.data.status == 'update_repurchase_success'){

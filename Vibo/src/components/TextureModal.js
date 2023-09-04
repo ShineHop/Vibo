@@ -29,7 +29,7 @@ const TextureModal = (props) => {
     // port 전송 코드
     const onTextureUpdatePressed = () => {
             try{
-                axios.post('http://172.30.1.36:3001/api/user/2023052702/mypage/edit/texture',
+                axios.post('http://172.30.1.35:3001/api/user/2023052702/mypage/edit/texture',
                     {'texture': textureUpdate})
                 .then((response)=> {
                     if  (response.data.status == 'update_texture_success'){

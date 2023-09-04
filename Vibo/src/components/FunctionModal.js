@@ -35,7 +35,7 @@ const FunctionModal = (props) => {
     // port 전송 코드
     const onFuncUpdatePressed = () => {
             try{
-                axios.post('http://172.30.1.36:3001/api/user/2023052702/mypage/edit/function',
+                axios.post('http://172.30.1.35:3001/api/user/2023052702/mypage/edit/function',
                     {'vita': functionUpdate.vita, 'bio': functionUpdate.bio, 'diet': functionUpdate.diet, 'vagina': functionUpdate.vagina })
                 .then((response)=> {
                     if  (response.data.status == 'update_func_success'){
