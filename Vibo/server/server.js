@@ -34,81 +34,93 @@ app.post('/api/login/', (req,res, next)=>{
     const userPwd = req.body.password;
     const matchingQuery = "select * from itemdb.user_info where userID = ?  AND userPwd = ?;"
 
-    itemdb.query(matchingQuery, [userID, userPwd], function(err, result){
+    itemdb.query(matchingQuery, [userID, userPwd], function(err, login_res){
         if (err) {console.log("error: ", err)};
+        if (login_res.length){
+            resultlist = Object.values(login_res[0]);
+            resultpwd = resultlist[1];
+            resultlist = resultlist.toString();
+            console.log(resultlist)
 
-        resultlist = Object.values(result[0]);
-        resultpwd = resultlist[1];
-        resultlist = resultlist.toString();
-        console.log(resultlist)
+            res.send({
+                message: "Login success",
+                status: 'success',
+                data: {
+                    'id':userID,
+                    'password':userPwd
+                }
+            });
 
-            if (userPwd === resultpwd){
-                res.send({
-                    message: "Login success",
-                    status: 'success',
-                    data: {
-                        'id':userID,
-                        'password':userPwd
-                    }
-                });
-            } else {        // 어차피 여기서 안 먹힘. query에서 에러처리 해야함
-                res.send({
-                    message: "Login unsuccess",
-                    status: 'unsuccess',
-                    data: {
-                        'id':userID,
-                        'password':userPwd
-                    }
-                });
-            }
-    }); //일치하지 않는 경우 에러처리 해야함
+        } else{
+            res.send({
+                message: "Login unsuccess",
+                status: 'unsuccess',
+                data: {
+                    'id':userID,
+                    'password':userPwd
+                }
+            });
+        };
+    });
 });
 
 // 회원가입 정보 express -> mysql로 데이터 저장
-app.post('/api/join/:joinID/:joinName/:joinPwd', (req, res) => {
+app.post('/api/join/:joinID/', (req, res) => {
     const userName = req.body.username;
     const userID = req.body.id;
     const userPwd = req.body.password;
+    const userBirth = req.body.birthday;
+    const userSex = req.body.sex;
 
     const joinCheckQuery = 'SELECT (userID) from itemdb.user_info where userID = (?)'
     const joinQuery = 'INSERT INTO itemdb.user_info (userID, userPwd, userName) VALUES (?,?,?)'
 
-    itemdb.query(joinCheckQuery, [userID], function(err, check_res){
-        if (err){
-            console.log("err: ", err);
-        }
-        if (check_res.length){              // id 중복 처리
-            console.log('number of same ID: ', check_res.length);
-            console.log("found same ID: ", check_res[0]);
-            res.send({
-                status: 'duplicated_id',
-                data: {'id':userID}
-            });
-        } else{                             // id 중복되지 않을 때
-            res.send({
-                message: "Check ID successfully!",
-                status: 'check_success',
-                data: {
-                    'username':userName,
-                    'id':userID,
-                    'password':userPwd
-                }
+    if (userName!='' && userID!='' && userPwd!='' && userBirth!='' && userSex!=''){
+        itemdb.query(joinCheckQuery, [userID], function(err, check_res){
+            if (err){
+                console.log("err: ", err);
+            }
+            if (check_res.length){              // id 중복 처리
+                console.log('number of same ID: ', check_res.length);
+                console.log("found same ID: ", check_res[0]);
+                res.send({
+                    status: 'duplicated_id',
+                    data: {'id':userID}
+                });
+            }
+            else{                             // id 중복되지 않을 때
+                res.send({
+                    message: "Check ID successfully!",
+                    status: 'check_success',
+                    data: {
+                        'username':userName,
+                        'id':userID,
+                        'password':userPwd,
+                        'birthday':userBirth,
+                        'sex':userSex
+                    }
+                });
+            }
+        });
+    } else {
+        res.send({
+            message: "Fill out the rest!",
+            status: 'not_complete'
+        });
+    }
 
-            });
 
-        }
-
-    });
 });
 
-app.post('/api/join/:joinID/:joinName/:joinPwd/final', (req, res)=> {
+app.post('/api/join/:joinID/final', (req, res)=> {
     console.log("what? ", req.body);
 
     const joinID = req.body.joinID;
     const joinName = req.body.joinName;
     const joinPwd = req.body.joinPwd;
-    //const joinBirth = req.body.joinBirth;   //아래에서 적용시켜야함
-    //const joinSex = req.body.joinSex;
+
+    const joinBirth = req.body.joinBirth;   //아래에서 적용시켜야함
+    const joinSex = req.body.joinSex;
 
     userTaste = req.body.taste;
     userRebuy = req.body.repurchase;
@@ -152,11 +164,11 @@ app.post('/api/join/:joinID/:joinName/:joinPwd/final', (req, res)=> {
         userTasteDetail.push(userSour)
     }
     if (userFruit){
-        userFruit = "과일 맛"
+        userFruit = "과일맛"
         userTasteDetail.push(userFruit)
     }
     if (userMilk){
-        userMilk = "우유 맛"
+        userMilk = "우유맛"
         userTasteDetail.push(userMilk)
     }
     if (userVita){
@@ -185,7 +197,8 @@ app.post('/api/join/:joinID/:joinName/:joinPwd/final', (req, res)=> {
             console.log("Inserted values successfully!");
             res.send({
                 message: "Insert values successfully!",
-                status: 'value_success'
+                status: 'value_success',
+                data: {'id':joinID}
             });
         }
 

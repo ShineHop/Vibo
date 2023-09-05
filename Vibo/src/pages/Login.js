@@ -9,7 +9,7 @@ import {
     Pressable,
     View,
     Image,
-    Button
+    Button, Alert
 } from "react-native";
 
 import colors from './colors/colors';
@@ -75,7 +75,9 @@ function Login({navigation, props}) {
                         .then((res) => {userID = res.data.data['userID']})
                         .catch()
                     } else{
-                        console.warn('아이디와 비밀번호를 다시 확인해주세요');
+                         Alert.alert('로그인 오류', '아이디와 비밀번호를 다시 확인해주세요.', [
+                          {text: '확인', onPress: () => console.log('OK Pressed')},
+                        ]);
                     }
                 })
                 .catch(error => {

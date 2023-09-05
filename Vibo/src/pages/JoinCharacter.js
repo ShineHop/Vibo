@@ -17,11 +17,15 @@ import colors from './colors/colors';
 import fonts from './fonts/fonts';
 
 import axios from 'axios';
-import { storeUserData } from './UserData';
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { containsKey, getData, removeData, storeData } from "./AsyncService";
+import { storeUserData, getUserData } from './UserData';
 
 function JoinCharacter({route, navigation}) {
     const [joinInfoInputs, setJoinInfoInputs] = useState({
         joinID: joinID, joinName: joinName, joinPwd: joinPwd,
+        joinBirth: joinBirth, joinSex: joinSex,
         taste: false, repurchase: false, texture: false,
         sweet: false, sour: false, fruit: false, milk: false,
         vita: false, bio: false, diet: false, vagina: false
@@ -34,24 +38,32 @@ function JoinCharacter({route, navigation}) {
         }));
     };
 
+    const storeUserID = async (key: string, value: any) => {
+      try {
+        const stringValue = JSON.stringify(value);
+        await AsyncStorage.setItem(key, stringValue);
+        console.log("local: ", stringValue);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     // port 전송 코드
     const onJoinFinalPressed = () => {
-        console.log(joinInfoInputs)
+        console.log("JoinCharacter.js) joinInfoInputs: ",joinInfoInputs)
             try{
-                axios.post('http://172.30.1.34:3001/api/join/:joinID/:joinName/:joinPwd/final',
-                    {'joinID': joinID, 'joinName': joinName, 'joinPwd': joinPwd,
+                axios.post('http://172.30.1.34:3001/api/join/:joinID/final',
+                    {'joinID': joinInfoInputs.joinID, 'joinName': joinInfoInputs.joinName, 'joinPwd': joinInfoInputs.joinPwd,
+                    'joinBirth': joinInfoInputs.joinBirth, 'joinSex': joinInfoInputs.joinSex,
                     'taste': joinInfoInputs.taste, 'repurchase': joinInfoInputs.repurchase, 'texture': joinInfoInputs.texture,
                     'sweet': joinInfoInputs.sweet, 'sour': joinInfoInputs.sour, 'fruit': joinInfoInputs.fruit, 'milk': joinInfoInputs.milk,
                     'vita': joinInfoInputs.vita, 'bio': joinInfoInputs.bio, 'diet': joinInfoInputs.diet, 'vagina': joinInfoInputs.vagina})
                 .then((response)=> {
                     if  (response.data.status == 'value_success'){
+                        storeUserID('userID', response.data.data.id);   // 로컬저장소에 저장
                         storeUserData();        // 회원정보 로컬에 저장
                         navigation.replace('Tab');      // 해당 id의 home으로 접속해야 함 !!!!!
-                        axios.post('http://172.30.1.36:3001/api/onLogin', {'userID': joinID})
-                        .then(res => console.log(res))
-                        .catch()
                     }
-                    console.log(response);
                 })
                 .catch(error => {
                     if (error.response) {
@@ -80,7 +92,7 @@ function JoinCharacter({route, navigation}) {
     };
 
     // Sign Up custom button
-    const CustomButton = ({ onPress, text }) => {
+    const SignUpButton = ({ onPress, text }) => {
     	return (
         	<Pressable
             	onPress={onJoinFinalPressed}
@@ -182,7 +194,7 @@ function JoinCharacter({route, navigation}) {
                         <Text style={styles.checkText}>질 건강</Text>
                     </View>
                 </ScrollView>
-                <CustomButton
+                <SignUpButton
                     text="Sign Up"
                 />
                 </View>

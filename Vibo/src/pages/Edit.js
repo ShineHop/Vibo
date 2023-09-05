@@ -34,8 +34,8 @@ const Edit = ({route, navigation, props}) => {
 
     // modal 부분
     const [tasteModalVisible, setTasteModalVisible] = useState(false);
-    const [repurchaseModalVisible, setRepurchaseModalVisible] = useState(false);
     const [textureModalVisible, setTextureModalVisible] = useState(false);
+    const [repurchaseModalVisible, setRepurchaseModalVisible] = useState(false);
     const [functionModalVisible, setFunctionModalVisible] = useState(false);
 
 
@@ -65,7 +65,7 @@ const Edit = ({route, navigation, props}) => {
             const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));   //로컬 userInfo 가져오기
             const editModalTaste = userInfo.user.userTasteDetail;       // 로컬 taste
             const editModalTexture = userInfo.user.userTexture;         // 로컬 texture
-            const editModalRepurchase = userInfo.user.userRebuy;       // 로컬 function
+            const editModalRepurchase = userInfo.user.userRebuy;       // 로컬 repurchase
             const editModalFunction = userInfo.user.userFunction;       // 로컬 function
 
             console.log("editModalTaste: ", editModalTaste);

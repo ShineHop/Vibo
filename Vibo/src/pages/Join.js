@@ -10,7 +10,7 @@ import {
     TextInput,
     Pressable,
     Button,
-    Image
+    Image, Alert
 } from "react-native";
 
 import colors from './colors/colors';
@@ -37,7 +37,7 @@ function Join({route, navigation}) {
     };
 
     // Next custom button
-    const CustomButton = ({ onPress, text }) => {
+    const JoinDetailButton = ({ onPress, text }) => {
         return (
             <Pressable
                 onPress={onPress}
@@ -59,7 +59,7 @@ function Join({route, navigation}) {
     const onJoinNextPressed = () => {
         console.log(joinInputs)
             try{
-                axios.post('http://172.30.1.34:3001/api/join/' + joinInputs.id + '/' + joinInputs.username + '/' + joinInputs.password,
+                axios.post('http://172.30.1.34:3001/api/join/' + joinInputs.id,
                     {'username': joinInputs.username, 'birthday': joinInputs.birthday, 'sex': joinInputs.sex,
                     'id': joinInputs.id, 'password': joinInputs.password})
                 .then((response)=> {
@@ -67,14 +67,22 @@ function Join({route, navigation}) {
                         joinID = response.data.data['id'];
                         joinName = response.data.data['username'];
                         joinPwd = response.data.data['password'];
-                        //joinBirth = response.data.data['birthday'];
-                        //joinSex = response.data.data['sex'];
+                        joinBirth = response.data.data['birthday'];
+                        joinSex = response.data.data['sex'];
 
                         navigation.navigate('JoinCharPage');
 
-                    } else {
+                    }
+                    else if (response.data.status == 'not_complete'){
+                        Alert.alert('회원정보 기입 누락', '항목을 모두 입력해주세요.', [
+                          {text: '확인', onPress: () => console.log('OK Pressed')},
+                        ]);
+                    }
+                    else {
                         console.log(response.data.status);
-                        console.warn('이미 존재하는 아이디입니다.')     // 재입력 문구 띄우기
+                        Alert.alert('아이디 중복', '이미 존재하는 아이디입니다.', [
+                          {text: '확인', onPress: () => console.log('OK Pressed')},
+                        ]);
                     }
                 })
                 .catch(error => {
@@ -174,7 +182,7 @@ function Join({route, navigation}) {
                     <Image
                         style={styles.icon}
                         source={require('./images/paw.png')} />
-                    <CustomButton
+                    <JoinDetailButton
                         onPress={onJoinNextPressed}
                         text="취향정보 입력하기"
                     />

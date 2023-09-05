@@ -68,7 +68,7 @@ function MyPage({route, navigation}) {
 
         if (userData[item].userTasteDetail == ''){userData[item].userTasteDetail = "상관없음"}
         if (userData[item].userTexture == ''){userData[item].userTexture = '상관없음'} else {userData[item].userTexture = '중요함'};
-        if (userData[item].userRebuy == ''){userData[item].userRebuy = '상관없음'} else {userData[item].userTexture = '중요함'};
+        if (userData[item].userRebuy == ''){userData[item].userRebuy = '상관없음'} else {userData[item].userRebuy = '중요함'};
         if (userData[item].userFunction == ''){userData[item].userFunction = '상관없음'};
 
         if (editName){
@@ -78,13 +78,12 @@ function MyPage({route, navigation}) {
         return(
             <View>
                 <View style={styles.infoSet}>
-                    <Text>회원정보</Text>
                     <View style={{flexDirection:'row'}}>
                         <Image
                             style={styles.profile}
                             source={require('./images/vibo_profile.png')} />
                         <View>
-                            <Text style={styles.infoText}>{userData[item].userName}</Text>
+                            <Text style={styles.infoText}>{userData[item].userName} 님</Text>
                             <View style={{flexDirection:'row'}}>
                                 <Text style={{marginTop: '20%'}}>20대</Text>
                                 <Text style={{marginTop: '20%'}}>/</Text>
@@ -104,7 +103,7 @@ function MyPage({route, navigation}) {
                 </View>
                 <View style={styles.infoSet}>
                     <Text>다른 사용자들의 재구매 의사가 중요한가요?</Text>
-                    <Text style={styles.infoText}>{userData[item].userTexture}</Text>
+                    <Text style={styles.infoText}>{userData[item].userRebuy}</Text>
                 </View>
                 <View style={styles.infoSet}>
                     <Text>어떤 기능의 제품을 원하시나요?</Text>
@@ -113,6 +112,28 @@ function MyPage({route, navigation}) {
             </View>
         )
     }
+
+    const onLoginPressed = () => {
+        try{
+            AsyncStorage.clear();
+            navigation.navigate('Auth');
+
+        }catch (err){
+            console.log(err)
+        };
+    }
+
+    const LogoutButton = ({onPress, text}) => {
+        return (
+            <Pressable
+                onPress={onLoginPressed}
+            >
+                <Text style={styles.logoutBtnText}>
+                    {text}
+                </Text>
+            </Pressable>
+        );
+    };
 
     // Edit custom button
     const CustomButton = ({ onPress, text }) => {
@@ -126,7 +147,7 @@ function MyPage({route, navigation}) {
                 </Text>
             </Pressable>
         );
-    }
+    };
 
 
     return (
@@ -135,19 +156,19 @@ function MyPage({route, navigation}) {
         <View style={{flex:1}}>
             <View style={styles.mypageTopContainer}>
                 <Text style={styles.joinText}>My Page</Text>
-                <Pressable onPress={() => navigation.navigate('JoinPage')}>
-                    <Text style={styles.logoutBtnText}>Logout</Text>
-                </Pressable>
+                <LogoutButton
+                    text="Logout"
+                />
             </View>
 
 
             <View style={styles.infoContainer}>
                 <ScrollView>
-                <View style={styles.infoTextContainer}>
-                      <FlatList
-                        data={Object.keys(userData)}
-                        renderItem= {renderItem}/>
-                </View>
+                    <View style={styles.infoTextContainer}>
+                          <FlatList
+                            data={Object.keys(userData)}
+                            renderItem= {renderItem}/>
+                    </View>
                 </ScrollView>
                 <View style={{flexDirection: "row", alignSelf: 'flex-end'}}>
                     <Image
@@ -156,7 +177,7 @@ function MyPage({route, navigation}) {
                     <CustomButton
                         onPress={()=>
                         navigation.navigate('DrawerNavigationRoutes',{screen:"EditPage"})}
-                        text="취향이 바뀌었어요"
+                        text="상세정보 수정하기"
                     />
                 </View>
 
