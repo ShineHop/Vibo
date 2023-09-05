@@ -17,6 +17,7 @@ import colors from './colors/colors';
 import fonts from './fonts/fonts';
 
 import axios from 'axios';
+import { storeUserData } from './UserData';
 
 function JoinCharacter({route, navigation}) {
     const [joinInfoInputs, setJoinInfoInputs] = useState({
@@ -44,6 +45,7 @@ function JoinCharacter({route, navigation}) {
                     'vita': joinInfoInputs.vita, 'bio': joinInfoInputs.bio, 'diet': joinInfoInputs.diet, 'vagina': joinInfoInputs.vagina})
                 .then((response)=> {
                     if  (response.data.status == 'value_success'){
+                        storeUserData();        // 회원정보 로컬에 저장
                         navigation.replace('Tab');      // 해당 id의 home으로 접속해야 함 !!!!!
                         axios.post('http://172.30.1.36:3001/api/onLogin', {'userID': joinID})
                         .then(res => console.log(res))

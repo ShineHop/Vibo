@@ -7,11 +7,10 @@
 # train set의 모든 가능한 아이템 pair의 Cosine similarities 계산
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
-import numpy as np
 import sys
 import pymysql.cursors
 
-conn=pymysql.connect(host='localhost',port=3306,user='root',password='0000',db='itemdb',charset='utf8',autocommit=True,cursorclass=pymysql.cursors.DictCursor)
+conn = pymysql.connect(host='localhost', port=3306, user='root', password='', db='itemdb', charset='utf8', autocommit=True, cursorclass=pymysql.cursors.DictCursor)
 cursor1 = conn.cursor()
 cursor2 = conn.cursor()
 getlikedb="select * from likedb"

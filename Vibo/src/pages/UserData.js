@@ -13,7 +13,7 @@ export const storeUserData = async () => {
           console.log("getData_userID: ", userID);
           try{
                 axios.get('http://172.30.1.35:3001/api/onLogin/'+ userID +'/mypage')
-                .then((response)=> {
+                .then((response) => {
                     if  (response.data.status == 'found_userInfo'){
                         console.log("hi: ", response.data);
                         //storeData('userInfo', response.data.data);
@@ -27,20 +27,22 @@ export const storeUserData = async () => {
                         //infoArray = [...infoArray, response.data.data]
                         //console.log(infoArray);
                         //storeData('userInfo', infoArray);
+
                         const temp = {user:response.data.data};
                         console.log("temp: ", temp);
                         storeData('userInfo', temp);
                     }
+
                 })
                 .catch(error => { console.log("userdata: ", err); });
 
             } catch (err){
-                console.log("userdata: ", err)
+                console.log("userdata.js: ", err)
             };
         }
 
       } catch (error) {
-        console.log("userdata: ", error);
+        console.log("userdata.js: ", error);
       }
 };
 

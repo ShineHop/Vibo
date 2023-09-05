@@ -66,7 +66,9 @@ function Join({route, navigation}) {
                     if  (response.data.status == 'check_success'){
                         joinID = response.data.data['id'];
                         joinName = response.data.data['username'];
-                        joinPwd = response.data.data['password']
+                        joinPwd = response.data.data['password'];
+                        //joinBirth = response.data.data['birthday'];
+                        //joinSex = response.data.data['sex'];
 
                         navigation.navigate('JoinCharPage');
 

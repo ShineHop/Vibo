@@ -19,6 +19,8 @@ import fonts from '../pages/fonts/fonts';
 import axios from 'axios';
 import stylelist from '../style';
 
+import { storeUserData } from '../pages/UserData';
+
 const TasteModal = (props) => {
     const {modalVisible, setModalVisible} = props;
     const [tasteUpdate, setTasteUpdate] = useState({
@@ -41,7 +43,7 @@ const TasteModal = (props) => {
                     'sweet': tasteUpdate.sweet, 'sour': tasteUpdate.sour, 'fruit': tasteUpdate.fruit, 'milk': tasteUpdate.milk })
                 .then((response)=> {
                     if  (response.data.status == 'update_taste_success'){
-                        setModalVisible(!modalVisible)
+                        setModalVisible(!modalVisible);
                     }
                 })
                 .catch(error => {

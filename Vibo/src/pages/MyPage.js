@@ -22,27 +22,66 @@ import { storeUserData, getUserData } from './UserData';
 
 
 function MyPage({route, navigation}) {
-    storeUserData();
 
     const [userData, setUserData] = useState([]);
+
     useEffect(() => {
         async function getData() {
           const _persons = await getUserData();
           setUserData(_persons);
         }
-        getData();
-    }, []);
 
-    console.log("userData: ", Object.keys(userData));
-    console.log(userData.userName);
+        getData();
+
+    },[]);
 
     const renderItem=({ item }) =>{
+        const searchRegExp1 = new RegExp('\\[', 'g');
+        const searchRegExp2 = new RegExp('\\]', 'g');
+        const searchRegExp3 = new RegExp('\\"', 'g');
+
+        userData[item].userTasteDetail =  userData[item].userTasteDetail.replace(searchRegExp1, '');
+        userData[item].userTasteDetail =  userData[item].userTasteDetail.replace(searchRegExp2, '');
+        userData[item].userTasteDetail =  userData[item].userTasteDetail.replace(searchRegExp3, '');
+        userData[item].userFunction =  userData[item].userFunction.replace(searchRegExp1, '');
+        userData[item].userFunction =  userData[item].userFunction.replace(searchRegExp2, '');
+        userData[item].userFunction =  userData[item].userFunction.replace(searchRegExp3, '');
+
+        if (userData[item].userTasteDetail == ''){userData[item].userTasteDetail = "상관없음"}
+        if (userData[item].userTexture == ''){userData[item].userTexture = '상관없음'};
+        if (userData[item].userFunction == ''){userData[item].userFunction = '상관없음'};
+
         return(
             <View>
-            <Text style={styles.infoText}>{userData[item].userName}</Text>
-            <Text style={styles.infoText}>{userData[item].userTasteDetail}</Text>
-            <Text style={styles.infoText}>{userData[item].userTexture}</Text>
-            <Text style={styles.infoText}>{userData[item].userFunction}</Text>
+                <View style={styles.infoSet}>
+                    <Text>회원정보</Text>
+                    <View style={{flexDirection:'row'}}>
+                        <Image
+                            style={styles.profile}
+                            source={require('./images/vibo_profile.png')} />
+                        <View>
+                            <Text style={styles.infoText}>{userData[item].userName}</Text>
+                            <View style={{flexDirection:'row'}}>
+                                <Text style={{marginTop: '20%'}}>20대</Text>
+                                <Text style={{marginTop: '20%'}}>/</Text>
+                                <Text style={{marginTop: '20%'}}>여성</Text>
+                            </View>
+                        </View>
+
+                    </View>
+                </View>
+                <View style={styles.infoSet}>
+                    <Text>추천 받고 싶은 맛</Text>
+                    <Text style={styles.infoText}>{userData[item].userTasteDetail}</Text>
+                </View>
+                <View style={styles.infoSet}>
+                    <Text>제품의 목넘김 여부</Text>
+                    <Text style={styles.infoText}>{userData[item].userTexture}</Text>
+                </View>
+                <View style={styles.infoSet}>
+                    <Text>추천 받고 싶은 기능의 제품</Text>
+                    <Text style={styles.infoText}>{userData[item].userFunction}</Text>
+                </View>
             </View>
         )
     }
@@ -75,20 +114,6 @@ function MyPage({route, navigation}) {
 
 
             <View style={styles.infoContainer}>
-                <View style={styles.profileContainer}>
-                    <Image
-                        style={styles.profile}
-                        source={require('./images/vibo_profile.png')} />
-                    <View style={{flexDirection:'col'}}>
-                        <Text style={{marginTop: '40%'}}>username</Text>
-                        <View style={{flexDirection:'row'}}>
-                            <Text style={{marginTop: '20%'}}>20대</Text>
-                            <Text style={{marginTop: '20%'}}>/</Text>
-                            <Text style={{marginTop: '20%'}}>여성</Text>
-                        </View>
-                    </View>
-                </View>
-
                 <View style={styles.infoTextContainer}>
                       <FlatList
                         data={Object.keys(userData)}
@@ -146,20 +171,27 @@ const styles = StyleSheet.create({
     profile: {
         width: 110, height: 110
     },
-    infoTextContainer: {
 
+
+    infoTextContainer: {
+        marginTop: 30
     },
-    infoText: {
+    infoSet: {
         width: '80%',
         padding: 5,
+        marginBottom: 15,
         borderWidth: 1.5,
         borderRadius: 10,
         borderColor: colors.Gray3,
-        marginBottom: 10,
-        fontSize: 18,
+        alignSelf: 'center',
+    },
+    infoText: {
+        fontSize: 15,
         fontWeight: '700',
         color: colors.Black,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginTop: 5,
+        marginBottom: 5
     },
 
 
@@ -202,7 +234,7 @@ const styles = StyleSheet.create({
         width: '50%',
         height: 50,
         alignItems: 'center',
-        marginTop: 30,
+        marginTop: 20,
         marginBottom: 11,
         marginRight: '5%',
         borderRadius: 50,

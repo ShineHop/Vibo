@@ -17,6 +17,7 @@ import fonts from './fonts/fonts';
 
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { storeUserData } from './UserData';
 
 function Login({navigation, props}) {
     const [loginInputs, setLoginInputs] = useState({
@@ -67,6 +68,7 @@ function Login({navigation, props}) {
                         console.log(response.data.data.id)      //2023052120
 
                         storeUserID('userID', response.data.data.id);   // 로컬저장소에 저장
+                        storeUserData();            // 회원정보 로컬에 저장
 
                         navigation.replace('Tab');   // 해당 id의 home으로 접속해야 함 !!!!!
                         axios.post('http://172.30.1.35:3001/api/onLogin/' + loginInputs.id, {'userID':loginInputs.id})

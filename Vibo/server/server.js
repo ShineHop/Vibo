@@ -107,6 +107,8 @@ app.post('/api/join/:joinID/:joinName/:joinPwd/final', (req, res)=> {
     const joinID = req.body.joinID;
     const joinName = req.body.joinName;
     const joinPwd = req.body.joinPwd;
+    //const joinBirth = req.body.joinBirth;   //아래에서 적용시켜야함
+    //const joinSex = req.body.joinSex;
 
     userTaste = req.body.taste;
     userRebuy = req.body.repurchase;
@@ -277,11 +279,11 @@ app.use('/api/user/:userID/mypage/edit/taste', (req, res) => {
             updateTasteDetail.push(sourUpdate)
         }
         if (fruitUpdate){
-            fruitUpdate = "과일 맛"
+            fruitUpdate = "과일맛"
             updateTasteDetail.push(fruitUpdate)
         }
         if (milkUpdate){
-            milkUpdate = "우유 맛"
+            milkUpdate = "우유맛"
             updateTasteDetail.push(milkUpdate)
         }
     } else{
@@ -430,7 +432,7 @@ app.get('/api/data', (req, res) => {
 app.get('/api/user/:userID/recommend', (req, res) => {
 
       const { userID } = req.params;
-      const query = 'SELECT userTaste,userTasteDetail,userRebuy,userTexture,userFunction FROM userinfo WHERE userID = ? ;';
+      const query = 'SELECT userTaste,userTasteDetail,userRebuy,userTexture,userFunction FROM user_info WHERE userID = ? ;';
       const query2 = 'SELECT * FROM itemdb WHERE ItemID in (?) ;';
 
       itemdb.query(query,[userID],function(err,rows) {

@@ -37,18 +37,10 @@ const Edit = ({route, navigation, props}) => {
     const [textureModalVisible, setTextureModalVisible] = useState(false);
     const [functionModalVisible, setFunctionModalVisible] = useState(false);
 
-    const [userName, setUserName] = useState([]);
-    useEffect(() => {
-        async function getData() {
-          const _persons = await getUserData();
-          setUserName(_persons);
-        }
-        getData();
-    }, []);
-    //console.log("edit: ", userName.user.userName);
-    //const defaultName = JSON.Stringify(userName.user.userName);
 
-   // 닉네임, 프로필
+   //const defaultName = JSON.Stringify(userName.user.userName);
+
+   // edit 닉네임, 프로필
     const [editInputs, setEditInputs] = useState({
        username: '',
     });
@@ -75,7 +67,8 @@ const Edit = ({route, navigation, props}) => {
             .then((response)=> {
                 if  (response.data.status == 'update_username_success'){
                     console.log("update_username_success");
-                    navigation.navigate('MyPage');
+                    //storeUserData();    //로컬저장소에 저장
+                    navigation.navigate('MyPage', {sData:storeUserData()});
                 }
             })
             .catch(error => {
@@ -113,7 +106,6 @@ const Edit = ({route, navigation, props}) => {
     }
 
 
-
     return (
         <SafeAreaView style={{flex:1}}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -138,7 +130,7 @@ const Edit = ({route, navigation, props}) => {
 
             <View style={styles.editTopContainer}>
                 <Text style={styles.joinText}> Edit </Text>
-                <Pressable onPress={() => navigation.navigate('MyPage')}>
+                <Pressable onPress={() => navigation.goBack()}>
                     <Text style={styles.logoutBtnText}>Back</Text>
                 </Pressable>
             </View>
@@ -163,7 +155,8 @@ const Edit = ({route, navigation, props}) => {
                             style={styles.customInput}
                             value={editInputs.username}
                             onChangeText={(text) => {handleInputChange('username', text)}}
-                            placeholder={'Username'}
+                            placeholder={'Username'}            ///////durl!!!!!!!!
+
                         />
                     </View>
                     <ChangeInfoButton
