@@ -19,6 +19,10 @@ import fonts from '../pages/fonts/fonts';
 import axios from 'axios';
 import stylelist from '../style';
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { containsKey, getData, removeData, storeData } from "../pages/AsyncService";
+import { storeUserData } from '../pages/UserData';
+
 const FunctionModal = (props) => {
     const {modalVisible, setModalVisible} = props;
     const [functionUpdate, setFunctionUpdate] = useState({
@@ -33,12 +37,15 @@ const FunctionModal = (props) => {
     };
 
     // port 전송 코드
-    const onFuncUpdatePressed = () => {
+    const onFuncUpdatePressed = async () => {
             try{
-                axios.post('http://172.30.1.35:3001/api/user/2023052702/mypage/edit/function',
+                const userID = JSON.parse(await AsyncStorage.getItem("userID"));
+                console.log("func_userid: ", userID);
+                axios.post('http://172.30.1.34:3001/api/user/'+userID+'/mypage/edit/function',
                     {'vita': functionUpdate.vita, 'bio': functionUpdate.bio, 'diet': functionUpdate.diet, 'vagina': functionUpdate.vagina })
                 .then((response)=> {
                     if  (response.data.status == 'update_func_success'){
+                        storeUserData();
                         setModalVisible(!modalVisible)
                     }
                 })

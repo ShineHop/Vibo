@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {
-    SafeAreaView,
+    SafeAreaView, ScrollView,
     TouchableWithoutFeedback,
     Keyboard,
     StyleSheet,
@@ -35,7 +35,26 @@ function MyPage({route, navigation}) {
 
     },[]);
 
+
     const renderItem=({ item }) =>{
+        //edit.js에서 넘겨받은 props
+        const eData = route.params;
+        console.log('eData: ', eData);
+        if (typeof(eData) != 'undefined'){
+                editName = route.params.eName;
+                editTaste = route.params.eTaste;
+                editTexture = route.params.eTexture;
+                editRepurchase = route.params.eRepurchase;
+                editFunction = route.params.eFunction;
+                console.log("eName: ", editName, "eTaste: ", editTaste, "eTexture: ", editTexture, "editRepurchase: ", editRepurchase, "eFunction: ", editFunction);
+
+                userData[item].userTasteDetail = editTaste; //modal에서 변경되면 값 지정
+                userData[item].userTexture = editTexture;
+                userData[item].userRebuy = editRepurchase;
+                userData[item].userFunction = editFunction;
+
+        } else {editName = ''}
+
         const searchRegExp1 = new RegExp('\\[', 'g');
         const searchRegExp2 = new RegExp('\\]', 'g');
         const searchRegExp3 = new RegExp('\\"', 'g');
@@ -48,8 +67,13 @@ function MyPage({route, navigation}) {
         userData[item].userFunction =  userData[item].userFunction.replace(searchRegExp3, '');
 
         if (userData[item].userTasteDetail == ''){userData[item].userTasteDetail = "상관없음"}
-        if (userData[item].userTexture == ''){userData[item].userTexture = '상관없음'};
+        if (userData[item].userTexture == ''){userData[item].userTexture = '상관없음'} else {userData[item].userTexture = '중요함'};
+        if (userData[item].userRebuy == ''){userData[item].userRebuy = '상관없음'} else {userData[item].userTexture = '중요함'};
         if (userData[item].userFunction == ''){userData[item].userFunction = '상관없음'};
+
+        if (editName){
+            userData[item].userName = editName;
+            storeUserData();}
 
         return(
             <View>
@@ -71,15 +95,19 @@ function MyPage({route, navigation}) {
                     </View>
                 </View>
                 <View style={styles.infoSet}>
-                    <Text>추천 받고 싶은 맛</Text>
+                    <Text>추천 받고 싶은 제품의 맛은 무엇인가요?</Text>
                     <Text style={styles.infoText}>{userData[item].userTasteDetail}</Text>
                 </View>
                 <View style={styles.infoSet}>
-                    <Text>제품의 목넘김 여부</Text>
+                    <Text>제품의 목넘김 여부가 중요한가요?</Text>
                     <Text style={styles.infoText}>{userData[item].userTexture}</Text>
                 </View>
                 <View style={styles.infoSet}>
-                    <Text>추천 받고 싶은 기능의 제품</Text>
+                    <Text>다른 사용자들의 재구매 의사가 중요한가요?</Text>
+                    <Text style={styles.infoText}>{userData[item].userTexture}</Text>
+                </View>
+                <View style={styles.infoSet}>
+                    <Text>어떤 기능의 제품을 원하시나요?</Text>
                     <Text style={styles.infoText}>{userData[item].userFunction}</Text>
                 </View>
             </View>
@@ -114,12 +142,13 @@ function MyPage({route, navigation}) {
 
 
             <View style={styles.infoContainer}>
+                <ScrollView>
                 <View style={styles.infoTextContainer}>
                       <FlatList
                         data={Object.keys(userData)}
                         renderItem= {renderItem}/>
                 </View>
-
+                </ScrollView>
                 <View style={{flexDirection: "row", alignSelf: 'flex-end'}}>
                     <Image
                         style={styles.icon}
@@ -177,7 +206,7 @@ const styles = StyleSheet.create({
         marginTop: 30
     },
     infoSet: {
-        width: '80%',
+        width: '90%',
         padding: 5,
         marginBottom: 15,
         borderWidth: 1.5,

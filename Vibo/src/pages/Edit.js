@@ -31,14 +31,13 @@ import { storeUserData, getUserData } from './UserData';
 
 
 const Edit = ({route, navigation, props}) => {
+
     // modal 부분
     const [tasteModalVisible, setTasteModalVisible] = useState(false);
     const [repurchaseModalVisible, setRepurchaseModalVisible] = useState(false);
     const [textureModalVisible, setTextureModalVisible] = useState(false);
     const [functionModalVisible, setFunctionModalVisible] = useState(false);
 
-
-   //const defaultName = JSON.Stringify(userName.user.userName);
 
    // edit 닉네임, 프로필
     const [editInputs, setEditInputs] = useState({
@@ -60,20 +59,37 @@ const Edit = ({route, navigation, props}) => {
     // port 전송 코드
     const onUpdatePressed = async() => {
         try{
-            const userID = JSON.parse(await AsyncStorage.getItem("userID"));
+            const userID = JSON.parse(await AsyncStorage.getItem("userID"));    // 로컬 id 가져오기
             console.log("edit_userid: ", userID);
-            axios.post('http://172.30.1.35:3001/api/user/'+userID+'/mypage/edit/username',
-                {'username': editInputs.username})
-            .then((response)=> {
-                if  (response.data.status == 'update_username_success'){
-                    console.log("update_username_success");
-                    //storeUserData();    //로컬저장소에 저장
-                    navigation.navigate('MyPage', {sData:storeUserData()});
-                }
-            })
-            .catch(error => {
-                console.log("edit: ", err);
-            });
+
+            const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));   //로컬 userInfo 가져오기
+            const editModalTaste = userInfo.user.userTasteDetail;       // 로컬 taste
+            const editModalTexture = userInfo.user.userTexture;         // 로컬 texture
+            const editModalRepurchase = userInfo.user.userRebuy;       // 로컬 function
+            const editModalFunction = userInfo.user.userFunction;       // 로컬 function
+
+            console.log("editModalTaste: ", editModalTaste);
+            console.log("editModalTexture: ", editModalTexture);
+            console.log("editModalRepurchase: ", editModalRepurchase);
+            console.log("editModalFunction: ", editModalFunction);
+
+
+            if (editInputs.username){   //사용자가 username에 입력을 하면
+                axios.post('http://172.30.1.34:3001/api/user/'+userID+'/mypage/edit/username',
+                    {'username': editInputs.username})
+                .then((response)=> {
+                    if  (response.data.status == 'update_username_success'){
+                        console.log("update_username_success");
+
+                        navigation.navigate('MyPage', {eName: editInputs.username, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction});
+                    }
+                })
+                .catch(error => {
+                    console.log("edit: ", err);
+                });
+
+            } else{navigation.navigate('MyPage', {eName: userInfo.user.userName, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction})};
+
         } catch (err){
             console.log("edit: ", err);
         };
@@ -149,13 +165,13 @@ const Edit = ({route, navigation, props}) => {
                 </View>
 
                 <View style={styles.infoTextContainer}>
-                    <View style={{flexDirection: "row", justifyContent: 'flex-end', marginRight: '5%'}}>
+                    <View style={{flexDirection: "row", justifyContent: 'flex-end', marginRight: '5%', marginBottom: 20}}>
                         <Text style={{alignSelf: 'center'}}> 닉네임 </Text>
                         <TextInput
                             style={styles.customInput}
                             value={editInputs.username}
                             onChangeText={(text) => {handleInputChange('username', text)}}
-                            placeholder={'Username'}            ///////durl!!!!!!!!
+                            placeholder={'변경하시려면 원하는 닉네임을 입력하세요.'}
 
                         />
                     </View>

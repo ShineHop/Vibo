@@ -21,18 +21,24 @@ import fonts from '../pages/fonts/fonts';
 import axios from 'axios';
 import stylelist from '../style';
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { containsKey, getData, removeData, storeData } from "../pages/AsyncService";
+import { storeUserData } from '../pages/UserData';
 
 const TextureModal = (props) => {
     const {modalVisible, setModalVisible} = props;
     const [textureUpdate, setTextureUpdate] = useState('yes')
 
     // port 전송 코드
-    const onTextureUpdatePressed = () => {
+    const onTextureUpdatePressed = async () => {
             try{
-                axios.post('http://172.30.1.35:3001/api/user/2023052702/mypage/edit/texture',
+                const userID = JSON.parse(await AsyncStorage.getItem("userID"));
+                console.log("texture_userid: ", userID);
+                axios.post('http://172.30.1.34:3001/api/user/'+userID+'/mypage/edit/texture',
                     {'texture': textureUpdate})
                 .then((response)=> {
                     if  (response.data.status == 'update_texture_success'){
+                        storeUserData();
                         setModalVisible(!modalVisible)
                     }
                 })
