@@ -6,7 +6,7 @@ import { useNavigation ,NavigationContainer} from "@react-navigation/native";
 import axios from 'axios';
 import Icon from "react-native-vector-icons/Ionicons";
 import Slider from '@react-native-community/slider';
-
+import imagePath from '../components/imagePath.json'
 
 function Detail({route}) {
   const navigation = useNavigation();
@@ -15,8 +15,9 @@ function Detail({route}) {
   const[averscore,setAverScore] =useState(0);
   const[scores, setMyScore] = useState(myscore);
   const[IBCFitemlist, setIBCFitems] = useState();
+  console.log('route.params:',route.params)
+  const itemid = route.params;
 
-  const itemid = route.params.item.ItemID;
 useEffect(() => { 
   async function fetchScore(){
     await axios.get('http://192.168.142.1:3001/api/user/2023052706/ratings/'+itemid).then((response)=>
@@ -139,7 +140,8 @@ function showflatlist(){
         <TouchableOpacity onPress={()=>[navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})]}>
         <View style={styles.flatlistcontainer}>
         <View >
-          <Image source={require('./images/paw.png')} style = {styles.image}></Image>
+          <Image source={require("../components/images/1.jpg")} style = {styles.image}/>
+          
         </View>
           <View style={styles.flatlisttext}>
             <Text style={[stylelist.Text_Regular]} key={item.ItemID}>{item.item}</Text>
@@ -155,8 +157,9 @@ const RatingUpdated=([scores])=>{
     if(response.ok){
       return response.json();}},[itemid])
     console.log('score updated')  }
-  
-
+    jsonfile = JSON.parse(JSON.stringify(Object.values(itemid)))
+    console.log('itemid:',jsonfile)
+    console.log('detailimage',imagePath[Object.values(itemid)[0][3]])
   return(    
     <SafeAreaView style={{flex:1, backgroundColor:'#ffffff'}}   >
       <ScrollView>    
@@ -168,8 +171,7 @@ const RatingUpdated=([scores])=>{
     <View style={styles.container}> 
         <Text style={[stylelist.Title_Bold,stylelist.black,stylelist.line]} >About</Text>
         <View style={styles.imagecontainer}>
-          <Image source={require('./images/paw.png')} style = {styles.image}></Image>
-        </View>
+          <Image source={route.params.item.src ? require('./images/paw.png'): route.params.item.src} style = {styles.image}/></View>
         <View style={styles.itemcontainer}>
           <Text style={[stylelist.Title_SemiBold,stylelist.black,styles.text ]}>{route.params.item.item}</Text>
               <TouchableOpacity onPress ={()=>[ButtonClicked(route.params.item.ItemID),setState(!likeState)]} >

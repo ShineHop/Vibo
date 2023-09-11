@@ -75,6 +75,7 @@ def cosine_similar(random):
     cosine_df = pd.read_csv(currentPath+"/models/cosine_similarity.csv",encoding='utf-8')
     cos_sim = []
     target_text = cosine_df.iloc[random]
+    
 
 
     for i in range(len(cosine_df)):
@@ -159,6 +160,7 @@ def RecommendItems(user_choice):
     #Counter(first).most_common()
 
     most = set(df[df.iloc[:,7]==most_cluster[0]]['ItemID'])
+    
     choice_random = random.choice(list(most))
     result = set(cosine_similar(choice_random))
     print (result,end='')

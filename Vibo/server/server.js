@@ -434,13 +434,25 @@ app.use('/api/user/:userID/mypage/edit/function', (req, res) => {
 });
 
 
-app.get('/api/data', (req, res) => {
-    const query = 'SELECT * FROM itemdb';
-    itemdb.query(query, (err, rows) => {
-
-      res.json(rows);
-    });
-  });
+app.get('/api/data', (req,res) => {
+    const query = 'SELECT ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능 FROM itemdb;';
+    itemdb.query(query, (err, rows) => { 
+        if(err){
+            console.log(err)}
+        else{
+            res.json(rows)
+            }        
+    })});
+    
+app.get('/api/dataimg', (req,res) => {
+    const imgquery = 'SELECT ItemID,IMAGE FROM itemdb; '
+    itemdb.query(imgquery,(err,rows)=>{
+        if(err){
+            console.log(err)}
+        else{
+            res.json(rows)
+        }      
+})})
 
 app.get('/api/user/:userID/recommend', (req, res) => {
 
