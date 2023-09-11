@@ -13,7 +13,7 @@ const All=({userID})=>{
   const [likeState, setState] = useState([true]);
 
   useEffect(() => { 
-    axios.get('http://172.30.1.34:3001/api/user/2023052706/like').then((response)=>{
+    axios.get('http://192.168.142.1:3001/api/user/2023052706/like').then((response)=>{
       setItems(response.data);}).catch((error)=>{console.log(error);});
 }, [likeState]); // 로그인된 사용자 ID가 변경될 때마다 실행
 
@@ -26,7 +26,7 @@ const All=({userID})=>{
       setState(true);
     }
     
-    axios.post('http://172.30.1.34:3001/api/user/2023052706/like/'+ id +'/update').then((response)=>
+    axios.post('http://192.168.142.1:3001/api/user/2023052706/like/'+ id +'/update').then((response)=>
     {    
       console.log(response);
         if(response.ok){

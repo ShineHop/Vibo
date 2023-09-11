@@ -75,7 +75,7 @@ const Edit = ({route, navigation, props}) => {
 
 
             if (editInputs.username){   //사용자가 username에 입력을 하면
-                axios.post('http://172.30.1.34:3001/api/user/'+userID+'/mypage/edit/username',
+                axios.post('http://192.168.142.1:3001/api/user/'+userID+'/mypage/edit/username',
                     {'username': editInputs.username})
                 .then((response)=> {
                     if  (response.data.status == 'update_username_success'){

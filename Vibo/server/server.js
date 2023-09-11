@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 const itemdb = mysql.createConnection({
     user:"root",
     host : "localhost",
-    password:'',
+    password:'0000',
     database:"itemdb"
 });
 const spawn = require('child_process').spawn;
@@ -32,7 +32,7 @@ itemdb.connect();
 app.post('/api/login/', (req,res, next)=>{
     const userID = req.body.id
     const userPwd = req.body.password;
-    const matchingQuery = "select * from itemdb.user_info where userID = ?  AND userPwd = ?;"
+    const matchingQuery = "select * from itemdb.userinfo where userID = ?  AND userPwd = ?;"
 
     itemdb.query(matchingQuery, [userID, userPwd], function(err, login_res){
         if (err) {console.log("error: ", err)};
@@ -72,8 +72,8 @@ app.post('/api/join/:joinID/', (req, res) => {
     const userBirth = req.body.birthday;
     const userSex = req.body.sex;
 
-    const joinCheckQuery = 'SELECT (userID) from itemdb.user_info where userID = (?)'
-    const joinQuery = 'INSERT INTO itemdb.user_info (userID, userPwd, userName) VALUES (?,?,?)'
+    const joinCheckQuery = 'SELECT (userID) from itemdb.userinfo where userID = (?)'
+    const joinQuery = 'INSERT INTO itemdb.userinfo (userID, userPwd, userName) VALUES (?,?,?)'
 
     if (userName!='' && userID!='' && userPwd!='' && userBirth!='' && userSex!=''){
         itemdb.query(joinCheckQuery, [userID], function(err, check_res){
@@ -138,7 +138,7 @@ app.post('/api/join/:joinID/final', (req, res)=> {
     userDiet = req.body.diet;
     userVagina = req.body.vagina;
 
-    const joinQuery = 'INSERT INTO itemdb.user_info (userID, userPwd, userName, userTaste, userRebuy, userTexture, userTasteDetail, userFunction) VALUES (?,?,?,?,?,?,?,?)'
+    const joinQuery = 'INSERT INTO itemdb.userinfo (userID, userPwd, userName, userTaste, userRebuy, userTexture, userTasteDetail, userFunction) VALUES (?,?,?,?,?,?,?,?)'
 
     if (userTaste){
         userTaste = "맛있다"
@@ -208,7 +208,7 @@ app.post('/api/join/:joinID/final', (req, res)=> {
 // Mypage
 app.get('/api/onLogin/:userID/mypage', (req, res)=> {
     const userID = req.params;
-    const userInfoQuery = 'SELECT * from itemdb.user_info WHERE userID = (?)'
+    const userInfoQuery = 'SELECT * from itemdb.userinfo WHERE userID = (?)'
 
     itemdb.query(userInfoQuery, [userID.userID], function(err, info_res){
 
@@ -251,7 +251,7 @@ app.use('/api/user/:userID/mypage/edit/username', (req, res) => {
 
     usernameUpdate = req.body.username;
 
-    const updateQuery = 'UPDATE itemdb.user_info SET userName=? WHERE userID=?'
+    const updateQuery = 'UPDATE itemdb.userinfo SET userName=? WHERE userID=?'
 
     itemdb.query(updateQuery, [usernameUpdate, userID], function(err, update_res){
         if (err) {
@@ -306,7 +306,7 @@ app.use('/api/user/:userID/mypage/edit/taste', (req, res) => {
 
     console.log(updateTasteDetail)
 
-    const updateQuery = 'UPDATE itemdb.user_info SET userTaste=?, userTasteDetail=? WHERE userID=?'
+    const updateQuery = 'UPDATE itemdb.userinfo SET userTaste=?, userTasteDetail=? WHERE userID=?'
 
     itemdb.query(updateQuery, [tasteUpdate, JSON.stringify(updateTasteDetail), userID], function(err, update_res){
         if (err) {
@@ -338,7 +338,7 @@ app.use('/api/user/:userID/mypage/edit/texture', (req, res) => {
 
     console.log(textureUpdate)
 
-    const updateQuery = 'UPDATE itemdb.user_info SET userTexture=? WHERE userID=?'
+    const updateQuery = 'UPDATE itemdb.userinfo SET userTexture=? WHERE userID=?'
 
     itemdb.query(updateQuery, [textureUpdate, userID], function(err, update_res){
         if (err) {
@@ -370,7 +370,7 @@ app.use('/api/user/:userID/mypage/edit/repurchase', (req, res) => {
 
     console.log(repurchUpdate)
 
-    const updateQuery = 'UPDATE itemdb.user_info SET userRebuy=? WHERE userID=?'
+    const updateQuery = 'UPDATE itemdb.userinfo SET userRebuy=? WHERE userID=?'
 
     itemdb.query(updateQuery, [repurchUpdate, userID], function(err, update_res){
         if (err) {
@@ -417,7 +417,7 @@ app.use('/api/user/:userID/mypage/edit/function', (req, res) => {
 
     console.log(updateFuncDetail)
 
-    const updateQuery = 'UPDATE itemdb.user_info SET userFunction=? WHERE userID=?'
+    const updateQuery = 'UPDATE itemdb.userinfo SET userFunction=? WHERE userID=?'
 
     itemdb.query(updateQuery, [JSON.stringify(updateFuncDetail), userID], function(err, update_res){
         if (err) {
@@ -445,7 +445,7 @@ app.get('/api/data', (req, res) => {
 app.get('/api/user/:userID/recommend', (req, res) => {
 
       const { userID } = req.params;
-      const query = 'SELECT userTaste,userTasteDetail,userRebuy,userTexture,userFunction FROM user_info WHERE userID = ? ;';
+      const query = 'SELECT userTaste,userTasteDetail,userRebuy,userTexture,userFunction FROM userinfo WHERE userID = ? ;';
       const query2 = 'SELECT * FROM itemdb WHERE ItemID in (?) ;';
 
       itemdb.query(query,[userID],function(err,rows) {

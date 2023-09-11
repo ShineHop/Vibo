@@ -59,7 +59,7 @@ function Join({route, navigation}) {
     const onJoinNextPressed = () => {
         console.log(joinInputs)
             try{
-                axios.post('http://172.30.1.34:3001/api/join/' + joinInputs.id,
+                axios.post('http://192.168.142.1:3001/api/join/' + joinInputs.id,
                     {'username': joinInputs.username, 'birthday': joinInputs.birthday, 'sex': joinInputs.sex,
                     'id': joinInputs.id, 'password': joinInputs.password})
                 .then((response)=> {
