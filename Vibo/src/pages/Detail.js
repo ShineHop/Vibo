@@ -48,7 +48,8 @@ useEffect(() => {
         }
       
           Likeornot(),
-          fetchScore()
+          fetchScore(),
+          setMyScore(0)
         } catch (err){
             console.log("detail.js) err: ", err);
         };
