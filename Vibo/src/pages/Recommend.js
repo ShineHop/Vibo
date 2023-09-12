@@ -3,38 +3,38 @@ import {SafeAreaView, View, Image,Text ,TouchableOpacity,Button,StatusBar,StyleS
 import stylelist from '../style';
 import axios from 'axios'
 import { useNavigation } from "@react-navigation/native";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const All=()=> {
+const All=()=>{
   const [recitems, setItems] = useState([]);
   const [error, setError] = useState(null);
   const navigation = useNavigation();
 
-
-  useEffect(()=>{
+  useEffect(() => { 
     async function temp(){
       const userID = JSON.parse(await AsyncStorage.getItem("userID"));
       console.log("userID 1: ", userID);
      
         try{
-          axios.get('http://172.30.1.14:3001/api/user/'+userID+'/recommend').then((response)=>{
+          axios.get('http://192.168.142.1:3001/api/user/'+userID+'/recommend').then((response)=>{
             console.log(response.data);
             setItems(response.data);
+            console.log('response of recommend', recitems)
             }).catch((error)=>{console.error("here:", error);});
         } catch (err){
             console.log("recommend.js) err: ", err);
         };
-
-    }
-
-    temp();
-
-  }, []);
+  
+      }
+temp()
+}, []); // 로그인된 사용자 ID가 변경될 때마다 실행
 
   return(
   <View >
   <FlatList  data={recitems} // 필수 Props
-  numColumns={2}   renderItem= {
+  numColumns={2}   
+  renderItem= {
     
     ({ item })=>(
       <TouchableOpacity onPress={()=>navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})}>

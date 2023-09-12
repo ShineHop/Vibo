@@ -24,7 +24,8 @@ import { storeUserData, getUserData } from './UserData';
 function MyPage({route, navigation}) {
 
     const [userData, setUserData] = useState([]);
-
+    console.log(userData)
+    
     useEffect(() => {
         async function getData() {
           const _persons = await getUserData();

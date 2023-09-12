@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 const itemdb = mysql.createConnection({
     user:"root",
     host : "localhost",
-    password:'',
+    password:'0000',
     database:"itemdb"
 });
 const spawn = require('child_process').spawn;
@@ -32,7 +32,7 @@ itemdb.connect();
 app.post('/api/login/', (req,res, next)=>{
     const userID = req.body.id
     const userPwd = req.body.password;
-    const matchingQuery = "select * from itemdb.user_info where userID = ?  AND userPwd = ?;"
+    const matchingQuery = "select * from itemdb.userinfo where userID = ?  AND userPwd = ?;"
 
     itemdb.query(matchingQuery, [userID, userPwd], function(err, login_res){
         if (err) {console.log("error: ", err)};
@@ -240,7 +240,7 @@ app.post('/api/join/:joinID/final', (req, res)=> {
 // Mypage
 app.get('/api/onLogin/:userID/mypage', (req, res)=> {
     const userID = req.params;
-    const userInfoQuery = 'SELECT * from itemdb.user_info WHERE userID = (?)'
+    const userInfoQuery = 'SELECT * from itemdb.userinfo WHERE userID = (?)'
 
     itemdb.query(userInfoQuery, [userID.userID], function(err, info_res){
 
@@ -286,7 +286,7 @@ app.use('/api/user/:userID/mypage/edit/username', (req, res) => {
 
     usernameUpdate = req.body.username;
 
-    const updateQuery = 'UPDATE itemdb.user_info SET userName=? WHERE userID=?'
+    const updateQuery = 'UPDATE itemdb.userinfo SET userName=? WHERE userID=?'
 
     itemdb.query(updateQuery, [usernameUpdate, userID], function(err, update_res){
         if (err) {
@@ -366,7 +366,7 @@ app.use('/api/user/:userID/mypage/edit/taste', (req, res) => {
 
     console.log(updateTasteDetail)
 
-    const updateQuery = 'UPDATE itemdb.user_info SET userTaste=?, userTasteDetail=? WHERE userID=?'
+    const updateQuery = 'UPDATE itemdb.userinfo SET userTaste=?, userTasteDetail=? WHERE userID=?'
 
     itemdb.query(updateQuery, [tasteUpdate, JSON.stringify(updateTasteDetail), userID], function(err, update_res){
         if (err) {
@@ -404,7 +404,7 @@ app.use('/api/user/:userID/mypage/edit/texture', (req, res) => {
 
     console.log(textureUpdate)
 
-    const updateQuery = 'UPDATE itemdb.user_info SET userTexture=? WHERE userID=?'
+    const updateQuery = 'UPDATE itemdb.userinfo SET userTexture=? WHERE userID=?'
 
     itemdb.query(updateQuery, [textureUpdate, userID], function(err, update_res){
         if (err) {
@@ -436,7 +436,7 @@ app.use('/api/user/:userID/mypage/edit/repurchase', (req, res) => {
 
     console.log(repurchUpdate)
 
-    const updateQuery = 'UPDATE itemdb.user_info SET userRebuy=? WHERE userID=?'
+    const updateQuery = 'UPDATE itemdb.userinfo SET userRebuy=? WHERE userID=?'
 
     itemdb.query(updateQuery, [repurchUpdate, userID], function(err, update_res){
         if (err) {
@@ -483,7 +483,7 @@ app.use('/api/user/:userID/mypage/edit/function', (req, res) => {
 
     console.log(updateFuncDetail)
 
-    const updateQuery = 'UPDATE itemdb.user_info SET userFunction=? WHERE userID=?'
+    const updateQuery = 'UPDATE itemdb.userinfo SET userFunction=? WHERE userID=?'
 
     itemdb.query(updateQuery, [JSON.stringify(updateFuncDetail), userID], function(err, update_res){
         if (err) {
@@ -501,19 +501,31 @@ app.use('/api/user/:userID/mypage/edit/function', (req, res) => {
 });
 
 
-app.get('/api/data', (req, res) => {
-    const query = 'SELECT * FROM itemdb';
-    itemdb.query(query, (err, rows) => {
-
-      res.json(rows);
-    });
-  });
+app.get('/api/data', (req,res) => {
+    const query = 'SELECT ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능 FROM itemdb;';
+    itemdb.query(query, (err, rows) => { 
+        if(err){
+            console.log(err)}
+        else{
+            res.json(rows)
+            }        
+    })});
+    
+app.get('/api/dataimg', (req,res) => {
+    const imgquery = 'SELECT ItemID,IMAGE FROM itemdb; '
+    itemdb.query(imgquery,(err,rows)=>{
+        if(err){
+            console.log(err)}
+        else{
+            res.json(rows)
+        }      
+})})
 
 app.get('/api/user/:userID/recommend', (req, res) => {
 
       const { userID } = req.params;
-      const query = 'SELECT userTaste,userTasteDetail,userRebuy,userTexture,userFunction FROM user_info WHERE userID = ? ;';
-      const query2 = 'SELECT * FROM itemdb WHERE ItemID in (?) ;';
+      const query = 'SELECT userTaste,userTasteDetail,userRebuy,userTexture,userFunction FROM userinfo WHERE userID = ? ;';
+      const query2 = 'SELECT ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능 FROM itemdb WHERE ItemID in (?) ;';
 
       itemdb.query(query,[userID],function(err,rows) {
         featurelist = Object.values(rows[0]);
@@ -567,91 +579,93 @@ app.get('/api/user/:userID/recommend', (req, res) => {
 });
 
 app.use('/api/user/:userID/like/:itemID/update',(req,res,next)=>{
-    const UID  = req.params.userID;
-    const iID = req.params.itemID;
-    let itemID = Number(iID);
-    let userID = Number(UID);
-    const querycheck = 'SELECT * FROM likedb WHERE UID = ?;'
-    const query = "UPDATE likedb SET `?` = 0 WHERE UID = ? ;"
-    const query1 = "UPDATE likedb SET `?` = 1 WHERE UID = ? ;"
-    itemdb.query(querycheck,[userID],function(err,rows){
-      //console.log(rows);
-      if (!rows[0]){
-          likearr = null
-      }
+  const UID  = req.params.userID;
+  const iID = req.params.itemID;
+  let itemID = Number(iID);
+  let userID = Number(UID);
+  const querycheck = 'SELECT * FROM likedb WHERE UID = ?;'
+  const query = "UPDATE likedb SET `?` = 0 WHERE UID = ? ;"
+  const query1 = "UPDATE likedb SET `?` = 1 WHERE UID = ? ;"
+  itemdb.query(querycheck,[userID],function(err,rows){
+    //console.log(rows);
+    if (!rows[0]){
+        likearr = null
+    }
+    else{
+    likearr = Object.values(rows[0]);
+    for (i = 0 ; i <likearr.length;i++){
+      if (i == itemID){
+        console.log(likearr[itemID])
+        if(likearr[i] == 1)
+        {
+          itemdb.query(query,[itemID,userID]);
+        }
       else{
-      likearr = Object.values(rows[0]);
-      for (i = 0 ; i <likearr.length;i++){
-        if (i == itemID){
-          console.log(likearr[itemID])
-          if(likearr[i] == 1)
-          {
-            itemdb.query(query,[itemID,userID]);
-          }
+        itemdb.query(query1,[itemID,userID]);
+      }}
+     }
+}})
+next()
+
+});
+
+app.get('/api/user/:userID/like', (req, res) => {
+    const { userID } = req.params;
+
+    const query = 'SELECT * FROM likedb WHERE UID = ? ;';
+    const query2 = 'SELECT item FROM itemdb WHERE ItemID = ?;';
+    let userItemlist = [];
+    let id = [];
+    itemdb.query(query,[userID],function(err,rows) {
+      if (err) {
+        console.log("데이터 가져오기 실패");
+      } else {
+        if (!rows[0]){
+            likearr = null;
+        }
         else{
-          itemdb.query(query1,[itemID,userID]);
-        }}
-       }
-  }})
-  next()
-  
-  });
-  
-  app.get('/api/user/:userID/like', (req, res) => {
-      const { userID } = req.params;
-  
-      const query = 'SELECT * FROM likedb WHERE UID = ? ;';
-      const query2 = 'SELECT item FROM itemdb WHERE ItemID = ?;';
-      let userItemlist = [];
-      let id = [];
-      itemdb.query(query,[userID],function(err,rows) {
-        if (err) {
-          console.log("데이터 가져오기 실패");
-        } else {
-          if (!rows[0]){
-              likearr = null;
+        likearr = Object.values(rows[0]);
+        console.log('likearr',likearr)
+        var j = 0;
+        var k = 0;
+        for (i= 0 ; i < likearr.length; i++)
+        {
+        if (likearr[i] == 1){
+            id[k]= i
+            k++;
+            itemdb.query(query2, [i],function(err,rows){
+            if (err){console.error('Error executing second query:',err);}
+            else{
+              userItemlist[j]={itemID:id[j], title: Object.values(rows[0])};
+              j++;
+              //console.log('k=',k);
+
+              //console.log('j=',j);
+              if (j==k){
+               // console.log(userItemlist);
+                res.send(userItemlist);
+             }}
           }
-          else{
-          likearr = Object.values(rows[0]);
-          console.log('likearr',likearr)
-          var j = 0;
-          var k = 0;
-          for (i= 0 ; i < likearr.length; i++)
-          {
-          if (likearr[i] == 1){
-              id[k]= i
-              k++;
-              itemdb.query(query2, [i],function(err,rows){
-              if (err){console.error('Error executing second query:',err);}
-              else{
-                userItemlist[j]={itemID:id[j], title: Object.values(rows[0])};
-                j++;
-                //console.log('k=',k);
-  
-                //console.log('j=',j);
-                if (j==k){
-                 // console.log(userItemlist);
-                  res.send(userItemlist);
-               }}
-            }
-            );}
-          }}
-  }});
-  })
+          );}
+        }}
+}});
+})
 app.get('/api/user/:userID/like/:itemID', (req, res) => {
   const  UID  = req.params.userID;
   const iID = req.params.itemID;
+  console.log('UID',UID)
+  console.log('iID',iID)
   let itemID = Number(iID);
   let userID = Number(UID);
   const query = 'SELECT * FROM likedb WHERE UID = ? ;';
   let id = [];
   try{
   itemdb.query(query,[userID],function(err,rows) {
-    if (err) {
-      console.log("데이터 가져오기 실패");
+    if (!rows[0] ) {
+        likearr = []
     } else {
       var k = 0;
-     // res.send(rows[0]);
+      //console.log('likedb',rows[0]);
       likearr = Object.values(rows[0]);
       for (i= 0 ; i < likearr.length; i++)
       {if (likearr[i] == 1){
@@ -731,28 +745,31 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
       console.log(aver_score);
         itemdb.query(query,[userID],function(err,rows) {
           if (err) {
-            console.log("데이터 가져오기 실패");
+            console.log("데이터 가져오기 실패",err);
           } else {
            // res.send(rows[0]);
-           console.log('Object.values(rows[0]:',Object.values(rows[0]))
+           if (! rows[0]){
+            res.send([aver_score,0])
+           }else{
+            console.log('Object.values(rows[0]:',Object.values(rows[0]))
             ratings = Object.values(rows[0]);
            for (i = 0; i<ratings.length; i++){
             if(i == itemID){
               user_score = ratings[i]
               res.send([aver_score,user_score])
               break
-            }}} })}})})
+            }}}} })}})})
 
 
 //모달창에 보일 ItemBasedCommand 아이템들
 app.get('/api/user/IBCF/:itemID', (req, res) => {
   const { itemID } = req.params;
-  console.log('itemID', itemID)
-  const IBCFList = spawn('python',['./models/IBCF.py',itemID]);
-  const query = 'Select * From itemdb WHERE ItemID in (?);';
-
-  IBCFList.stdout.on('data',function(data){
+  
+ const IBCFList = spawn('python',['./models/IBCF.py',itemID]);
+ const query = 'Select ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능  From itemdb WHERE ItemID in (?);';
+ IBCFList.stdout.on('data',function(data){
     rs = iconv.decode(data, 'euc-kr');
+    console.log(rs)
     rsarr = rs.split(/\'|\, |\ |\]|\[/,-1);
     rsarr = rsarr.slice(1,-1);
     resultarr = rsarr.filter(Boolean)

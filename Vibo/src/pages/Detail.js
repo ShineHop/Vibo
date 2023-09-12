@@ -7,59 +7,58 @@ import axios from 'axios';
 import Icon from "react-native-vector-icons/Ionicons";
 import Slider from '@react-native-community/slider';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import imagePath from '../components/imagePath.json'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { storeUserData } from '../pages/UserData';
 
 function Detail({route}) {
+  
   const navigation = useNavigation();
   const [likeState, setState] = useState(false);
+  const[clicked,setclick] = useState(0);
   const[myscore,setScore] = useState();
+  const[userID,setUserID] = useState();
   const[averscore,setAverScore] =useState(0);
   const[scores, setMyScore] = useState(myscore);
   const[IBCFitemlist, setIBCFitems] = useState();
-  const [userID, setUserID] = useState();
 
   const itemid = route.params.item.ItemID;
+  console.log('itemid',itemid)
 
-  useEffect(() => { 
-    
-    async function fetchScore(uid){
-      await axios.get('http://172.30.1.14:3001/api/user/'+uid+'/ratings/'+itemid).then((response)=>
-      { 
-        console.log(response.data);
-        setAverScore(Math.round(response.data[0]*10)/10);
-        setScore(response.data[1]);
-        //console.log('response.data[1]',response.data[1])
-      })
-    }
-  
-    async function Likeornot(uid){
-      await axios.get('http://172.30.1.14:3001/api/user/'+uid+'/like/'+itemid).then((response)=>{
-      setState(response.data);
-      }).catch((error)=>{console.error(error);},[itemid]);
-    }
 
-      async function temp_detail(){
-        const userID = JSON.parse(await AsyncStorage.getItem("userID"));
-        console.log("temp_userID: ", userID);
-  
-        setUserID(userID);
-  
-        console.log("temp_afterSet: ", userID);
-  
-  
-          fetchScore(userID);
-          Likeornot(userID);
+useEffect(() => { 
+  async function temp(){
+    const user = JSON.parse(await AsyncStorage.getItem("userID"));
+    setUserID(user)
+    console.log("userID 1: ", user);
+   
+      try{
+      async function fetchScore(){ 
+        await axios.get('http://192.168.142.1:3001/api/user/'+ user +'/ratings/'+itemid).then((response)=>
+        { 
+          console.log(response.data);
+          setAverScore(Math.round(response.data[0]*10)/10);
+          setScore(response.data[1]);
+          console.log('response.data[1]',response.data[1])
+        }),[itemid]}
+
+      async function Likeornot(){
+        await axios.get('http://192.168.142.1:3001/api/user/'+user+'/like/'+itemid).then((response)=>{
+        setState(response.data);
+        console.log(response.data)}).catch((error)=>{console.error(error);}),[itemid]
+        }
+      
+          Likeornot(),
+          fetchScore()
+        } catch (err){
+            console.log("detail.js) err: ", err);
+        };
   
       }
-
-
-
-    temp_detail();
-
-  },[]); 
-
-
-
+  temp()
+  },[itemid]
+  ); 
+  console.log('userid: ', userID)
 
 function Stars(rating){
     
@@ -128,53 +127,54 @@ function Stars(rating){
 
 
   //좋아요 버튼 누를 시 서버 전송
-  const ButtonClicked=(id)=>{
+  const ButtonClicked=(itemid)=>{
    
-    console.log('btnclicked_id: ', userID);
     //likedb의 좋아요 state 업데이트
     async function updatelike()
-    {await axios.post('http://172.30.1.14:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
+    {await axios.post('http://192.168.142.1:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
       {console.log(response);
         if(response.ok){
           return response.json();     
-        }})}
+        }}),[likeState]}
     
     // 좋아요 클릭시 해당 제품과 비슷한 속성의 아이템 추천해주는 IBCF 알고리즘 백에서 실행
     async function IBCFList(){
-      await axios.get('http://172.30.1.14:3001/api/user/IBCF/'+itemid).then((response)=>{
-        console.log(response.data);
-        setIBCFitems(response.data);  }
-      ) ,[itemid]
+      await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+itemid).then((response)=>{
+        console.log('IBCFLIST',response.data);
+        setIBCFitems(response.data); 
+        console.log('flatlistdata',IBCFitemlist)
+      }
+      ),[]
    }
     updatelike()
-    if (likeState == false){
     IBCFList()
    
-  }};
-  
-  function showflatlist(){
+  };
+function showflatlist(){
+  if (clicked == true){
   if (likeState == true){
-    return    (<FlatList data={IBCFitemlist}
+    console.log(IBCFitemlist)
+    return    (
+    <FlatList data={IBCFitemlist}
     keyExtractor={(item) => item.ItemID}
     horizontal = {true}
-    
     renderItem= {({ item })=>(
         
-        <TouchableOpacity onPress={()=>[navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})]}>
+        <TouchableOpacity onPress={()=>[navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}}),setclick(false)]}>
         <View style={styles.flatlistcontainer}>
         <View >
-          <Image source={require('./images/paw.png')} style = {styles.image}></Image>
+          <Image source={require("../components/images/1.jpg")} style = {styles.image}/>
+          
         </View>
           <View style={styles.flatlisttext}>
             <Text style={[stylelist.Text_Regular]} key={item.ItemID}>{item.item}</Text>
           </View>
         </View>
-      </TouchableOpacity>)}/>)}
-}
+      </TouchableOpacity>)}/>)}}}
 
 //사용자의 상품에 대한 평점 업데이트
 const RatingUpdated=([scores])=>{
-  axios.post('http://172.30.1.14:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
+  axios.post('http://192.168.142.1:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
   { console.log(response);
     if(response.ok){
       return response.json();}},[itemid])
@@ -192,11 +192,10 @@ const RatingUpdated=([scores])=>{
     <View style={styles.container}> 
         <Text style={[stylelist.Title_Bold,stylelist.black,stylelist.line]} >About</Text>
         <View style={styles.imagecontainer}>
-          <Image source={require('./images/paw.png')} style = {styles.image}></Image>
-        </View>
+          <Image source={route.params.item.src ? require('./images/paw.png'): route.params.item.src} style = {styles.image}/></View>
         <View style={styles.itemcontainer}>
           <Text style={[stylelist.Title_SemiBold,stylelist.black,styles.text ]}>{route.params.item.item}</Text>
-              <TouchableOpacity onPress ={()=>[ButtonClicked(route.params.item.ItemID),setState(!likeState)]} >
+              <TouchableOpacity onPress ={()=>[ButtonClicked(route.params.item.ItemID),setState(!likeState),setclick(true)]} >
                 <Icon name={likeState === true ? "heart" : "heart-outline" } color = '#FCA6C5' size={35} style={styles.heart} ></Icon>
               </TouchableOpacity>
         </View>

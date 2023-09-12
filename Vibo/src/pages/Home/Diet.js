@@ -36,6 +36,38 @@ const dietdata = data.filter((item)=>item.기능.includes('다이어트'));
 const Best=()=>{
   const [data, setData] = useState([]);
   const navigation = useNavigation();
+  
+  
+  async function drawImage() {
+    let imgobj = document.createElement("img");
+    // promise 선언
+    let imgPromise = new Promise( (resolve , reject) => {
+        resolve();
+    });
+    
+    // resolve가 호출 될때 에는 , then() 메서드가 실행 
+    // , reject 일시에는 catch() 
+    imgPromise.then(() => {
+        imgobj.onload = () => {
+        let cur_img_width = this.naturalWidth;  
+            let cur_img_height = this.naturalHeight;
+        
+        };
+    });
+   
+   
+   console.log("Image Load Start");
+    console.log(new Date().getTime());
+
+    imgobj.src = "${pageContext.request.contextPath}/imageAction.do?process=testImageDownload";
+    
+    // await 키워드로 기다림 
+    await imgPromise ; 
+
+    console.log(new Date().getTime());
+    console.log("Image Load End ");
+   
+}
 
   useEffect(() => {
     // 서버에서 데이터 가져오기
@@ -62,7 +94,7 @@ const Best=()=>{
 
         <View style={styles_home.item_container}>
           <View >
-          <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
+          <Image source={'../../../../'} style = {styles_home.image}></Image>
           </View>
           <View style={styles_home.text}>
           <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>
