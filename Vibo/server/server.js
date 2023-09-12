@@ -458,7 +458,7 @@ app.get('/api/user/:userID/recommend', (req, res) => {
 
       const { userID } = req.params;
       const query = 'SELECT userTaste,userTasteDetail,userRebuy,userTexture,userFunction FROM userinfo WHERE userID = ? ;';
-      const query2 = 'SELECT * FROM itemdb WHERE ItemID in (?) ;';
+      const query2 = 'SELECT ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능 FROM itemdb WHERE ItemID in (?) ;';
 
       itemdb.query(query,[userID],function(err,rows) {
         featurelist = Object.values(rows[0]);
@@ -521,6 +521,10 @@ app.use('/api/user/:userID/like/:itemID/update',(req,res,next)=>{
   const query1 = "UPDATE likedb SET `?` = 1 WHERE UID = ? ;"
   itemdb.query(querycheck,[userID],function(err,rows){
     //console.log(rows);
+    if (!rows[0]){
+        likearr = null
+    }
+    else{
     likearr = Object.values(rows[0]);
     for (i = 0 ; i <likearr.length;i++){
       if (i == itemID){
@@ -531,7 +535,7 @@ app.use('/api/user/:userID/like/:itemID/update',(req,res,next)=>{
         }
       else{
         itemdb.query(query1,[itemID,userID]);
-      }
+      }}
      }
 }})
 next()
@@ -549,7 +553,12 @@ app.get('/api/user/:userID/like', (req, res) => {
       if (err) {
         console.log("데이터 가져오기 실패");
       } else {
+        if (!rows[0]){
+            likearr = null;
+        }
+        else{
         likearr = Object.values(rows[0]);
+        console.log('likearr',likearr)
         var j = 0;
         var k = 0;
         for (i= 0 ; i < likearr.length; i++)
@@ -571,23 +580,25 @@ app.get('/api/user/:userID/like', (req, res) => {
              }}
           }
           );}
-        }
+        }}
 }});
 })
 app.get('/api/user/:userID/like/:itemID', (req, res) => {
   const  UID  = req.params.userID;
   const iID = req.params.itemID;
+  console.log('UID',UID)
+  console.log('iID',iID)
   let itemID = Number(iID);
   let userID = Number(UID);
   const query = 'SELECT * FROM likedb WHERE UID = ? ;';
   let id = [];
   try{
   itemdb.query(query,[userID],function(err,rows) {
-    if (err) {
-      console.log("데이터 가져오기 실패");
+    if (!rows[0] ) {
+        likearr = []
     } else {
       var k = 0;
-     // res.send(rows[0]);
+      //console.log('likedb',rows[0]);
       likearr = Object.values(rows[0]);
       for (i= 0 ; i < likearr.length; i++)
       {if (likearr[i] == 1){
@@ -667,28 +678,31 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
       console.log(aver_score);
         itemdb.query(query,[userID],function(err,rows) {
           if (err) {
-            console.log("데이터 가져오기 실패");
+            console.log("데이터 가져오기 실패",err);
           } else {
            // res.send(rows[0]);
-           console.log('Object.values(rows[0]:',Object.values(rows[0]))
+           if (! rows[0]){
+            res.send([aver_score,0])
+           }else{
+            console.log('Object.values(rows[0]:',Object.values(rows[0]))
             ratings = Object.values(rows[0]);
            for (i = 0; i<ratings.length; i++){
             if(i == itemID){
               user_score = ratings[i]
               res.send([aver_score,user_score])
               break
-            }}} })}})})
+            }}}} })}})})
 
 
 //모달창에 보일 ItemBasedCommand 아이템들
 app.get('/api/user/IBCF/:itemID', (req, res) => {
   const { itemID } = req.params;
-  console.log('itemID', itemID)
-  const IBCFList = spawn('python',['./models/IBCF.py',itemID]);
-  const query = 'Select * From itemdb WHERE ItemID in (?);';
-
-  IBCFList.stdout.on('data',function(data){
+  
+ const IBCFList = spawn('python',['./models/IBCF.py',itemID]);
+ const query = 'Select ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능  From itemdb WHERE ItemID in (?);';
+ IBCFList.stdout.on('data',function(data){
     rs = iconv.decode(data, 'euc-kr');
+    console.log(rs)
     rsarr = rs.split(/\'|\, |\ |\]|\[/,-1);
     rsarr = rsarr.slice(1,-1);
     resultarr = rsarr.filter(Boolean)

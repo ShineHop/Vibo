@@ -8,17 +8,15 @@ import imagePath from '../../components/imagePath.json'
 
 
   
-const Best=()=>{
+const Best=(userID)=>{
   const [data, setData] = useState([]);
   const [img,setimg] = useState([])
   const navigation = useNavigation();
  
   useEffect(() => {
     // 서버에서 데이터 가져오기
-<<<<<<< Updated upstream
-=======
+
     function loadData(){
->>>>>>> Stashed changes
     axios.get('http://192.168.142.1:3001/api/data')
       .then((response) => {
         setData(response.data); //data = [ItemID,item,맛,맛 상세,재구매의사, 목넘김,기능]
@@ -122,8 +120,8 @@ if (dataarray){
         horizontal={true} // numColumns를 사용할 때 값을 false로 지정해줘야 한다.
         />
       </View>
-    );
-        }
+    );}
+      
 const All=()=>{
   const [data, setData] = useState([]);
   const navigation = useNavigation();
