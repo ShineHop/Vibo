@@ -34,7 +34,7 @@ const RepurchaseModal = (props) => {
             try{
                 const userID = JSON.parse(await AsyncStorage.getItem("userID"));
                 console.log("taste_userid: ", userID);
-                axios.post('http://172.30.1.34:3001/api/user/'+userID+'/mypage/edit/repurchase',
+                axios.post('http://172.30.1.14:3001/api/user/'+userID+'/mypage/edit/repurchase',
                     {'repurchase': repurchaseUpdate})
                 .then((response)=> {
                     if  (response.data.status == 'update_repurchase_success'){
@@ -70,7 +70,7 @@ const RepurchaseModal = (props) => {
             transparent={true}
             visible={modalVisible}
             onRequestClose={()=>{
-                Alert.alert('Modal has been closed.');
+                Alert.alert('변경사항이 저장되지 않습니다.');
                 setModalVisible(!modalVisible);
         }}>
 

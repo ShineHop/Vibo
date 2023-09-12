@@ -24,21 +24,22 @@ import { storeUserData, getUserData } from './UserData';
 
 function JoinCharacter({route, navigation}) {
     const [joinInfoInputs, setJoinInfoInputs] = useState({
-        joinID: joinID, joinName: joinName, joinPwd: joinPwd,
+        joinID: joinID, joinPwd: joinPwd,
+        joinName: joinName, joinProfile: joinProfile,
         joinBirth: joinBirth, joinSex: joinSex,
         taste: false, repurchase: false, texture: false,
         sweet: false, sour: false, fruit: false, milk: false,
         vita: false, bio: false, diet: false, vagina: false
     })
 
-    const changeCheck = (key:string, value) => {
+    const changeCheck = (key, value) => {
         setJoinInfoInputs(prevState => ({
              ...prevState,
              [key]: value,
         }));
     };
 
-    const storeUserID = async (key: string, value: any) => {
+    const storeUserID = async (key, value) => {
       try {
         const stringValue = JSON.stringify(value);
         await AsyncStorage.setItem(key, stringValue);
@@ -52,8 +53,9 @@ function JoinCharacter({route, navigation}) {
     const onJoinFinalPressed = () => {
         console.log("JoinCharacter.js) joinInfoInputs: ",joinInfoInputs)
             try{
-                axios.post('http://172.30.1.34:3001/api/join/:joinID/final',
-                    {'joinID': joinInfoInputs.joinID, 'joinName': joinInfoInputs.joinName, 'joinPwd': joinInfoInputs.joinPwd,
+                axios.post('http://172.30.1.14:3001/api/join/:joinID/final',
+                    {'joinID': joinInfoInputs.joinID, 'joinPwd': joinInfoInputs.joinPwd,
+                    'joinName': joinInfoInputs.joinName, 'joinProfile': joinInfoInputs.joinProfile,
                     'joinBirth': joinInfoInputs.joinBirth, 'joinSex': joinInfoInputs.joinSex,
                     'taste': joinInfoInputs.taste, 'repurchase': joinInfoInputs.repurchase, 'texture': joinInfoInputs.texture,
                     'sweet': joinInfoInputs.sweet, 'sour': joinInfoInputs.sour, 'fruit': joinInfoInputs.fruit, 'milk': joinInfoInputs.milk,

@@ -1,15 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
-#pip install --upgrade gensim;
-
-
-# In[2]:
-
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import urllib.request
@@ -79,7 +67,7 @@ def cosine_similar(random):
 
     for i in range(len(cosine_df)):
         cos_text = cosine_df.iloc[i]
-        cos = np.dot(target_text, cos_text) / (np.linalg.norm(target_text)*np.linalg.norm(cos_text))#코사인 유사도 식 구글링 통해서 검색 가능
+        cos = np.dot(target_text, cos_text) / (np.linalg.norm(target_text)*np.linalg.norm(cos_text)) #코사인 유사도 식 구글링 통해서 검색 가능
         cos_sim.append(cos)
 
     cosine_df['cos_sim'] = cos_sim

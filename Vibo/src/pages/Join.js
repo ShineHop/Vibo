@@ -22,6 +22,7 @@ import axios from 'axios';
 
 function Join({route, navigation}) {
     const [joinInputs, setJoinInputs] = useState({
+        profile: 0,
         username: '',
         birthday: '',
         sex: '',
@@ -29,7 +30,7 @@ function Join({route, navigation}) {
         password: ''
     });
 
-    const handleInputChange=(key:string, value:string)=>{
+    const handleInputChange=(key, value)=>{
         setJoinInputs(prevState => ({
             ...prevState,
             [key]:value,
@@ -50,28 +51,57 @@ function Join({route, navigation}) {
         );
     }
 
-    // 임시 확인용
-    const onProfilePressed = () => {
-        console.warn("onProfilePressed");
+    // 프로필 버튼 이벤트
+    const onFirstProfilePressed = () => {
+        handleInputChange('profile', 1);
+        Alert.alert('프로필 이미지', '프로필 이미지를 선택하였습니다.', [
+          {text: '확인', onPress: () => console.log('OK Pressed')},
+        ]);
+        // 클릭 시 테두리 생성하기
     };
+
+    const onSecondProfilePressed = () => {
+        handleInputChange('profile', 2);
+        Alert.alert('프로필 이미지', '프로필 이미지를 선택하였습니다.', [
+          {text: '확인', onPress: () => console.log('OK Pressed')},
+        ]);
+        // 클릭 시 테두리 생성하기
+    };
+
 
     // port 전송 코드
     const onJoinNextPressed = () => {
         console.log(joinInputs)
+        if (joinInputs.id==''){
+        Alert.alert('경고', '모든 정보를 입력해주세요.', [
+                  {text: '확인', onPress: () => console.log('OK Pressed')},
+                ]);
+        }
             try{
-                axios.post('http://172.30.1.34:3001/api/join/' + joinInputs.id,
-                    {'username': joinInputs.username, 'birthday': joinInputs.birthday, 'sex': joinInputs.sex,
+                axios.post('http://172.30.1.14:3001/api/join/' + joinInputs.id,
+                    {'profile':joinInputs.profile, 'username': joinInputs.username, 'birthday': joinInputs.birthday, 'sex': joinInputs.sex,
                     'id': joinInputs.id, 'password': joinInputs.password})
                 .then((response)=> {
                     if  (response.data.status == 'check_success'){
+                        joinProfile = response.data.data['profile'];
                         joinID = response.data.data['id'];
-                        joinName = response.data.data['username'];
                         joinPwd = response.data.data['password'];
+                        joinName = response.data.data['username'];
                         joinBirth = response.data.data['birthday'];
                         joinSex = response.data.data['sex'];
 
                         navigation.navigate('JoinCharPage');
 
+                    }
+                    else if (response.data.status == 'no_6_digits'){
+                      Alert.alert('회원정보 기입 오류', '주민번호 앞 자리를 6자리로 정확히 입력해주세요.', [
+                        {text: '확인', onPress: () => console.log('OK Pressed')},
+                      ]);
+                    }
+                    else if (response.data.status == 'no_1_digit'){
+                      Alert.alert('회원정보 기입 오류', '주민번호 뒷부분 1자리를 정확히 입력해주세요.', [
+                        {text: '확인', onPress: () => console.log('OK Pressed')},
+                      ]);
                     }
                     else if (response.data.status == 'not_complete'){
                         Alert.alert('회원정보 기입 누락', '항목을 모두 입력해주세요.', [
@@ -123,12 +153,12 @@ function Join({route, navigation}) {
 
                 <Text> 프로필 </Text>
                 <View style={styles.profileContainer}>
-                    <Pressable onPress={onProfilePressed}>
+                    <Pressable onPress={onFirstProfilePressed}>
                         <Image
                               style={styles.profile}
                               source={require('./images/vibo_profile.png')} />
                     </Pressable>
-                    <Pressable onPress={onProfilePressed}>
+                    <Pressable onPress={onSecondProfilePressed}>
                         <Image
                               style={styles.profile}
                               source={require('./images/babo_profile.png')} />

@@ -6,6 +6,7 @@ import { useNavigation ,NavigationContainer} from "@react-navigation/native";
 import axios from 'axios';
 import Icon from "react-native-vector-icons/Ionicons";
 import Slider from '@react-native-community/slider';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 function Detail({route}) {
@@ -15,28 +16,50 @@ function Detail({route}) {
   const[averscore,setAverScore] =useState(0);
   const[scores, setMyScore] = useState(myscore);
   const[IBCFitemlist, setIBCFitems] = useState();
+  const [userID, setUserID] = useState();
 
   const itemid = route.params.item.ItemID;
-useEffect(() => { 
-  async function fetchScore(){
-    await axios.get('http://172.30.1.34:3001/api/user/2023052706/ratings/'+itemid).then((response)=>
-    { 
-      console.log(response.data);
-      setAverScore(Math.round(response.data[0]*10)/10);
-      setScore(response.data[1]);
-      console.log('response.data[1]',response.data[1])
-    })}
 
-  async function Likeornot(){
-    await axios.get('http://172.30.1.34:3001/api/user/2023052706/like/'+itemid).then((response)=>{
-    setState(response.data);
-    console.log(response.data)}).catch((error)=>{console.error(error);},[itemid]);
+  useEffect(() => { 
+    
+    async function fetchScore(uid){
+      await axios.get('http://172.30.1.14:3001/api/user/'+uid+'/ratings/'+itemid).then((response)=>
+      { 
+        console.log(response.data);
+        setAverScore(Math.round(response.data[0]*10)/10);
+        setScore(response.data[1]);
+        //console.log('response.data[1]',response.data[1])
+      })
+    }
+  
+    async function Likeornot(uid){
+      await axios.get('http://172.30.1.14:3001/api/user/'+uid+'/like/'+itemid).then((response)=>{
+      setState(response.data);
+      }).catch((error)=>{console.error(error);},[itemid]);
     }
 
-  Likeornot(),
-  fetchScore()
-  },[itemid]
-  ); 
+      async function temp_detail(){
+        const userID = JSON.parse(await AsyncStorage.getItem("userID"));
+        console.log("temp_userID: ", userID);
+  
+        setUserID(userID);
+  
+        console.log("temp_afterSet: ", userID);
+  
+  
+          fetchScore(userID);
+          Likeornot(userID);
+  
+      }
+
+
+
+    temp_detail();
+
+  },[]); 
+
+
+
 
 function Stars(rating){
     
@@ -107,10 +130,10 @@ function Stars(rating){
   //좋아요 버튼 누를 시 서버 전송
   const ButtonClicked=(id)=>{
    
-    
+    console.log('btnclicked_id: ', userID);
     //likedb의 좋아요 state 업데이트
     async function updatelike()
-    {await axios.post('http://172.30.1.34:3001/api/user/2023052706/like/'+ itemid +'/update').then((response)=>
+    {await axios.post('http://172.30.1.14:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
       {console.log(response);
         if(response.ok){
           return response.json();     
@@ -118,7 +141,7 @@ function Stars(rating){
     
     // 좋아요 클릭시 해당 제품과 비슷한 속성의 아이템 추천해주는 IBCF 알고리즘 백에서 실행
     async function IBCFList(){
-      await axios.get('http://172.30.1.34:3001/api/user/IBCF/'+itemid).then((response)=>{
+      await axios.get('http://172.30.1.14:3001/api/user/IBCF/'+itemid).then((response)=>{
         console.log(response.data);
         setIBCFitems(response.data);  }
       ) ,[itemid]
@@ -128,7 +151,8 @@ function Stars(rating){
     IBCFList()
    
   }};
-function showflatlist(){
+  
+  function showflatlist(){
   if (likeState == true){
     return    (<FlatList data={IBCFitemlist}
     keyExtractor={(item) => item.ItemID}
@@ -150,7 +174,7 @@ function showflatlist(){
 
 //사용자의 상품에 대한 평점 업데이트
 const RatingUpdated=([scores])=>{
-  axios.post('http://172.30.1.34:3001/api/user/2023052706/ratings/'+ itemid +'/update/'+scores).then((response)=>
+  axios.post('http://172.30.1.14:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
   { console.log(response);
     if(response.ok){
       return response.json();}},[itemid])

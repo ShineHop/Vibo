@@ -29,7 +29,7 @@ const FunctionModal = (props) => {
         vita: false, bio: false, diet: false, vagina: false
     })
 
-    const changeCheck = (key:string, value) => {
+    const changeCheck = (key, value) => {
         setFunctionUpdate(prevState => ({
              ...prevState,
              [key]: value,
@@ -41,7 +41,7 @@ const FunctionModal = (props) => {
             try{
                 const userID = JSON.parse(await AsyncStorage.getItem("userID"));
                 console.log("func_userid: ", userID);
-                axios.post('http://172.30.1.34:3001/api/user/'+userID+'/mypage/edit/function',
+                axios.post('http://172.30.1.14:3001/api/user/'+userID+'/mypage/edit/function',
                     {'vita': functionUpdate.vita, 'bio': functionUpdate.bio, 'diet': functionUpdate.diet, 'vagina': functionUpdate.vagina })
                 .then((response)=> {
                     if  (response.data.status == 'update_func_success'){
@@ -77,7 +77,7 @@ const FunctionModal = (props) => {
             transparent={true}
             visible={modalVisible}
             onRequestClose={()=>{
-                Alert.alert('Modal has been closed.');
+                Alert.alert('변경사항이 저장되지 않습니다.');
                 setModalVisible(!modalVisible);
         }}>
 

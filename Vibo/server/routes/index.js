@@ -21,6 +21,10 @@ module.exports = function(app)
         res.render('Edit.js');
     });
 
+    app.get('/Detail',function(req,res){
+        res.render('Detail.js');
+    });
+
     app.get('/Diet',function(req,res){
         res.render('Diet.js');
     });
@@ -44,5 +48,7 @@ module.exports = function(app)
     app.get('/Like',function(req,res){
         res.render('Like.js');
     });
+
+
 
 }

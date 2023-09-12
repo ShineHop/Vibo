@@ -42,18 +42,36 @@ const Edit = ({route, navigation, props}) => {
    // edit 닉네임, 프로필
     const [editInputs, setEditInputs] = useState({
        username: '',
+       profile: 0
     });
 
-    const handleInputChange=(key:string, value:string)=>{
+    const [firstImgSrc, setFirstImgSrc] = useState(require('./images/vibo_profile.png'))
+    const [secondImgSrc, setSecondImgSrc] = useState('./images/babo_profile.png')
+
+    const handleInputChange=(key, value)=>{
         setEditInputs(prevState => ({
             ...prevState,
             [key]:value,
         }));
     };
 
-    // 임시 확인용
-    const onProfilePressed = () => {
-        console.warn("onProfilePressed");
+    // 프로필 버튼 이벤트
+    const onFirstProfilePressed = () => {
+        //console.warn("onFirstProfilePressed");
+        handleInputChange('profile', 1);
+        Alert.alert('프로필 이미지', '프로필 이미지를 변경하였습니다.', [
+          {text: '확인', onPress: () => console.log('OK Pressed')},
+        ]);
+        // 클릭 시 테두리 생성하기
+    };
+
+    const onSecondProfilePressed = () => {
+        //console.warn("onSecondProfilePressed");
+        handleInputChange('profile', 2);
+        Alert.alert('프로필 이미지', '프로필 이미지를 변경하였습니다.', [
+          {text: '확인', onPress: () => console.log('OK Pressed')},
+        ]);
+        // 클릭 시 테두리 생성하기
     };
 
     // port 전송 코드
@@ -63,45 +81,64 @@ const Edit = ({route, navigation, props}) => {
             console.log("edit_userid: ", userID);
 
             const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));   //로컬 userInfo 가져오기
+            const editProfile = userInfo.user.userProfile;              // 로컬 profile
             const editModalTaste = userInfo.user.userTasteDetail;       // 로컬 taste
             const editModalTexture = userInfo.user.userTexture;         // 로컬 texture
             const editModalRepurchase = userInfo.user.userRebuy;       // 로컬 repurchase
             const editModalFunction = userInfo.user.userFunction;       // 로컬 function
 
+            console.log("editProfile: ", editProfile);
             console.log("editModalTaste: ", editModalTaste);
             console.log("editModalTexture: ", editModalTexture);
             console.log("editModalRepurchase: ", editModalRepurchase);
             console.log("editModalFunction: ", editModalFunction);
 
 
-            if (editInputs.username){   //사용자가 username에 입력을 하면
-                axios.post('http://172.30.1.34:3001/api/user/'+userID+'/mypage/edit/username',
+            if (editInputs.username && editInputs.profile!=0){   //사용자가 username에 입력함 & 프로필 선택함
+                axios.post('http://172.30.1.14:3001/api/user/'+userID+'/mypage/edit/username',
                     {'username': editInputs.username})
                 .then((response)=> {
                     if  (response.data.status == 'update_username_success'){
                         console.log("update_username_success");
 
-                        navigation.navigate('MyPage', {eName: editInputs.username, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction});
+                        navigation.navigate('MyPage', {eName: editInputs.username, eProfile: editInputs.profile, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction});
                     }
                 })
                 .catch(error => {
                     console.log("edit: ", err);
                 });
 
-            } else{navigation.navigate('MyPage', {eName: userInfo.user.userName, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction})};
+            }
+            else if (editInputs.username && editInputs.profile==0){ //사용자가 username에 입력함 & 프로필 선택 안 함
+                axios.post('http://172.30.1.14:3001/api/user/'+userID+'/mypage/edit/username',
+                    {'username': editInputs.username})
+                .then((response)=> {
+                    if  (response.data.status == 'update_username_success'){
+                        console.log("update_username_success");
+
+                        navigation.navigate('MyPage', {eName: editInputs.username, eProfile: editProfile, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction});
+                    }
+                })
+                .catch(error => {
+                    console.log("edit: ", err);
+                });
+            }
+            else if (editInputs.username=='' && editInputs.profile!=0){ //사용자가 username에 입력 안 함 & 프로필 선택함
+                navigation.navigate('MyPage', {eName: userInfo.user.userName, eProfile: editInputs.profile, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction});
+            }
+            else{navigation.navigate('MyPage', {eName: userInfo.user.userName, eProfile: editProfile, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction})};
 
         } catch (err){
             console.log("edit: ", err);
         };
     };
 
-    // 닉네임 저장 버튼
+    // 닉네임, 프로필 저장 버튼
     const CustomButton = ({ onPress, text }) => {
     	return (
         	<Pressable
             	onPress={onPress}
                 style={styles.customBtnContainer}>
-
             	<Text style={styles.customBtnText}>
                 	{text}
                 </Text>
@@ -152,12 +189,12 @@ const Edit = ({route, navigation, props}) => {
             </View>
             <View style={styles.infoContainer}>
                 <View style={styles.profileContainer}>
-                    <Pressable onPress={onProfilePressed}>
+                    <Pressable onPress={onFirstProfilePressed}>
                         <Image
                               style={styles.profile}
                               source={require('./images/vibo_profile.png')} />
                     </Pressable>
-                    <Pressable onPress={onProfilePressed}>
+                    <Pressable onPress={onSecondProfilePressed}>
                         <Image
                               style={styles.profile}
                               source={require('./images/babo_profile.png')} />
@@ -238,7 +275,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     profile: {
-        width: 110, height: 110
+        width: 110, height: 110,
     },
     infoTextContainer: {
 

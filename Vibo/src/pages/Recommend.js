@@ -3,18 +3,33 @@ import {SafeAreaView, View, Image,Text ,TouchableOpacity,Button,StatusBar,StyleS
 import stylelist from '../style';
 import axios from 'axios'
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-const All=(userID)=>{
+const All=()=> {
   const [recitems, setItems] = useState([]);
   const [error, setError] = useState(null);
   const navigation = useNavigation();
 
-  useEffect(() => { 
-    axios.get('http://172.30.1.34:3001/api/user/2023052702/recommend').then((response)=>{
-      console.log(response.data)
-      setItems(response.data);}).catch((error)=>{console.error(error);});
-}, [userID]); // 로그인된 사용자 ID가 변경될 때마다 실행
+
+  useEffect(()=>{
+    async function temp(){
+      const userID = JSON.parse(await AsyncStorage.getItem("userID"));
+      console.log("userID 1: ", userID);
+     
+        try{
+          axios.get('http://172.30.1.14:3001/api/user/'+userID+'/recommend').then((response)=>{
+            console.log(response.data);
+            setItems(response.data);
+            }).catch((error)=>{console.error("here:", error);});
+        } catch (err){
+            console.log("recommend.js) err: ", err);
+        };
+
+    }
+
+    temp();
+
+  }, []);
 
   return(
   <View >

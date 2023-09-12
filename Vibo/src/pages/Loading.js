@@ -1,43 +1,58 @@
-import React, {useEffect} from 'react';
-import {ActivityIndicator, Text, Button,View, StyleSheet, Image} from 'react-native';
+// Import React and Component
+import React, {useState, useEffect} from 'react';
+import {ActivityIndicator, View, StyleSheet, Image} from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { containsKey, getData, removeData, storeData } from "./AsyncService";
+import { storeUserData, getUserData } from './UserData';
 
-import SplashScreen from 'react-native-splash-screen';
+const Loading = ({navigation}) => {
+  //State for ActivityIndicator animation
+  const [animating, setAnimating] = useState(true);
 
-function Loading({navigation}){
-    useEffect(() => {
-        try {
-          setTimeout(() => {
-            SplashScreen.hide();
-          }, 200); //스플래시 활성화 시간 2초
-        } catch (e) {
-          console.log(e.message);
-        }
-      });
+  useEffect(() => {
+    setTimeout(() => {
+      setAnimating(false);
+      //Check if user_id is set or not
+      //If not then send for Authentication
+      //else send to Home Screen
+      AsyncStorage.getItem('userID').then((value) =>
+        navigation.replace(value === null ? 'Auth' : 'Tab'),
+      );
+    }, 700);
+  }, []);
 
-    return (
-        <View style={styles.container}>
-            <Text>VIBO</Text>
-            <Image
-                style={{width: 300, height: 500}}
-                source={require('./images/vibo.png')} />
-            <Button title="OK"
-                onPress={() => navigation.navigate('Auth')}
-            />
-        </View>
-    );
+  return (
+    <View style={styles.container}>
+      <Image
+        source={require('./images/vibo.png')}
+        style={{width: wp(55), resizeMode: 'contain', margin: 30}}
+      />
+      <ActivityIndicator
+        animating={animating}
+        color="#6990F7"
+        size="large"
+        style={styles.activityIndicator}
+      />
+    </View>
+  );
 };
+
+export default Loading;
 
 const styles = StyleSheet.create({
   container: {
-    flex:1 ,
-    justifyContent: 'center',
+    flex: 1,
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    justifyContent: 'center',
+    backgroundColor: 'white',
   },
-  title: {
-    fontSize: 30,
+  activityIndicator: {
+    alignItems: 'center',
+    height: 80,
   },
 });
-
-export default Loading;

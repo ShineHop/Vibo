@@ -42,11 +42,14 @@ const TasteModal = (props) => {
             try{
                 const userID = JSON.parse(await AsyncStorage.getItem("userID"));
                 console.log("taste_userid: ", userID);
-                axios.post('http://172.30.1.34:3001/api/user/'+userID+'/mypage/edit/taste',
+                axios.post('http://172.30.1.14:3001/api/user/'+userID+'/mypage/edit/taste',
                     {'taste': tasteUpdate.taste,
                     'sweet': tasteUpdate.sweet, 'sour': tasteUpdate.sour, 'fruit': tasteUpdate.fruit, 'milk': tasteUpdate.milk })
                 .then((response)=> {
-                    if  (response.data.status == 'update_taste_success'){
+                    if  (response.data.status == 'no_detail_pressed'){
+                        Alert.alert ('맛을 하나 이상 선택해주세요.');
+                    }
+                    else if (response.data.status == 'update_taste_success'){
                         storeUserData();
                         setModalVisible(!modalVisible);
                     }
@@ -79,7 +82,7 @@ const TasteModal = (props) => {
             transparent={true}
             visible={modalVisible}
             onRequestClose={()=>{
-                Alert.alert('Modal has been closed.');
+                Alert.alert('변경사항이 저장되지 않습니다.');
                 setModalVisible(!modalVisible);
         }}>
 
