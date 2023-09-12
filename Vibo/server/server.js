@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 const itemdb = mysql.createConnection({
     user:"root",
     host : "localhost",
-    password:'0000',
+    password:'',
     database:"itemdb"
 });
 const spawn = require('child_process').spawn;

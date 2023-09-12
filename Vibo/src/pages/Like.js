@@ -6,7 +6,6 @@ import axios from 'axios'
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //자신의 user_Id 에 해당하는 찜 아이템 목록 값들 불러오기
  
@@ -22,7 +21,7 @@ const All=()=>{
       setUserID(user)
      
         try{
-        axios.get('http://192.168.142.1:3001/api/user/'+user+'/like').then((response)=>{
+        axios.get('http://172.30.1.14:3001/api/user/'+user+'/like').then((response)=>{
       setItems(response.data);
       console.log('likeitems',useritems)
     })
@@ -40,7 +39,7 @@ const All=()=>{
       setState(true);
     }
     
-    axios.post('http://192.168.142.1:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
+    axios.post('http://172.30.1.14:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
     {    
       console.log(response);
         if(response.ok){
