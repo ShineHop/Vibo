@@ -6,7 +6,7 @@ import { useNavigation ,NavigationContainer} from "@react-navigation/native";
 import axios from 'axios';
 import Icon from "react-native-vector-icons/Ionicons";
 import Slider from '@react-native-community/slider';
-import imagePath from '../components/imagePath.json'
+import {imagePath} from '../components/imagePath.js'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { storeUserData } from '../pages/UserData';
 
@@ -24,9 +24,7 @@ function Detail({route}) {
  // const userID =Number(data)
  // console.log(userID)
   const itemid = route.params.item.ItemID;
-  console.log('itemid',itemid)
-
-
+  
 useEffect(() => { 
   async function temp(){
     const user = JSON.parse(await AsyncStorage.getItem("userID"));
@@ -164,7 +162,7 @@ function showflatlist(){
         <TouchableOpacity onPress={()=>[navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}}),setclick(false)]}>
         <View style={styles.flatlistcontainer}>
         <View >
-          <Image source={require("../components/images/1.jpg")} style = {styles.image}/>
+          <Image source={imagePath[item.ItemID]['src']} style = {styles.image}/>
           
         </View>
           <View style={styles.flatlisttext}>
@@ -193,7 +191,7 @@ const RatingUpdated=([scores])=>{
     <View style={styles.container}> 
         <Text style={[stylelist.Title_Bold,stylelist.black,stylelist.line]} >About</Text>
         <View style={styles.imagecontainer}>
-          <Image source={route.params.item.src ? require('./images/paw.png'): route.params.item.src} style = {styles.image}/></View>
+          <Image source={imagePath[itemid]['src']} style = {styles.image}/></View>
         <View style={styles.itemcontainer}>
           <Text style={[stylelist.Title_SemiBold,stylelist.black,styles.text ]}>{route.params.item.item}</Text>
               <TouchableOpacity onPress ={()=>[ButtonClicked(route.params.item.ItemID),setState(!likeState),setclick(true)]} >
