@@ -3,6 +3,7 @@ import {SafeAreaView, View, Text ,Image,TouchableOpacity,Button,StatusBar,StyleS
 import stylelist from '../../style';
 import axios from 'axios'
 import { useNavigation } from "@react-navigation/native";
+import {imagePath} from '../../components/imagePath.js'
 
 
 
@@ -21,8 +22,42 @@ const Best=()=>{
         console.error(error);
       });
   }, []);
-  const Vaginadata = data.filter((item)=>item.기능.includes('질건강'));
-  const bestdiet = Vaginadata.slice(0,5);
+  var jsontext =JSON.parse(JSON.stringify(data))
+
+  function makejson(){  
+    var dataarray = []
+      for (i = 0; i<= 806; i++){
+        if(typeof(jsontext[i])!='undefined'){
+            var string  = ' {"ItemID" :"'+ jsontext[i].ItemID + '","item": "'+jsontext[i].item +'","기능": "'+jsontext[i].기능+ '","insta": "'+jsontext[i].insta + '","youtube": "'+jsontext[i].youtube +'","src":"'+ imagePath[i]['src']+'"}'
+            dataarray.push(string)
+              }
+        else{
+          continue
+        }}
+        return dataarray;  
+  
+  }
+  const dataarray = makejson()
+if (dataarray){
+  len =  dataarray.length -1;
+ 
+  }
+  function makedatajson(){
+    var jsondata = []
+    for (var i = 0; i<= len ;i++){
+      try{
+        jsondata.push(JSON.parse(dataarray[i]))
+      }
+      catch(err){
+        jsondata.push(JSON.parse(JSON.stringify({"ItemID":264,"item":"솔가B-100베지터블캡슐","기능":"피로회복","insta":0,"youtube":0,"src":require('../../components/images/264.jpg')})))
+      }
+    }
+  
+    return jsondata;  
+  }
+  const datajson = makedatajson();
+  const Vaginadata = datajson.filter((item)=>item.기능.includes('질건강'));
+  const bestVagina = Vaginadata.slice(0,5);
 
     return(
       <View style={styles_home.container}>
@@ -30,13 +65,13 @@ const Best=()=>{
           <Text style = {[stylelist.black, stylelist.Semi_Bold] }> Best 5 </Text>
         </View>
         <FlatList
-        data={bestdiet} // 필수 Props
+        data={bestVagina} // 필수 Props
         renderItem= {({ item })=>(
           <TouchableOpacity onPress={()=>navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})}>
 
         <View style={styles_home.item_container}>
           <View >
-          <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
+          <Image source={item.src ? item.src : require('../images/paw.png')} style = {styles_home.image}></Image>
           </View>
           <View style={styles_home.text}>
           <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>
@@ -59,9 +94,43 @@ const All=()=>{
       .catch((error) => {
         console.error(error);
       });
-  }, []);
-  const Vaginadata = data.filter((item)=>item.기능.includes('질건강'));
-  const notbest = Vaginadata.slice(5,-1) //best 5이외의 상품들만 
+  }, []); var jsontext =JSON.parse(JSON.stringify(data))
+
+  function makejson(){  
+    var dataarray = []
+      for (i = 0; i<= 806; i++){
+        if(typeof(jsontext[i])!='undefined'){
+            var string  = ' {"ItemID" :"'+ jsontext[i].ItemID + '","item": "'+jsontext[i].item +'","기능": "'+jsontext[i].기능+ '","insta": "'+jsontext[i].insta + '","youtube": "'+jsontext[i].youtube +'","src":"'+ imagePath[i]['src']+'"}'
+            dataarray.push(string)
+              }
+        else{
+          continue
+        }}
+        return dataarray;  
+  
+  }
+  const dataarray = makejson()
+if (dataarray){
+  len =  dataarray.length -1;
+ 
+  }
+  function makedatajson(){
+    var jsondata = []
+    for (var i = 0; i<= len ;i++){
+      try{
+        jsondata.push(JSON.parse(dataarray[i]))
+      }
+      catch(err){
+        jsondata.push(JSON.parse(JSON.stringify({"ItemID":264,"item":"솔가B-100베지터블캡슐","기능":"피로회복","insta":0,"youtube":0,"src":require('../../components/images/264.jpg')})))
+      }
+    }
+  
+    return jsondata;  
+  }
+  const datajson = makedatajson();
+  const Vaginadata = datajson.filter((item)=>item.기능.includes('질건강'));
+  const notbest = Vaginadata.slice(5,-1);
+
     return(
       <View style={styles_home.container}>
       <View style={styles_home.title }> 
@@ -74,7 +143,7 @@ const All=()=>{
         <TouchableOpacity onPress={()=>navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})}>
         <View style={styles_home.item_container}>
         <View >
-        <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
+        <Image source={item.src ? item.src : require('../images/paw.png')} style = {styles_home.image}></Image>
         </View>
         <View style={styles_home.text}>
         <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>

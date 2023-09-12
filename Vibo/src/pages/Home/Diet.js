@@ -3,72 +3,14 @@ import {SafeAreaView, View, Text ,Image,TouchableOpacity,Button,StatusBar,StyleS
 import stylelist from '../../style';
 import axios from 'axios'
 import { useNavigation } from "@react-navigation/native";
+import {imagePath} from '../../components/imagePath.js'
 
 
-
-
-const Item = (item) => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    // 서버에서 데이터 가져오기
-    axios.get('http://172.30.1.14:3001/api/data')
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-const dietdata = data.filter((item)=>item.기능.includes('다이어트'));
-  return (
-    <View style={styles_home.item_container}>
-      <View >
-      <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
-      </View>
-      <View style={styles_home.text}>
-      <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>
-      </View>
-    </View>
-  );
-  };
-  
 const Best=()=>{
   const [data, setData] = useState([]);
   const navigation = useNavigation();
   
   
-  async function drawImage() {
-    let imgobj = document.createElement("img");
-    // promise 선언
-    let imgPromise = new Promise( (resolve , reject) => {
-        resolve();
-    });
-    
-    // resolve가 호출 될때 에는 , then() 메서드가 실행 
-    // , reject 일시에는 catch() 
-    imgPromise.then(() => {
-        imgobj.onload = () => {
-        let cur_img_width = this.naturalWidth;  
-            let cur_img_height = this.naturalHeight;
-        
-        };
-    });
-   
-   
-   console.log("Image Load Start");
-    console.log(new Date().getTime());
-
-    imgobj.src = "${pageContext.request.contextPath}/imageAction.do?process=testImageDownload";
-    
-    // await 키워드로 기다림 
-    await imgPromise ; 
-
-    console.log(new Date().getTime());
-    console.log("Image Load End ");
-   
-}
-
   useEffect(() => {
     // 서버에서 데이터 가져오기
     axios.get('http://172.30.1.14:3001/api/data')
@@ -79,9 +21,42 @@ const Best=()=>{
         console.error(error);
       });
   }, []);
-  const dietdata = data.filter((item)=>item.기능.includes('다이어트'));
-  const bestdiet = dietdata.slice(0,5);
+  var jsontext =JSON.parse(JSON.stringify(data))
 
+  function makejson(){  
+    var dataarray = []
+      for (i = 0; i<= 806; i++){
+        if(typeof(jsontext[i])!='undefined'){
+            var string  = ' {"ItemID" :"'+ jsontext[i].ItemID + '","item": "'+jsontext[i].item +'","기능": "'+jsontext[i].기능+ '","insta": "'+jsontext[i].insta + '","youtube": "'+jsontext[i].youtube +'","src":"'+ imagePath[i]['src']+'"}'
+            dataarray.push(string)
+              }
+        else{
+          continue
+        }}
+        return dataarray;  
+  
+  }
+  const dataarray = makejson()
+if (dataarray){
+  len =  dataarray.length -1;
+ 
+  }
+  function makedatajson(){
+    var jsondata = []
+    for (var i = 0; i<= len ;i++){
+      try{
+        jsondata.push(JSON.parse(dataarray[i]))
+      }
+      catch(err){
+        jsondata.push(JSON.parse(JSON.stringify({"ItemID":264,"item":"솔가B-100베지터블캡슐","기능":"피로회복","insta":0,"youtube":0,"src":require('../../components/images/264.jpg')})))
+      }
+    }
+  
+    return jsondata;  
+  }
+  const datajson = makedatajson();
+  const Diet = datajson.filter((item)=>item.기능.includes('다이어트'));
+  const bestdiet = Diet.slice(0,5)
     return(
       <View style={styles_home.container}>
         <View style={styles_home.title }> 
@@ -94,7 +69,7 @@ const Best=()=>{
 
         <View style={styles_home.item_container}>
           <View >
-          <Image source={'../../../../'} style = {styles_home.image}></Image>
+          <Image source={item.src ? item.src : require('../images/paw.png')} style = {styles_home.image}></Image>
           </View>
           <View style={styles_home.text}>
           <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>
@@ -118,8 +93,42 @@ const All=()=>{
         console.error(error);
       });
   }, []);
-  const dietdata = data.filter((item)=>item.기능.includes('다이어트'));
-  const notbest = dietdata.slice(5,-1) //best 5이외의 상품들만 
+  var jsontext =JSON.parse(JSON.stringify(data))
+
+  function makejson(){  
+    var dataarray = []
+      for (i = 0; i<= 806; i++){
+        if(typeof(jsontext[i])!='undefined'){
+            var string  = ' {"ItemID" :"'+ jsontext[i].ItemID + '","item": "'+jsontext[i].item +'","기능": "'+jsontext[i].기능+ '","insta": "'+jsontext[i].insta + '","youtube": "'+jsontext[i].youtube +'","src":"'+ imagePath[i]['src']+'"}'
+            dataarray.push(string)
+              }
+        else{
+          continue
+        }}
+        return dataarray;  
+  
+  }
+  const dataarray = makejson()
+if (dataarray){
+  len =  dataarray.length -1;
+ 
+  }
+  function makedatajson(){
+    var jsondata = []
+    for (var i = 0; i<= len ;i++){
+      try{
+        jsondata.push(JSON.parse(dataarray[i]))
+      }
+      catch(err){
+        jsondata.push(JSON.parse(JSON.stringify({"ItemID":264,"item":"솔가B-100베지터블캡슐","기능":"피로회복","insta":0,"youtube":0,"src":require('../../components/images/264.jpg')})))
+      }
+    }
+  
+    return jsondata;  
+  }
+  const datajson = makedatajson();
+  const Diet = datajson.filter((item)=>item.기능.includes('다이어트'));
+  const notbest = Diet.slice(5,-1)
     return(
       <View style={styles_home.container}>
       <View style={styles_home.title }> 
@@ -133,7 +142,7 @@ const All=()=>{
         
         <View style={styles_home.item_container}>
         <View >
-        <Image source={require('../images/paw.png')} style = {styles_home.image}></Image>
+        <Image source={item.src ? item.src : require('../images/paw.png')} style = {styles_home.image}></Image>
         </View>
         <View style={styles_home.text}>
         <Text style={stylelist.Text_Regular} key={item.ItemID}>{item.item}</Text>

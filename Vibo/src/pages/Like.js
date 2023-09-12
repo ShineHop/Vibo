@@ -6,6 +6,7 @@ import axios from 'axios'
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {imagePath} from '../components/imagePath.js'
 
 //자신의 user_Id 에 해당하는 찜 아이템 목록 값들 불러오기
  
@@ -55,7 +56,7 @@ const All=()=>{
     return(
           <View style={styles_home.item_container} >
           <View > 
-            <Image source={require('./images/paw.png')} style = {styles_home.image} ></Image>
+            <Image source={imagePath[item.itemID]['src']} style = {styles_home.image} ></Image>
           </View>
           <View >
             <Text style={styles_home.item}  key={item.id}> {item.title} </Text>

@@ -3,6 +3,7 @@ import {SafeAreaView, View, Image,Text ,TouchableOpacity,Button,StatusBar,StyleS
 import stylelist from '../style';
 import axios from 'axios'
 import { useNavigation } from "@react-navigation/native";
+import {imagePath} from '../components/imagePath.js'
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -40,7 +41,7 @@ temp()
       <TouchableOpacity onPress={()=>navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})}>
       <View style={styles_home.container}>
     <View >
-    <Image source={require('./images/paw.png')} style = {styles_home.image}></Image>
+    <Image source={imagePath[item.ItemID]['src']} style = {styles_home.image}></Image>
     </View>
     <View style={styles_home.text}>
     <Text style={stylelist.Text_Regular}>{item.item}</Text>
@@ -70,8 +71,10 @@ text:{
   
   display:'flex',
   width:'80%',
-  height:'25%',
+  height:'30%',
   flexWrap:"nowrap",
+  paddingTop:10,
+  paddingBottom:15,
   marginTop:15,
   marginLeft:30,
   marginRight:20,
@@ -80,7 +83,7 @@ text:{
 container:{
     alignItems: 'center',
     alignContent:'center',
-    width:150,
+    width:180,
     margin:5,
     height:160,
     //backgroundColor: 'yellow',
@@ -89,8 +92,8 @@ container:{
   },  
   image:{
     width:120,
-    height:110,
-    padding:40,
+    height:120,
+    padding:30,
     backgroundColor:'#f6f6f6',
     resizeMode:'contain',
    

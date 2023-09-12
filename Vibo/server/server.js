@@ -595,7 +595,7 @@ app.use('/api/user/:userID/like/:itemID/update',(req,res,next)=>{
     likearr = Object.values(rows[0]);
     for (i = 0 ; i <likearr.length;i++){
       if (i == itemID){
-        console.log(likearr[itemID])
+       // console.log(likearr[itemID])
         if(likearr[i] == 1)
         {
           itemdb.query(query,[itemID,userID]);
@@ -625,7 +625,7 @@ app.get('/api/user/:userID/like', (req, res) => {
         }
         else{
         likearr = Object.values(rows[0]);
-        console.log('likearr',likearr)
+        //console.log('likearr',likearr)
         var j = 0;
         var k = 0;
         for (i= 0 ; i < likearr.length; i++)
@@ -672,7 +672,7 @@ app.get('/api/user/:userID/like/:itemID', (req, res) => {
           id[k]= i
           k++;}
         }
-      console.log('itemID: ',itemID);
+     // console.log('itemID: ',itemID);
       for (i = 0 ; i< id.length; i++){
         if( id[i] == itemID ){
           res.send(true);
