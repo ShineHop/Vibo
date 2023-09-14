@@ -35,10 +35,10 @@ useEffect(() => {
       async function fetchScore(){ 
         await axios.get('http://192.168.142.1:3001/api/user/'+ user +'/ratings/'+itemid).then((response)=>
         { 
-          console.log(response.data);
+         // console.log(response.data);
           setAverScore(Math.round(response.data[0]*10)/10);
           setScore(response.data[1]);
-          console.log('response.data[1]',response.data[1])
+        //  console.log('response.data[1]',response.data[1])
         }),[itemid]}
 
       async function Likeornot(){
@@ -140,9 +140,9 @@ function Stars(rating){
     // 좋아요 클릭시 해당 제품과 비슷한 속성의 아이템 추천해주는 IBCF 알고리즘 백에서 실행
     async function IBCFList(){
       await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+itemid).then((response)=>{
-        console.log('IBCFLIST',response.data);
+       // console.log('IBCFLIST',response.data);
         setIBCFitems(response.data); 
-        console.log('flatlistdata',IBCFitemlist)
+       // console.log('flatlistdata',IBCFitemlist)
       }
       ),[]
    }
@@ -167,7 +167,7 @@ function showflatlist(){
           
         </View>
           <View style={styles.flatlisttext}>
-            <Text style={[stylelist.Text_Regular]} key={item.ItemID}>{item.item}</Text>
+            <Text style={[stylelist.Text_Medium,paddingTop=15, marginTop =10]} key={item.ItemID}>{item.item}</Text>
           </View>
         </View>
       </TouchableOpacity>)}/>)}}}
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   flatlisttext:{
     width:'80%',
     flexWrap:"nowrap",
-    height:40,
+    height:50,
   },
   container: {
    // paddingTop:10,
