@@ -10,6 +10,8 @@ import {imagePath} from '../components/imagePath.js'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { storeUserData } from '../pages/UserData';
 
+import TestModal from '../components/TestModal';
+
 function Detail({route}) {
   
   const navigation = useNavigation();
@@ -23,6 +25,8 @@ function Detail({route}) {
 
   const itemid = route.params.item.ItemID;
   
+  const [testModalVisible, setTestModalVisible] = useState(false);
+
 useEffect(() => { 
   async function temp(){
     const user = JSON.parse(await AsyncStorage.getItem("userID"));
@@ -135,40 +139,48 @@ function Stars(rating){
           return response.json();     
         }}),[likeState]}
     
-    // 좋아요 클릭시 해당 제품과 비슷한 속성의 아이템 추천해주는 IBCF 알고리즘 백에서 실행
-    async function IBCFList(){
-      await axios.get('http://172.30.1.14:3001/api/user/IBCF/'+itemid).then((response)=>{
-        console.log('IBCFLIST',response.data);
-        setIBCFitems(response.data); 
-        //console.log('flatlistdata',IBCFitemlist)
-      }
-      ),[]
-   }
+  //   // 좋아요 클릭시 해당 제품과 비슷한 속성의 아이템 추천해주는 IBCF 알고리즘 백에서 실행
+  //   async function IBCFList(){
+  //     await axios.get('http://172.30.1.14:3001/api/user/IBCF/'+itemid).then((response)=>{
+  //       console.log('IBCFLIST',response.data);
+  //       setIBCFitems(response.data); 
+  //       //console.log('flatlistdata',IBCFitemlist)
+  //     }
+  //     ),[]
+  //  }
     updatelike()
-    IBCFList()
+    // IBCFList()
    
   };
-function showflatlist(){
-  if (clicked == true){
-  if (likeState == true){
-    console.log(IBCFitemlist)
-    return    (
-    <FlatList data={IBCFitemlist}
-    keyExtractor={(item) => item.ItemID}
-    horizontal = {true}
-    renderItem= {({ item })=>(
+
+  function showModal(){
+    if (clicked == true){
+    if (likeState == true){
+      console.log("hi");
+      setTestModalVisible(true);
+    }}}
+
+// function showflatlist(){
+//   if (clicked == true){
+//   if (likeState == true){
+//     console.log(IBCFitemlist)
+//     return    (
+//     <FlatList data={IBCFitemlist}
+//     keyExtractor={(item) => item.ItemID}
+//     horizontal = {true}
+//     renderItem= {({ item })=>(
         
-        <TouchableOpacity onPress={()=>[navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}}),setclick(false)]}>
-        <View style={styles.flatlistcontainer}>
-        <View >
-          <Image source={imagePath[item.ItemID]['src']} style = {styles.image}/>
+//         <TouchableOpacity onPress={()=>[navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}}), setclick(false)]}>
+//         <View style={styles.flatlistcontainer}>
+//         <View >
+//           <Image source={imagePath[item.ItemID]['src']} style = {styles.image}/>
           
-        </View>
-          <View style={styles.flatlisttext}>
-            <Text style={[stylelist.Text_Medium,paddingTop=15, marginTop =10]} key={item.ItemID}>{item.item}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>)}/>)}}}
+//         </View>
+//           <View style={styles.flatlisttext}>
+//             <Text style={[stylelist.Text_Medium,paddingTop=15, marginTop =10]} key={item.ItemID}>{item.item}</Text>
+//           </View>
+//         </View>
+//       </TouchableOpacity>)}/>)}}}
 
 //사용자의 상품에 대한 평점 업데이트
 const RatingUpdated=([scores])=>{
@@ -178,9 +190,21 @@ const RatingUpdated=([scores])=>{
       return response.json();}},[itemid])
     console.log('score updated')  }
   
-
   return(    
-    <SafeAreaView style={{flex:1, backgroundColor:'#ffffff'}}   >
+    <SafeAreaView style={{flex:1, backgroundColor:'#ffffff'}}>
+
+      <TestModal
+          modalVisible={testModalVisible}
+          setModalVisible={setTestModalVisible}
+          itemID={itemid}
+          clicked={clicked}
+          setclick={setclick}
+          likeState={likeState}
+          IBCFitemlist={IBCFitemlist}
+          setIBCFitems={setIBCFitems}
+          />
+
+
       <ScrollView>    
     <View style={styles.backcontainer}> 
         <TouchableOpacity onPress={()=>navigation.pop()} style={styles.button}>
@@ -193,9 +217,11 @@ const RatingUpdated=([scores])=>{
           <Image source={imagePath[itemid]['src']} style = {styles.image}/></View>
         <View style={styles.itemcontainer}>
           <Text style={[stylelist.Title_SemiBold,stylelist.black,styles.text ]}>{route.params.item.item}</Text>
-              <TouchableOpacity onPress ={()=>[ButtonClicked(route.params.item.ItemID),setState(!likeState),setclick(true)]} >
+
+              <TouchableOpacity onPress ={()=>[ButtonClicked(route.params.item.ItemID),setState(!likeState),setclick(true), showModal()]} >
                 <Icon name={likeState === true ? "heart" : "heart-outline" } color = '#FCA6C5' size={35} style={styles.heart} ></Icon>
               </TouchableOpacity>
+
         </View>
         <View style={styles.itemcontainer1}>
           <Text style={styles.text2}>{route.params.item.기능.split("\n").join("  |  ")}</Text>
@@ -227,7 +253,7 @@ const RatingUpdated=([scores])=>{
             />
           </View>
               </View>
-              {showflatlist()}      
+              {/* {showflatlist()}       */}
         </ScrollView>
 
               
