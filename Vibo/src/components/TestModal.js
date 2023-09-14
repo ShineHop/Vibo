@@ -24,7 +24,7 @@ const TestModal = (props) => {
 
     useEffect(() => {
         async function IBCFList(){
-            await axios.get('http://172.30.1.14:3001/api/user/IBCF/'+props.itemID).then((response)=>{
+            await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+props.itemID).then((response)=>{
               console.log('IBCFLIST',response.data);
               setIBCFitems(response.data); 
             }
@@ -59,7 +59,7 @@ const TestModal = (props) => {
         );
     }
 
-
+    if (props.likeState == true){
 
     return (
         <Modal
@@ -102,7 +102,7 @@ const TestModal = (props) => {
             </View>
         </Modal>            
     );
-            
+                        }
 }
 
 const styles = StyleSheet.create({
