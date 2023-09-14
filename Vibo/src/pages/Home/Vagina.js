@@ -49,7 +49,9 @@ if (dataarray){
         jsondata.push(JSON.parse(dataarray[i]))
       }
       catch(err){
-        jsondata.push(JSON.parse(JSON.stringify({"ItemID":264,"item":"솔가B-100베지터블캡슐","기능":"피로회복","insta":0,"youtube":0,"src":require('../../components/images/264.jpg')})))
+        console.log(err)
+
+        // jsondata.push(JSON.parse(JSON.stringify({"ItemID":264,"item":"솔가B-100베지터블캡슐","기능":"피로회복","insta":0,"youtube":0,"src":require('../../components/images/264.jpg')})))
       }
     }
   

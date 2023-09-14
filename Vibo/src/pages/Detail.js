@@ -33,10 +33,10 @@ useEffect(() => {
       async function fetchScore(){ 
         await axios.get('http://172.30.1.14:3001/api/user/'+ user +'/ratings/'+itemid).then((response)=>
         { 
-          console.log(response.data);
+         // console.log(response.data);
           setAverScore(Math.round(response.data[0]*10)/10);
           setScore(response.data[1]);
-          console.log('response.data[1]',response.data[1])
+        //  console.log('response.data[1]',response.data[1])
         }),[itemid]}
 
       async function Likeornot(){
@@ -165,7 +165,7 @@ function showflatlist(){
           
         </View>
           <View style={styles.flatlisttext}>
-            <Text style={[stylelist.Text_Regular]} key={item.ItemID}>{item.item}</Text>
+            <Text style={[stylelist.Text_Medium,paddingTop=15, marginTop =10]} key={item.ItemID}>{item.item}</Text>
           </View>
         </View>
       </TouchableOpacity>)}/>)}}}
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
   flatlisttext:{
     width:'80%',
     flexWrap:"nowrap",
-    height:40,
+    height:50,
   },
   container: {
    // paddingTop:10,
