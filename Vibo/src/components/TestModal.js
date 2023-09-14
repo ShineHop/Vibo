@@ -12,10 +12,14 @@ import {
 import axios from 'axios';
 import stylelist from '../style';
 import {imagePath} from '../components/imagePath.js'
+import { useNavigation ,NavigationContainer} from "@react-navigation/native";
 
 const TestModal = (props) => {
+    const navigation = useNavigation();
     const {modalVisible, setModalVisible} = props;
     const {IBCFitemlist, setIBCFitems} = props;
+    const {clicked, setclick} = props;
+    
     console.log("props: ", props);
 
     useEffect(() => {
