@@ -493,7 +493,8 @@ app.use('/api/user/:userID/mypage/edit/function', (req, res) => {
             console.log("Update func values successfully!");
             res.send({
                 message: "Update func values successfully!",
-                status: 'update_func_success'
+                status: 'update_func_success',
+                data: {updateFunction : updateFuncDetail}
             });
         }
 
