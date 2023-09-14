@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect,useState} from "react";
 import {
     TouchableOpacity,
     StyleSheet,
@@ -17,23 +17,21 @@ import { useNavigation ,NavigationContainer} from "@react-navigation/native";
 const TestModal = (props) => {
     const navigation = useNavigation();
     const {modalVisible, setModalVisible} = props;
-    const {IBCFitemlist, setIBCFitems} = props;
-    const {clicked, setclick} = props;
-    
+    const IBCFitemlist = props.IBCFitemlist
+   
+    const ID = props.itemID
     console.log("props: ", props);
 
-    useEffect(() => {
-        async function IBCFList(){
-            await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+props.itemID).then((response)=>{
-              console.log('IBCFLIST',response.data);
-              setIBCFitems(response.data); 
-            }
-            ),[]
-         }
+        // async function IBCFList(){
+        //     await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+ID).then((response)=>{
+        //       console.log('IBCFLIST', response.data);
+        //       setIBCFitems(response.data); 
+        //     }
+        //     )}
         
-         IBCFList();
+        //  console.log(IBCFitemlist)
+        //  IBCFList();
 
-    }, []);
 
 
     // port 전송 코드
@@ -58,7 +56,7 @@ const TestModal = (props) => {
             </Pressable>
         );
     }
-
+if (props.clicked == true){
     if (props.likeState == true){
 
     return (
@@ -80,14 +78,14 @@ const TestModal = (props) => {
                         horizontal = {true}
                         renderItem= {({ item })=>(
                             
-                            <TouchableOpacity onPress={()=>[navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}}),setclick(false)]}>
+                            <TouchableOpacity onPress={()=>[navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})]}>
                             <View style={styles.flatlistcontainer}>
                             <View >
                                 <Image source={imagePath[item.ItemID]['src']} style = {styles.image}/>
                                 
                             </View>
                                 <View style={styles.flatlisttext}>
-                                <Text style={[stylelist.Text_Medium,paddingTop=15, marginTop =10]} key={item.ItemID}>{item.item}</Text>
+                                <Text style={[stylelist.Text_Medium]} key={item.ItemID}>{item.item}</Text>
                                 </View>
                             </View>
                             </TouchableOpacity>
@@ -104,7 +102,7 @@ const TestModal = (props) => {
     );
                         }
 }
-
+}
 const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
@@ -112,25 +110,51 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 22,
     },
+    image:{
+        width:150,
+        height:100,
+        resizeMode:'contain',
+        marginBottom:20
+       
+      },
+      
+  flatlistcontainer:{
+    alignItems: 'center',
+    alignContent:'center',
+    width:120,
+    margin:5,
+    height:130,
+    backgroundColor:'#f6f6f6',
+    paddingTop:10,
+    paddingRight:5,
+    paddingLeft:5,
+    marginBottom:30,
+    marginTop:30,
 
+    //paddingBottom:10
+  },
     modalView: {
-        margin: 20,
+        margin: 15,
         backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 35,
+        borderRadius: (0,0,10,10),
+        paddingBottom: 15,
         alignItems: 'center',
-        shadowColor: '#000',
+        shadowColor: '#99A799',
         shadowOffset: {
           width: 0,
           height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 5,
+        elevation: 4,
     },
 
     modalText: {
-        alignSelf: 'center'
+        width: 90,
+        flexWrap:"nowrap",
+        height:30,
+         
+         
     },
 
     modalButton: {

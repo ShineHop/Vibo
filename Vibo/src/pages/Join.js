@@ -78,7 +78,7 @@ function Join({route, navigation}) {
                 ]);
         }
             try{
-                axios.post('http://172.30.1.14:3001/api/join/' + joinInputs.id,
+                axios.post('http://192.168.142.1:3001/api/join/' + joinInputs.id,
                     {'profile':joinInputs.profile, 'username': joinInputs.username, 'birthday': joinInputs.birthday, 'sex': joinInputs.sex,
                     'id': joinInputs.id, 'password': joinInputs.password})
                 .then((response)=> {

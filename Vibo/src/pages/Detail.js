@@ -15,8 +15,8 @@ import TestModal from '../components/TestModal';
 function Detail({route}) {
   
   const navigation = useNavigation();
-  const [likeState, setState] = useState();
-  const[clicked,setclick] = useState(0);
+  const [likeState, setState] = useState(false);
+  const[clicked,setclick] = useState(false);
   const[myscore,setScore] = useState();
   const[userID,setUserID] = useState();
   const[averscore,setAverScore] =useState(0);
@@ -52,6 +52,7 @@ useEffect(() => {
           Likeornot(),
           fetchScore(),
           setMyScore(0)
+          setclick(false)
         } catch (err){
             console.log("detail.js) err: ", err);
         };
@@ -140,25 +141,28 @@ function Stars(rating){
         }}),[likeState]}
     
   //   // 좋아요 클릭시 해당 제품과 비슷한 속성의 아이템 추천해주는 IBCF 알고리즘 백에서 실행
-  //   async function IBCFList(){
-  //     await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+itemid).then((response)=>{
-  //       console.log('IBCFLIST',response.data);
-  //       setIBCFitems(response.data); 
-  //       //console.log('flatlistdata',IBCFitemlist)
-  //     }
-  //     ),[]
-  //  }
+    async function IBCFList(){
+      await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+itemid).then((response)=>{
+        console.log('IBCFLIST',response.data);
+        setIBCFitems(response.data); 
+        //console.log('flatlistdata',IBCFitemlist)
+      }
+      ),[]
+   }
+  
     updatelike()
-    // IBCFList()
+    IBCFList()
+    setclick(!clicked)
+   
    
   };
 
-  // function showModal(){
-  //   console.log(likeState)
-  //   if (likeState == true){
-  //     console.log("hi");
-  //     setTestModalVisible(true);
-  //   }}
+  function showModal(){
+    console.log(likeState)
+    if (likeState == true){
+      console.log("hi");
+      setTestModalVisible(true);
+    }}
 
 // function showflatlist(){
 //   if (clicked == true){
@@ -195,13 +199,13 @@ const RatingUpdated=([scores])=>{
 
       <TestModal
           modalVisible={testModalVisible}
-          setModalVisible={setTestModalVisible}
+          //setModalVisible={setTestModalVisible}
           itemID={itemid}
           clicked={clicked}
-          setclick={setclick}
+          //setclick={setclick}
           likeState={likeState}
           IBCFitemlist={IBCFitemlist}
-          setIBCFitems={setIBCFitems}
+          //setIBCFitems={setIBCFitems}
           />
 
 
@@ -218,7 +222,7 @@ const RatingUpdated=([scores])=>{
         <View style={styles.itemcontainer}>
           <Text style={[stylelist.Title_SemiBold,stylelist.black,styles.text ]}>{route.params.item.item}</Text>
 
-              <TouchableOpacity onPress ={()=>[ButtonClicked(route.params.item.ItemID),setState(!likeState),setclick(true), setTestModalVisible(true)]} >
+              <TouchableOpacity onPress ={()=>[ButtonClicked(route.params.item.ItemID),setState(!likeState),setclick(true), showModal()]} >
                 <Icon name={likeState === true ? "heart" : "heart-outline" } color = '#FCA6C5' size={35} style={styles.heart} ></Icon>
               </TouchableOpacity>
 
@@ -378,12 +382,5 @@ text:{
       left :110
 
   },
-  modalContainer: {
-    height: 300,
-    backgroundColor: 'red',
-    borderTopLeftRadius: 7,
-    borderTopRightRadius: 7,
-    padding: 20
-},  // 모달 스타일
 });
 export default Detail;

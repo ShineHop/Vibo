@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 const itemdb = mysql.createConnection({
     user:"root",
     host : "localhost",
-    password:'',
+    password:'0000',
     database:"itemdb"
 });
 const spawn = require('child_process').spawn;
@@ -372,7 +372,7 @@ app.use('/api/user/:userID/mypage/edit/taste', (req, res) => {
         if (err) {
             console.log("update_taste_err: ", err);
         }
-        else if (tasteUpdate=='맛있다'&&JSON.stringify(updateTasteDetail)=='[]'){
+        else if (JSON.stringify(updateTasteDetail)=='[]'){
             res.send({
                 message: "No detail pressed",
                 status: 'no_detail_pressed'
@@ -493,8 +493,7 @@ app.use('/api/user/:userID/mypage/edit/function', (req, res) => {
             console.log("Update func values successfully!");
             res.send({
                 message: "Update func values successfully!",
-                status: 'update_func_success',
-                data: {updateFunction : updateFuncDetail}
+                status: 'update_func_success'
             });
         }
 
@@ -776,12 +775,12 @@ app.get('/api/user/IBCF/:itemID', (req, res) => {
     resultarr = rsarr.filter(Boolean)
     resultarr =  resultarr.map(Number);
 
-    console.log(resultarr);
+    //console.log(resultarr);
 
 
     itemdb.query(query,[resultarr],function(err,rows) {
 
-        console.log('rows:',Object.values(rows))
+        console.log('rows:',rows)
         res.send(rows)
 
     }
