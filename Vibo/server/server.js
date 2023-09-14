@@ -73,8 +73,8 @@ app.post('/api/join/:joinID/', (req, res) => {
     const userBirth = req.body.birthday;
     const userSex = req.body.sex;
 
-    const joinCheckQuery = 'SELECT (userID) from itemdb.user_info where userID = (?)'
-    const joinQuery = 'INSERT INTO itemdb.user_info (userID, userPwd, userProfile, userName, userBirth, userSex) VALUES (?,?,?,?,?,?)'
+    const joinCheckQuery = 'SELECT (userID) from itemdb.userinfo where userID = (?)'
+    const joinQuery = 'INSERT INTO itemdb.userinfo (userID, userPwd, userProfile, userName, userBirth, userSex) VALUES (?,?,?,?,?,?)'
 
     if (userProfile!=0 && userName!='' && userID!='' && userPwd!='' && userBirth!='' && userSex!=''){
 
@@ -170,7 +170,7 @@ app.post('/api/join/:joinID/final', (req, res)=> {
     userDiet = req.body.diet;
     userVagina = req.body.vagina;
 
-    const joinQuery = 'INSERT INTO itemdb.user_info (userID, userPwd, userProfile, userName, userBirth, userSex, userTaste, userRebuy, userTexture, userTasteDetail, userFunction) VALUES (?,?,?,?,?,?,?,?,?,?,?)'
+    const joinQuery = 'INSERT INTO itemdb.userinfo (userID, userPwd, userProfile, userName, userBirth, userSex, userTaste, userRebuy, userTexture, userTasteDetail, userFunction) VALUES (?,?,?,?,?,?,?,?,?,?,?)'
 
     if (userTaste){
         userTaste = "맛있다"
@@ -310,7 +310,7 @@ app.use('/api/user/:userID/mypage/edit/profile', (req, res) => {
 
     profileUpdate = req.body.profile;
 
-    const updateQuery = 'UPDATE itemdb.user_info SET userProfile=? WHERE userID=?'
+    const updateQuery = 'UPDATE itemdb.userinfo SET userProfile=? WHERE userID=?'
 
     itemdb.query(updateQuery, [profileUpdate, userID], function(err, update_res){
         if (err) {

@@ -140,7 +140,7 @@ function Stars(rating){
       await axios.get('http://172.30.1.14:3001/api/user/IBCF/'+itemid).then((response)=>{
         console.log('IBCFLIST',response.data);
         setIBCFitems(response.data); 
-        console.log('flatlistdata',IBCFitemlist)
+        //console.log('flatlistdata',IBCFitemlist)
       }
       ),[]
    }
