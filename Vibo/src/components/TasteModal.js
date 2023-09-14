@@ -30,7 +30,7 @@ const TasteModal = (props) => {
         sweet: false, sour: false, fruit: false, milk: false,
     })
 
-    const changeCheck = (key:string, value) => {
+    const changeCheck = (key, value) => {
         setTasteUpdate(prevState => ({
              ...prevState,
              [key]: value,

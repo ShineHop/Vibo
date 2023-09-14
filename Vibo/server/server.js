@@ -372,7 +372,7 @@ app.use('/api/user/:userID/mypage/edit/taste', (req, res) => {
         if (err) {
             console.log("update_taste_err: ", err);
         }
-        else if (JSON.stringify(updateTasteDetail)=='[]'){
+        else if (tasteUpdate=='맛있다'&&JSON.stringify(updateTasteDetail)=='[]'){
             res.send({
                 message: "No detail pressed",
                 status: 'no_detail_pressed'
