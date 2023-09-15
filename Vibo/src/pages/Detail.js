@@ -49,7 +49,7 @@ useEffect(() => {
             setAverScore(Math.round(response.data[0]*10)/10);
             setScore(response.data[1]);
             setReady(false)
-          }, 1000)
+          }, 100)
 
           // setAverScore(Math.round(response.data[0]*10)/10);
           // setScore(response.data[1]);

@@ -6,8 +6,11 @@ import { useNavigation } from "@react-navigation/native";
 import {imagePath} from '../components/imagePath.js'
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Loading from './Loading.js';
 
 const All=()=>{
+  const [ready, setReady] = useState(true);
+
   const [recitems, setItems] = useState([]);
   const [error, setError] = useState(null);
   const navigation = useNavigation();
@@ -20,7 +23,13 @@ const All=()=>{
         try{
           axios.get('http://172.30.1.14:3001/api/user/'+userID+'/recommend').then((response)=>{
             console.log(response.data);
-            setItems(response.data);
+              // setItems(response.data);
+
+              setTimeout(()=>{
+                setItems(response.data);
+                setReady(false);
+              }, 1000)
+
             console.log('response of recommend', recitems)
             }).catch((error)=>{console.error("here:", error);});
         } catch (err){
@@ -28,11 +37,16 @@ const All=()=>{
         };
   
       }
-    
+
+      // setTimeout(()=>{
+      //   temp();
+      //   setReady(false)
+      // }, 1000)
       temp();
+
   }, []); // 로그인된 사용자 ID가 변경될 때마다 실행
 
-  return(
+  return ready ? <Loading/> :(
   <View >
   <FlatList  data={recitems} // 필수 Props
   numColumns={2}   
@@ -53,7 +67,7 @@ const All=()=>{
 
 
 function Recommend(){
-  return(
+  return (
   <SafeAreaView  style={stylelist.container}>    
 <View style={stylelist.titlecontainer}>
 <Text style = {[stylelist.title,stylelist.Title_Bold,stylelist.black,stylelist.line]}>VIBO's Choice</Text>

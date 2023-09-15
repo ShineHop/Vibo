@@ -53,12 +53,8 @@ const styles = StyleSheet.create({
     height: 80,
   },
   backgroundVideo: {
-    width: wp(50),
-    position: "absolute",
-    top: 0,
-    left: 120,
-    bottom: 0,
-    right: 0,
+    aspectRatio: 1,
+    width: wp(30),
   }
 
 });
