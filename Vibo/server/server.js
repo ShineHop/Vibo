@@ -522,12 +522,13 @@ app.get('/api/user/:userID/recommend', (req, res) => {
 
       const { userID } = req.params;
       const query = 'SELECT userTaste,userTasteDetail,userRebuy,userTexture,userFunction FROM userinfo WHERE userID = ? ;';
-      const query2 = 'SELECT ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능 FROM itemdb WHERE ItemID in (?) ;';
+      const query2 = 'SELECT ItemID,item,insta,youtube,맛,맛 상세,목넘김,재구매의사,기능 FROM itemdb WHERE ItemID in (?) ;';
 
       itemdb.query(query,[userID],function(err,rows) {
         featurelist = Object.values(rows[0]);
         featurelist = featurelist.toString();
         featurelist = featurelist.replace(/\[/g,' ');
+        featurelist = featurelist.replace('재구매의사','재구매의사 ');
       featurelist = featurelist.replace(/\]/g,' ');
       featurelist = featurelist.replace('\\','');
       featurelist = featurelist.replace(/\"/g,'');
