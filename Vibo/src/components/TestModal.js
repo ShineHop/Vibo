@@ -16,7 +16,7 @@ import { useNavigation ,NavigationContainer} from "@react-navigation/native";
 
 const TestModal = (props) => {
     const navigation = useNavigation();
-    const {modalVisible, setModalVisible} = props;
+    const [modalVisible, setModalVisible] = useState(true);
     const IBCFitemlist = props.IBCFitemlist
    
     const ID = props.itemID
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 4,
+        elevation: 5,
     },
 
     modalText: {
@@ -158,7 +158,9 @@ const styles = StyleSheet.create({
     },
 
     modalButton: {
-        justifyContent: 'flex-end'
+        justifyContent: 'center'
+        ,alignContent:'center'
+        
     }
 });
 

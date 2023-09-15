@@ -86,7 +86,9 @@ function MyPage({route, navigation}) {
         // userSex: 3,4 - 2000년대
         var now = new Date();
         let todayYear = now.getFullYear();
+        console.log('birth', userData[item])
         var birth = userData[item].userBirth;
+   
         var strBirth = birth.substr(0, 2);
         if (userData[item].userSex==1 || userData[item].userSex==2){
             intBirth = Number('19'+strBirth);

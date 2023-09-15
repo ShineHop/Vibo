@@ -223,7 +223,7 @@ const RatingUpdated=([scores])=>{
           <Text style={[stylelist.Title_SemiBold,stylelist.black,styles.text ]}>{route.params.item.item}</Text>
 
               <TouchableOpacity onPress ={()=>[ButtonClicked(route.params.item.ItemID),setState(!likeState),setclick(true), showModal()]} >
-                <Icon name={likeState === true ? "heart" : "heart-outline" } color = '#FCA6C5' size={35} style={styles.heart} ></Icon>
+                <Icon name={likeState == true ? "heart" : "heart-outline" } color = '#FCA6C5' size={35} style={styles.heart} ></Icon>
               </TouchableOpacity>
 
         </View>

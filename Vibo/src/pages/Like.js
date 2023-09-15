@@ -18,19 +18,18 @@ const All=()=>{
   useEffect(() => { 
     async function temp(){
       const user = JSON.parse(await AsyncStorage.getItem("userID"));
-      console.log("userID 1: ", userID);
+      //console.log("userID 1: ", userID);
       setUserID(user)
      
         try{
         axios.get('http://192.168.142.1:3001/api/user/'+user+'/like').then((response)=>{
       setItems(response.data);
-      console.log('likeitems',useritems)
+    //  console.log('likeitems',useritems)
     })
     .catch((error)=>{console.log(error);}); }catch(err){    console.log("like.js) err: ", err);}}
     temp()
     
-, [userID,likeState]}); // 로그인된 사용자 ID가 변경될 때마다 실행
-
+, [likeState,useritems]}); // 로그인된 사용자 ID가 변경될 때마다 실행
 
   const ButtonClicked=(itemid)=>{
     if ( likeState == true){
@@ -42,7 +41,7 @@ const All=()=>{
     
     axios.post('http://192.168.142.1:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
     {    
-      console.log(response);
+      //console.log(response);
         if(response.ok){
           return response.json();  
              
@@ -71,7 +70,13 @@ const All=()=>{
     )}
   //const [columnIndices, setColumnIndices] = useState([]);
  // const [userId, setUserId] = useState('john'); // 로그인된 사용자 ID를 상태로 관리
-
+ if (useritems.length ==0){
+  return(
+    <View>
+      <Text>마음에 드는 상품을 찜해보세요!</Text>
+    </View>
+  )
+ } else{
   return(
   <View >
   <FlatList data={ useritems} // 필수 Props
@@ -81,7 +86,7 @@ const All=()=>{
    
   </View>
   );
-  }
+  }}
 const Like = ()=>{
 
   // state = {ButtonClicked:true};

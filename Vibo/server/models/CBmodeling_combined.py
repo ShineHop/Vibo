@@ -90,7 +90,7 @@ def cosine_similar(random):
 def RecommendItems(user_choice):
 
 # 앱의 backend에서 버튼으로 입력받아오면 수정하기
-    user_choice= user_choice.split()
+    user_choice= user_choice.split(' ')
 
     result = []
     #사용자의 입력값 개수에 따라 6개 미만 - word2vec으로 6개 채워서 result 리스트로 반환
