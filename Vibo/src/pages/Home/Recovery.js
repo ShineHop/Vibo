@@ -1,5 +1,5 @@
 import React ,{useEffect,useState} from "react";
-import {SafeAreaView, View, Text ,Image,Button,StatusBar,StyleSheet,FlatList} from "react-native";
+import {SafeAreaView, View, Text ,Image,StatusBar,StyleSheet,FlatList} from "react-native";
 import stylelist from '../../style';
 import axios from 'axios'
 import { useNavigation } from "@react-navigation/native";
@@ -8,9 +8,8 @@ import {imagePath} from '../../components/imagePath.js'
 
 
   
-const Best=(userID)=>{
+const Best=()=>{
   const [data, setData] = useState([]);
-  const [img,setimg] = useState([])
   const navigation = useNavigation();
  
   useEffect(() => {
@@ -130,7 +129,7 @@ if (dataarray){
         jsondata.push(JSON.parse(dataarray[i]))
       }
       catch(err){
-        console.log(err)
+        //console.log(err)
         //jsondata.push(JSON.parse(JSON.stringify({"ItemID":264,"item":"솔가B-100베지터블캡슐","기능":"피로회복","insta":0,"youtube":0,"src":require('../../components/images/264.jpg')})))
       }
     }
@@ -165,7 +164,7 @@ if (dataarray){
     );};
   
 
-function Recovery({navigation}) {
+function Recovery() {
   return (      
     <SafeAreaView style={{flex:1}}   >    
     <Best/><All/> 
