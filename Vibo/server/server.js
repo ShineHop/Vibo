@@ -518,16 +518,6 @@ app.get('/api/data', (req,res) => {
             }        
     })});
     
-// app.get('/api/dataimg', (req,res) => {
-//     const imgquery = 'SELECT ItemID,IMAGE FROM itemdb; '
-//     itemdb.query(imgquery,(err,rows)=>{
-//         if(err){
-//             console.log(err)}
-//         else{
-//             res.json(rows)
-//         }      
-// })})
-
 app.get('/api/user/:userID/recommend', (req, res) => {
 
       const { userID } = req.params;
@@ -733,24 +723,24 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
         console.log('scores:',scores);
         for (j = 1; j< scores.length;j++){
           score = Number(Object.values(rows[j]));
-          console.log('score:',score)
+        //  console.log('score:',score)
 
           if (score != 0){
             if (Number(score)>=5){
               k+= 5
-              console.log('5로 통일')
+            //  console.log('5로 통일')
             }
             else{
               k +=  Number(score);
             }
-            console.log('k',k)
+          //  console.log('k',k)
             revnum ++;
 
         }
         console.log('out_if_revnum:',revnum);
       }
         aver_score = k/revnum;
-      console.log(aver_score);
+     // console.log(aver_score);
         itemdb.query(query,[userID],function(err,rows) {
           if (err) {
             console.log("데이터 가져오기 실패",err);
@@ -761,7 +751,7 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
            if (! rows[0]){
             res.send([aver_score,0])
            }else{
-            console.log('Object.values(rows[0]:',Object.values(rows[0]))
+          //  console.log('Object.values(rows[0]:',Object.values(rows[0]))
             ratings = Object.values(rows[0]);
            for (i = 0; i<ratings.length; i++){
             if(i == itemID){
@@ -778,7 +768,7 @@ app.get('/api/user/IBCF/:itemID', (req, res) => {
  const IBCFList = spawn('python',['./models/IBCF.py',itemID]);
  const query = 'Select ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능  From itemdb WHERE ItemID in (?);';
  IBCFList.stdout.on('data',function(data){
-    console.log(data)
+ //   console.log(data)
     rs = iconv.decode(data, 'euc-kr');
     console.log(rs)
     rsarr = rs.split(/\'|\, |\ |\]|\[/,-1);

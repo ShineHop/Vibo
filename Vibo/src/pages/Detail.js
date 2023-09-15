@@ -114,11 +114,8 @@ function Stars(rating){
             )}
           else {
               return(
-              
                   <Image style={styles.stars} source={require("./images/stars/0.png")}/> 
-         
-            )
-            }
+            )}
             
     }
   
@@ -198,11 +195,12 @@ function Stars(rating){
 
 //사용자의 상품에 대한 평점 업데이트
 const RatingUpdated=([scores])=>{
-  axios.post('http://192.168.142.1:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
-  {try{ console.log(response);
+  try{ 
+    axios.post('http://192.168.142.1:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
+    {console.log(response);
     if(response.ok){
-      return response.json();}}
-    catch(err){console.log(err)}},[itemid])
+      return response.json();}
+   },[itemid])} catch(err){console.log(err)}
     console.log('score updated')  }
   
   return(    
