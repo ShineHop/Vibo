@@ -35,7 +35,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 //페이지 불러오기
-import LoadPage from "./src/pages/Loading";
+import SplashPage from "./src/pages/Splash";
 import HomePage from "./src/pages/Home";
 import JoinPage from "./src/pages/Join";
 import DetailPage from "./src/pages/Detail";
@@ -91,8 +91,8 @@ function App(): JSX.Element {
   return (
     <SafeAreaView style={backgroundStyle}>
       <NavigationContainer>
-      <Stack.Navigator initialRouteName="LoadPage">
-        <Stack.Screen name="LoadPage" component={LoadPage} />
+      <Stack.Navigator initialRouteName="SplashPage">
+        <Stack.Screen name="SplashPage" component={SplashPage} />
         <Stack.Screen name="HomePage" component={HomePage} />
         <Stack.Screen name="LoginPage" component={LoginPage} />
       </Stack.Navigator>

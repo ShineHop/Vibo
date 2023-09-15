@@ -11,9 +11,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { storeUserData } from '../pages/UserData';
 
 import TestModal from '../components/TestModal';
+import Loading from './Loading.js';
 
 function Detail({route}) {
   
+  const [ready, setReady] = useState(true);
+
   const navigation = useNavigation();
   const [likeState, setState] = useState(false);
   const[clicked,setclick] = useState(false);
@@ -38,14 +41,44 @@ useEffect(() => {
       
         await axios.get('http://172.30.1.14:3001/api/user/'+ user +'/ratings/'+itemid).then((response)=>
         { 
-         // console.log(response.data);
+         console.log("0: ", response.data[0]);
+         console.log("1: ", response.data[1]);
          try
-         {setAverScore(Math.round(response.data[0]*10)/10);
-          setScore(response.data[1]);}
+         {
+          setTimeout(()=>{
+            setAverScore(Math.round(response.data[0]*10)/10);
+            setScore(response.data[1]);
+            setReady(false)
+          }, 1000)
+
+          // setAverScore(Math.round(response.data[0]*10)/10);
+          // setScore(response.data[1]);
+        }
           catch(err){
             console.log(err)
           }        //  console.log('response.data[1]',response.data[1])
-        }),[itemid]}
+        })
+        .catch(error => {
+          if (error.response) {
+            // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
+            console.log('response')
+            console.log(error.response.data)
+            console.log(error.response.status)
+            console.log(error.response.headers)
+          } else if (error.request) {
+            // 요청이 이루어 졌으나 응답을 받지 못했습니다.
+            // `error.request`는 브라우저의 XMLHttpRequest 인스턴스 또는
+            // Node.js의 http.ClientRequest 인스턴스입니다.
+            console.log('request')
+            console.log(error.request)
+          } else {
+            // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다.
+            console.log('Error', error.message)
+          }
+          console.log(error.config)
+        })
+        , [itemid]
+      }
 
       async function Likeornot(){
         await axios.get('http://172.30.1.14:3001/api/user/'+user+'/like/'+itemid).then((response)=>{
@@ -53,7 +86,7 @@ useEffect(() => {
         console.log(response.data)}
       catch(err){console.log(err)}}).catch((error)=>{console.error(error);}),[itemid]
         }
-      
+
           Likeornot(),
           fetchScore(),
           setMyScore(0)
@@ -63,7 +96,10 @@ useEffect(() => {
         };
   
       }
+  
   temp()
+
+
   },[itemid]
   ); 
   console.log('userid: ', userID)
@@ -203,7 +239,7 @@ const RatingUpdated=([scores])=>{
    },[itemid])} catch(err){console.log(err)}
     console.log('score updated')  }
   
-  return(    
+  return  ready ? <Loading/> : (    
     <SafeAreaView style={{flex:1, backgroundColor:'#ffffff'}}>
 
       <TestModal

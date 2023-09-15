@@ -25,7 +25,7 @@ function Login({navigation, props}) {
         password: ''
     });
 
-    const handleInputChange=(key:string, value:string)=>{
+    const handleInputChange=(key, value)=>{
         setLoginInputs(prevState => ({
             ...prevState,
             [key]:value,
@@ -46,7 +46,7 @@ function Login({navigation, props}) {
         );
     }
 
-    const storeUserID = async (key: string, value: any) => {
+    const storeUserID = async (key, value) => {
       try {
         const stringValue = JSON.stringify(value);
         await AsyncStorage.setItem(key, stringValue);

@@ -5,29 +5,13 @@
  * @format
  */
 
-import React ,{useState, useEffect} from 'react';
-import Axios from 'axios';
+import React from 'react';
 
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
-  Image,
-  useColorScheme,
-  View,route
 } from 'react-native';
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import SplashScreen from 'react-native-splash-screen';
 
 /*
 npm install @react-navigation/native
@@ -39,7 +23,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 //페이지 불러오기
-import LoadPage from "./src/pages/Loading";
+import SplashPage from "./src/pages/Splash";
 import HomePage from "./src/pages/Home";
 import JoinPage from "./src/pages/Join";
 import DetailPage from "./src/pages/Detail";
@@ -86,8 +70,7 @@ function App(){
   return (
       <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash">
-        {/* SplashScreen which will come once for 5 Seconds */}
-        <Stack.Screen name="Splash"     component={LoadPage}     options={{headerShown: false}}  />
+        <Stack.Screen name="Splash"     component={SplashPage}     options={{headerShown: false}}  />
         <Stack.Screen name="Auth"     component={Auth}     options={{headerShown: false}}  />
         <Stack.Screen name="Home" component={HomePage}  options={{headerShown: false}}   />
         <Stack.Screen name="DrawerNavigationRoutes" component={DrawerNavigationRoutes}

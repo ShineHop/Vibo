@@ -695,7 +695,7 @@ app.use('/api/user/:userID/ratings/:itemID/update/:scores',(req,res,next)=>{
 
   let itemID = Number(iID);
   let userID = Number(UID);
-  let score =Number(myscore);
+  let score = Number(myscore);
   const query = "UPDATE collabdb SET `?` = ? WHERE UID = ? ;"
   itemdb.query(query,[itemID,score,userID]);
 
@@ -719,10 +719,10 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
       }
       else{
         let revnum = 0;
-        scores = Object.values(rows);
+        let scores = Object.values(rows);
         console.log('scores:',scores);
         for (j = 1; j< scores.length;j++){
-          score = Number(Object.values(rows[j]));
+          let score = Number(Object.values(rows[j]));
         //  console.log('score:',score)
 
           if (score != 0){

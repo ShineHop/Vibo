@@ -5,10 +5,10 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Video from 'react-native-video';
 
-const Loading = ({navigation}) => {
+const Splash = ({navigation}) => {
   const [animating, setAnimating] = useState(true);
 
 
@@ -17,16 +17,16 @@ const Loading = ({navigation}) => {
     setTimeout(() => {
       setAnimating(false);
 
-    //   AsyncStorage.getItem('userID').then((value) =>
-    //     navigation.replace(value === null ? 'Auth' : 'Tab'),
-    //   );
+      AsyncStorage.getItem('userID').then((value) =>
+        navigation.replace(value === null ? 'Auth' : 'Tab'),
+      );
     }, 1000);
 
   }, []);
 
   return (
     <View style={styles.container}>
-      <Video source={require('./video/vitamin.mp4')}
+      <Video source={require('./video/medicine.mp4')}
         style={styles.backgroundVideo}
         paused={false}
         resizeMode={"contain"} 
@@ -34,11 +34,14 @@ const Loading = ({navigation}) => {
         repeat={true} 
         onAnimatedValueUpdate={() => {}}
       />
+
+      <Image source={require('./images/splash/title.png')} style={styles.backgroundImage}/>
+
     </View>
   );
 };
 
-export default Loading;
+export default Splash;
 
 const styles = StyleSheet.create({
   container: {
@@ -56,7 +59,16 @@ const styles = StyleSheet.create({
     width: wp(50),
     position: "absolute",
     top: 0,
-    left: 120,
+    left: 100,
+    bottom: 0,
+    right: 0,
+  },
+  backgroundImage: {
+    width: wp(30),
+    resizeMode: 'contain',
+    position: "absolute",
+    top: 250,
+    left: 140,
     bottom: 0,
     right: 0,
   }
