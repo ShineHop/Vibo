@@ -38,15 +38,19 @@ useEffect(() => {
         await axios.get('http://172.30.1.14:3001/api/user/'+ user +'/ratings/'+itemid).then((response)=>
         { 
          // console.log(response.data);
-          setAverScore(Math.round(response.data[0]*10)/10);
-          setScore(response.data[1]);
-        //  console.log('response.data[1]',response.data[1])
+         try
+         {setAverScore(Math.round(response.data[0]*10)/10);
+          setScore(response.data[1]);}
+          catch(err){
+            console.log(err)
+          }        //  console.log('response.data[1]',response.data[1])
         }),[itemid]}
 
       async function Likeornot(){
-        await axios.get('http://172.30.1.14:3001/api/user/'+user+'/like/'+itemid).then((response)=>{
-        setState(response.data);
-        console.log(response.data)}).catch((error)=>{console.error(error);}),[itemid]
+        await axios.get('http://192.168.142.1:3001/api/user/'+user+'/like/'+itemid).then((response)=>{
+        try{setState(response.data);
+        console.log(response.data)}
+      catch(err){console.log(err)}}).catch((error)=>{console.error(error);}),[itemid]
         }
       
           Likeornot(),
@@ -135,20 +139,24 @@ function Stars(rating){
     //likedb의 좋아요 state 업데이트
 
     async function updatelike()
-    {await axios.post('http://172.30.1.14:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
-      {console.log(response);
+    {await axios.post('http://192.168.142.1:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
+      {try{
+        console.log(response);
         if(response.ok){
           return response.json();     
-        }}),[likeState]}
-      
-
-    // 좋아요 클릭시 해당 제품과 비슷한 속성의 아이템 추천해주는 IBCF 알고리즘 백에서 실행
+        }}
+        catch(err){console.log(err)}}),[likeState]}
+    
+  //   // 좋아요 클릭시 해당 제품과 비슷한 속성의 아이템 추천해주는 IBCF 알고리즘 백에서 실행
     async function IBCFList(){
-      await axios.get('http://172.30.1.14:3001/api/user/IBCF/'+itemid).then((response)=>{
-        console.log('IBCFLIST',response.data);
+      await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+itemid).then((response)=>{
+        
+        try{console.log('IBCFLIST',response.data);
         setIBCFitems(response.data); 
         //console.log('flatlistdata',IBCFitemlist)
-      }
+        }catch(err){
+        console.log(err)
+      }}
       ),[]
    }
   
@@ -190,10 +198,11 @@ function Stars(rating){
 
 //사용자의 상품에 대한 평점 업데이트
 const RatingUpdated=([scores])=>{
-  axios.post('http://172.30.1.14:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
-  { console.log(response);
+  axios.post('http://192.168.142.1:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
+  {try{ console.log(response);
     if(response.ok){
-      return response.json();}},[itemid])
+      return response.json();}}
+    catch(err){console.log(err)}},[itemid])
     console.log('score updated')  }
   
   return(    
@@ -225,7 +234,7 @@ const RatingUpdated=([scores])=>{
           <Text style={[stylelist.Title_SemiBold,stylelist.black,styles.text ]}>{route.params.item.item}</Text>
 
               <TouchableOpacity onPress ={()=>[ButtonClicked(route.params.item.ItemID),setState(!likeState),setclick(true), showModal()]} >
-                <Icon name={likeState === true ? "heart" : "heart-outline" } color = '#FCA6C5' size={35} style={styles.heart} ></Icon>
+                <Icon name={likeState == true ? "heart" : "heart-outline" } color = '#FCA6C5' size={35} style={styles.heart} ></Icon>
               </TouchableOpacity>
 
         </View>

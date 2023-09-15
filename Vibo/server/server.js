@@ -73,12 +73,14 @@ app.post('/api/join/:joinID/', (req, res) => {
     const userBirth = req.body.birthday;
     const userSex = req.body.sex;
 
-    const joinCheckQuery = 'SELECT (userID) from itemdb.userinfo where userID = (?)'
-    const joinQuery = 'INSERT INTO itemdb.userinfo (userID, userPwd, userProfile, userName, userBirth, userSex) VALUES (?,?,?,?,?,?)'
-
+    const joinCheckQuery = 'SELECT (userID) from itemdb.userinfo where userID = (?);'
+    const joinQuery = 'INSERT INTO itemdb.userinfo (userID, userPwd, userProfile, userName, userBirth, userSex) VALUES (?,?,?,?,?,?);'
+    const joinQuerytolikedb = 'INSERT INTO itemdb.likedb (UID) VALUES (?);'
+    const joinQuerytocollabdb = 'INSERT INTO itemdb.collabdb (UID) VALUES (?);'
     if (userProfile!=0 && userName!='' && userID!='' && userPwd!='' && userBirth!='' && userSex!=''){
 
         itemdb.query(joinCheckQuery, [userID], function(err, check_res){
+         
             // 주민번호 숫자 자리수 6자리 에러 처리
             if (userBirth.toString().length!=6){
                 res.send({
@@ -122,6 +124,8 @@ app.post('/api/join/:joinID/', (req, res) => {
                         'sex':userSex
                     }
                 });
+                itemdb.query(joinQuerytolikedb,[userID]);
+                itemdb.query(joinQuerytocollabdb,[userID]);
             }
 
             if (err){
@@ -235,6 +239,7 @@ app.post('/api/join/:joinID/final', (req, res)=> {
         }
 
     });
+    
 });
 
 // Mypage
@@ -287,6 +292,8 @@ app.use('/api/user/:userID/mypage/edit/username', (req, res) => {
     usernameUpdate = req.body.username;
 
     const updateQuery = 'UPDATE itemdb.userinfo SET userName=? WHERE userID=?'
+
+
 
     itemdb.query(updateQuery, [usernameUpdate, userID], function(err, update_res){
         if (err) {
@@ -511,15 +518,15 @@ app.get('/api/data', (req,res) => {
             }        
     })});
     
-app.get('/api/dataimg', (req,res) => {
-    const imgquery = 'SELECT ItemID,IMAGE FROM itemdb; '
-    itemdb.query(imgquery,(err,rows)=>{
-        if(err){
-            console.log(err)}
-        else{
-            res.json(rows)
-        }      
-})})
+// app.get('/api/dataimg', (req,res) => {
+//     const imgquery = 'SELECT ItemID,IMAGE FROM itemdb; '
+//     itemdb.query(imgquery,(err,rows)=>{
+//         if(err){
+//             console.log(err)}
+//         else{
+//             res.json(rows)
+//         }      
+// })})
 
 app.get('/api/user/:userID/recommend', (req, res) => {
 
@@ -535,7 +542,7 @@ app.get('/api/user/:userID/recommend', (req, res) => {
       featurelist = featurelist.replace('\\','');
       featurelist = featurelist.replace(/\"/g,'');
       featurelist = featurelist.replace(/\,/g,'');
-      console.log(featurelist)
+      console.log('featurelist[',featurelist)
       let recommendItemList = [];
 
       const recommendlist = spawn('python',['./models/CBmodeling_combined.py',featurelist]);
@@ -547,12 +554,12 @@ app.get('/api/user/:userID/recommend', (req, res) => {
               resultarr =  rsarr.map(Number);
               //rsarr = rsarr[0]
              // console.log('rs의 개수: ',rsarr.length);
-              console.log(resultarr);
+             // console.log(resultarr);
               var j = 0;
               itemdb.query(query2,[resultarr],function(err,rows){
                 if (err){console.error('Error executing second query:',err);}
                 else{
-                  console.log(Object.values(rows))
+                  //console.log(Object.values(rows))
 
                     for (i= 0 ; i < resultarr.length; i++) {
                       //console.log(Object.values(rows[i]));
@@ -661,7 +668,8 @@ app.get('/api/user/:userID/like/:itemID', (req, res) => {
   let id = [];
   try{
   itemdb.query(query,[userID],function(err,rows) {
-    if (!rows[0] ) {
+   console.log(rows[0])
+    if (!rows[0]) {
         likearr = []
     } else {
       var k = 0;
@@ -746,6 +754,8 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
         itemdb.query(query,[userID],function(err,rows) {
           if (err) {
             console.log("데이터 가져오기 실패",err);
+            res.send([aver_score,0])
+
           } else {
            // res.send(rows[0]);
            if (! rows[0]){
@@ -768,6 +778,7 @@ app.get('/api/user/IBCF/:itemID', (req, res) => {
  const IBCFList = spawn('python',['./models/IBCF.py',itemID]);
  const query = 'Select ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능  From itemdb WHERE ItemID in (?);';
  IBCFList.stdout.on('data',function(data){
+    console.log(data)
     rs = iconv.decode(data, 'euc-kr');
     console.log(rs)
     rsarr = rs.split(/\'|\, |\ |\]|\[/,-1);
