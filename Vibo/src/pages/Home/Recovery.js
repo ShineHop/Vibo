@@ -17,7 +17,7 @@ const Best=(userID)=>{
     // 서버에서 데이터 가져오기
 
     function loadData(){
-    axios.get('http://192.168.142.1:3001/api/data')
+    axios.get('http://172.30.1.14:3001/api/data')
       .then((response) => {
         setData(response.data); //data = [ItemID,item,맛,맛 상세,재구매의사, 목넘김,기능]
       // console.log(response.data)
@@ -95,7 +95,7 @@ const All=()=>{
 
   useEffect(() => {
     // 서버에서 데이터 가져오기
-    axios.get('http://192.168.142.1:3001/api/data')
+    axios.get('http://172.30.1.14:3001/api/data')
       .then((response) => {
         setData(response.data);
       })

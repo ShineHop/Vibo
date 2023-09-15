@@ -35,7 +35,7 @@ useEffect(() => {
    
       try{
       async function fetchScore(){ 
-        await axios.get('http://192.168.142.1:3001/api/user/'+ user +'/ratings/'+itemid).then((response)=>
+        await axios.get('http://172.30.1.14:3001/api/user/'+ user +'/ratings/'+itemid).then((response)=>
         { 
          // console.log(response.data);
           setAverScore(Math.round(response.data[0]*10)/10);
@@ -44,7 +44,7 @@ useEffect(() => {
         }),[itemid]}
 
       async function Likeornot(){
-        await axios.get('http://192.168.142.1:3001/api/user/'+user+'/like/'+itemid).then((response)=>{
+        await axios.get('http://172.30.1.14:3001/api/user/'+user+'/like/'+itemid).then((response)=>{
         setState(response.data);
         console.log(response.data)}).catch((error)=>{console.error(error);}),[itemid]
         }
@@ -133,16 +133,18 @@ function Stars(rating){
   const ButtonClicked=(itemid)=>{
    
     //likedb의 좋아요 state 업데이트
+
     async function updatelike()
-    {await axios.post('http://192.168.142.1:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
+    {await axios.post('http://172.30.1.14:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
       {console.log(response);
         if(response.ok){
           return response.json();     
         }}),[likeState]}
-    
-  //   // 좋아요 클릭시 해당 제품과 비슷한 속성의 아이템 추천해주는 IBCF 알고리즘 백에서 실행
+      
+
+    // 좋아요 클릭시 해당 제품과 비슷한 속성의 아이템 추천해주는 IBCF 알고리즘 백에서 실행
     async function IBCFList(){
-      await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+itemid).then((response)=>{
+      await axios.get('http://172.30.1.14:3001/api/user/IBCF/'+itemid).then((response)=>{
         console.log('IBCFLIST',response.data);
         setIBCFitems(response.data); 
         //console.log('flatlistdata',IBCFitemlist)
@@ -151,7 +153,7 @@ function Stars(rating){
    }
   
     updatelike()
-    IBCFList()
+    // IBCFList()
     setclick(!clicked)
    
    
@@ -188,7 +190,7 @@ function Stars(rating){
 
 //사용자의 상품에 대한 평점 업데이트
 const RatingUpdated=([scores])=>{
-  axios.post('http://192.168.142.1:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
+  axios.post('http://172.30.1.14:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
   { console.log(response);
     if(response.ok){
       return response.json();}},[itemid])
