@@ -778,6 +778,7 @@ app.get('/api/user/IBCF/:itemID', (req, res) => {
  const IBCFList = spawn('python',['./models/IBCF.py',itemID]);
  const query = 'Select ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능  From itemdb WHERE ItemID in (?);';
  IBCFList.stdout.on('data',function(data){
+    console.log(data)
     rs = iconv.decode(data, 'euc-kr');
     console.log(rs)
     rsarr = rs.split(/\'|\, |\ |\]|\[/,-1);

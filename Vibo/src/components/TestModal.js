@@ -65,7 +65,6 @@ if (props.clicked == true){
         transparent={true}
         visible={modalVisible}
         onRequestClose={()=>{
-            Alert.alert('변경사항이 저장되지 않습니다.');
             setModalVisible(!modalVisible);
         }}>
 

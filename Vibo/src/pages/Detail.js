@@ -35,18 +35,23 @@ useEffect(() => {
    
       try{
       async function fetchScore(){ 
+      
         await axios.get('http://192.168.142.1:3001/api/user/'+ user +'/ratings/'+itemid).then((response)=>
         { 
          // console.log(response.data);
-          setAverScore(Math.round(response.data[0]*10)/10);
-          setScore(response.data[1]);
-        //  console.log('response.data[1]',response.data[1])
+         try
+         {setAverScore(Math.round(response.data[0]*10)/10);
+          setScore(response.data[1]);}
+          catch(err){
+            console.log(err)
+          }        //  console.log('response.data[1]',response.data[1])
         }),[itemid]}
 
       async function Likeornot(){
         await axios.get('http://192.168.142.1:3001/api/user/'+user+'/like/'+itemid).then((response)=>{
-        setState(response.data);
-        console.log(response.data)}).catch((error)=>{console.error(error);}),[itemid]
+        try{setState(response.data);
+        console.log(response.data)}
+      catch(err){console.log(err)}}).catch((error)=>{console.error(error);}),[itemid]
         }
       
           Likeornot(),
@@ -135,18 +140,23 @@ function Stars(rating){
     //likedb의 좋아요 state 업데이트
     async function updatelike()
     {await axios.post('http://192.168.142.1:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
-      {console.log(response);
+      {try{
+        console.log(response);
         if(response.ok){
           return response.json();     
-        }}),[likeState]}
+        }}
+        catch(err){console.log(err)}}),[likeState]}
     
   //   // 좋아요 클릭시 해당 제품과 비슷한 속성의 아이템 추천해주는 IBCF 알고리즘 백에서 실행
     async function IBCFList(){
       await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+itemid).then((response)=>{
-        console.log('IBCFLIST',response.data);
+        
+        try{console.log('IBCFLIST',response.data);
         setIBCFitems(response.data); 
         //console.log('flatlistdata',IBCFitemlist)
-      }
+        }catch(err){
+        console.log(err)
+      }}
       ),[]
    }
   
@@ -189,9 +199,10 @@ function Stars(rating){
 //사용자의 상품에 대한 평점 업데이트
 const RatingUpdated=([scores])=>{
   axios.post('http://192.168.142.1:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
-  { console.log(response);
+  {try{ console.log(response);
     if(response.ok){
-      return response.json();}},[itemid])
+      return response.json();}}
+    catch(err){console.log(err)}},[itemid])
     console.log('score updated')  }
   
   return(    
