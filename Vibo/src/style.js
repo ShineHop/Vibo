@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   Text_Bold: {
-    fontWeight: 600,
+    fontWeight: '600',
     fontFamily: 'inter',
     fontSize: 14,
   },

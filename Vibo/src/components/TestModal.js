@@ -16,23 +16,31 @@ import { useNavigation ,NavigationContainer} from "@react-navigation/native";
 
 const TestModal = (props) => {
     const navigation = useNavigation();
-    const [modalVisible, setModalVisible] = useState(true);
-    const IBCFitemlist = props.IBCFitemlist
+    const [modalVisible, setModalVisible] = useState();
+    const[IBCFitemlist, setIBCFitems] = useState();
+
    
     const ID = props.itemID
     console.log("props: ", props);
-
-        // async function IBCFList(){
-        //     await axios.get('http://172.30.1.14:3001/api/user/IBCF/'+ID).then((response)=>{
-        //       console.log('IBCFLIST', response.data);
-        //       setIBCFitems(response.data); 
-        //     }
-        //     )}
+    useEffect(() => { 
+        async function IBCFList(){
+            await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+ID).then((response)=>{
+              console.log('IBCFLIST', response.data);
+              if(!response.data){
+                setIBCFitems()
+            }
+              else{
+              setIBCFitems(response.data); 
+            }}
+            )}
+            IBCFList() 
+            setModalVisible(props.likeState)    },[props.likeState])
         
-        //  console.log(IBCFitemlist)
-        //  IBCFList();
+      //   console.log(IBCFitemlist)
+       
 
-
+console.log('modalvisible',modalVisible)
+      
 
     // port 전송 코드
     const onTextureUpdatePressed = () => {
@@ -58,15 +66,13 @@ const TestModal = (props) => {
     }
 if (props.clicked == true){
     if (props.likeState == true){
-
-    return (
+        if(IBCFitemlist)
+{        return (
         <Modal
         animationType='slide'
         transparent={true}
         visible={modalVisible}
-        onRequestClose={()=>{
-            setModalVisible(!modalVisible);
-        }}>
+        >
 
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
@@ -100,14 +106,43 @@ if (props.clicked == true){
         </Modal>            
     );
                         }
-}
-}
+                        else{
+                            return(
+                                <Modal
+                                animationType='slide'
+                                transparent={true}
+                                visible={modalVisible}
+                                >
+                        
+                                    <View style={styles.nocenteredView}>
+                                        <View style={styles.nomodalView}>
+                                    <Text style = {[stylelist.Semi_Bold,styles.notext]}>표시할 항목이 존재하지 않습니다</Text>
+                                    <TextureUpdateButton
+                        text="닫기"
+                    />
+                    </View></View>
+                                    
+                                    </Modal>                            )
+                        }}
+}}
+
 const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'center',
         marginTop: 22,
+    }, 
+    notext:{
+        padding:20,
+        margin :10
+    },
+   
+    nocenteredView: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        //padding: 20
     },
     image:{
         width:150,
@@ -147,6 +182,21 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
     },
+    nomodalView: {
+        margin: 10,
+        backgroundColor: 'white',
+        borderRadius: (0,0,10,10),
+        paddingBottom: 15,
+        alignItems: 'center',
+        shadowColor: '#99A799',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
 
     modalText: {
         width: 90,
@@ -158,7 +208,9 @@ const styles = StyleSheet.create({
 
     modalButton: {
         justifyContent: 'center'
-        ,alignContent:'center'
+        ,alignContent:'center',
+        width:30,
+        height:10
         
     }
 });
