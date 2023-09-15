@@ -35,6 +35,7 @@ useEffect(() => {
    
       try{
       async function fetchScore(){ 
+      
         await axios.get('http://172.30.1.14:3001/api/user/'+ user +'/ratings/'+itemid).then((response)=>
         { 
          // console.log(response.data);
@@ -134,7 +135,6 @@ function Stars(rating){
   const ButtonClicked=(itemid)=>{
    
     //likedb의 좋아요 state 업데이트
-
     async function updatelike()
     {await axios.post('http://172.30.1.14:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
       {try{
@@ -158,7 +158,7 @@ function Stars(rating){
    }
   
     updatelike()
-    // IBCFList()
+    IBCFList()
     setclick(!clicked)
    
    
@@ -195,14 +195,9 @@ function Stars(rating){
 
 //사용자의 상품에 대한 평점 업데이트
 const RatingUpdated=([scores])=>{
-<<<<<<< HEAD
-  axios.post('http://172.30.1.14:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
-  {try{ console.log(response);
-=======
   try{ 
-    axios.post('http://192.168.142.1:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
+    axios.post('http://172.30.1.14:3001/api/user/'+userID+'/ratings/'+ itemid +'/update/'+scores).then((response)=>
     {console.log(response);
->>>>>>> d7ea364ae35006a21c4f924a2405331cb512c7a6
     if(response.ok){
       return response.json();}
    },[itemid])} catch(err){console.log(err)}
