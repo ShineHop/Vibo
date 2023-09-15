@@ -56,7 +56,7 @@ const All=()=>{
       <TouchableOpacity onPress={()=>navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})}>
       <View style={styles_home.container}>
     <View >
-    <Image source={imagePath[item.ItemID]['src']} style = {styles_home.image}></Image>
+    <Image source={imagePath[item.ItemID]['src']} style = {styles_home.image}></Image>  
     </View>
     <View style={styles_home.text}>
     <Text style={stylelist.Text_Regular}>{item.item}</Text>
