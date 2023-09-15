@@ -90,7 +90,7 @@ if (props.clicked == true){
                                 
                             </View>
                                 <View style={styles.flatlisttext}>
-                                <Text style={[stylelist.Text_Medium]} key={item.ItemID}>{item.item}</Text>
+                                <Text style={[stylelist.Text_Medium,styles.itemtext]} key={item.ItemID}>{item.item}</Text>
                                 </View>
                             </View>
                             </TouchableOpacity>
@@ -152,17 +152,20 @@ const styles = StyleSheet.create({
        
       },
       
+      itemtext:{
+        marginTop:10,
+        height:40},
   flatlistcontainer:{
     alignItems: 'center',
     alignContent:'center',
     width:120,
     margin:5,
-    height:130,
+    height:150,
     backgroundColor:'#f6f6f6',
     paddingTop:10,
     paddingRight:5,
     paddingLeft:5,
-    marginBottom:30,
+    marginBottom:50,
     marginTop:30,
 
     //paddingBottom:10
