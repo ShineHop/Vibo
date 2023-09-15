@@ -712,6 +712,9 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
   let userID = Number(UID);
   let k = 0;
 
+  console.log("fire: ", req);
+  console.log('what: ', res);
+
     const query = 'SELECT * FROM collabdb WHERE UID = ? ;';
     const query2 = 'SELECT `?` FROM collabdb;'
     itemdb.query(query2,[itemID], function(err,rows){

@@ -41,6 +41,7 @@ useEffect(() => {
       
         await axios.get('http://192.168.142.1:3001/api/user/'+ user +'/ratings/'+itemid).then((response)=>
         { 
+          console.log(response.data);
          console.log("0: ", response.data[0]);
          console.log("1: ", response.data[1]);
          try
@@ -48,7 +49,7 @@ useEffect(() => {
           setTimeout(()=>{
             setAverScore(Math.round(response.data[0]*10)/10);
             setScore(response.data[1]);
-            setReady(false)
+            setReady(false)            
           }, 100)
 
           // setAverScore(Math.round(response.data[0]*10)/10);
@@ -77,7 +78,7 @@ useEffect(() => {
           }
           console.log(error.config)
         })
-        , [itemid]
+        // , [itemid]
       }
 
       async function Likeornot(){
@@ -97,7 +98,7 @@ useEffect(() => {
   
       }
   
-  temp()
+  temp();
 
 
   },[itemid]

@@ -7,13 +7,10 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {imagePath} from '../components/imagePath.js'
-import Loading from './Loading.js';
 
 //자신의 user_Id 에 해당하는 찜 아이템 목록 값들 불러오기
  
 const All=()=>{
-  const [ready, setReady] = useState(true);
-
   const [useritems, setItems] = useState([]);
   const [likeState, setState] = useState([true]);
   const[userID,setUserID] = useState();
@@ -26,17 +23,12 @@ const All=()=>{
       
         try{
         axios.get('http://172.30.1.14:3001/api/user/'+user+'/like').then((response)=>{
-      setItems(response.data);
+          setItems(response.data);
     //  console.log('likeitems',useritems)
     })
     .catch((error)=>{console.log(error);}); }catch(err){    console.log("like.js) err: ", err);}}
     
-
-    setTimeout(()=>{
-      temp()
-      setReady(false)
-    }, 1000)
-
+    temp()
     
 , [likeState,useritems]}); // 로그인된 사용자 ID가 변경될 때마다 실행
 
