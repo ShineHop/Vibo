@@ -23,7 +23,7 @@ const TestModal = (props) => {
     console.log("props: ", props);
 
         // async function IBCFList(){
-        //     await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+ID).then((response)=>{
+        //     await axios.get('http://172.30.1.14:3001/api/user/IBCF/'+ID).then((response)=>{
         //       console.log('IBCFLIST', response.data);
         //       setIBCFitems(response.data); 
         //     }
