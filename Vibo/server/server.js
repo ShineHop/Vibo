@@ -16,9 +16,9 @@ app.use(express.urlencoded({ extended: true }));
 
 
 const itemdb = mysql.createConnection({
-    user:"root",
-    host : "localhost",
-    password:'',
+    user:"user1",
+    host : "3.34.45.236",
+    password:'0000',
     database:"itemdb"
 });
 const spawn = require('child_process').spawn;
@@ -26,6 +26,10 @@ const spawn = require('child_process').spawn;
 
 itemdb.connect();
 
+const port = 3001;
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});
 // post: 생성, put: 수정, get: 받아오기, delete: 삭제
 
 // 로그인
@@ -793,7 +797,4 @@ app.get('/api/user/IBCF/:itemID', (req, res) => {
   })
 
   // 서버 시작
-  const port = 3001;
-  app.listen(port, () => {
-    console.log(`Server started on port ${port}`);
-  });
+ 

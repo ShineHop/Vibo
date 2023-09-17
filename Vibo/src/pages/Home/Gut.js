@@ -14,7 +14,7 @@ const Best=()=>{
 
   useEffect(() => {
     // 서버에서 데이터 가져오기
-    axios.get('http://172.30.1.14:3001/api/data')
+    axios.get('http://3.34.45.236:3001/api/data')
       .then((response) => {
         setData(response.data);
       })
@@ -86,7 +86,7 @@ const All=()=>{
 
   useEffect(() => {
     // 서버에서 데이터 가져오기
-    axios.get('http://172.30.1.14:3001/api/data')
+    axios.get('http://3.34.45.236:3001/api/data')
       .then((response) => {
         setData(response.data);
       })

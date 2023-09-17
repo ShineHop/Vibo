@@ -21,7 +21,7 @@ const All=()=>{
       console.log("userID 1: ", userID);
      
         try{
-          axios.get('http://172.30.1.14:3001/api/user/'+userID+'/recommend').then((response)=>{
+          axios.get('http://3.34.45.236:3001/api/user/'+userID+'/recommend').then((response)=>{
             console.log(response.data);
               // setItems(response.data);
 

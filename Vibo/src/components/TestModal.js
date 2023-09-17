@@ -24,7 +24,7 @@ const TestModal = (props) => {
     console.log("props: ", props);
     useEffect(() => { 
         async function IBCFList(){
-            await axios.get('http://192.168.142.1:3001/api/user/IBCF/'+ID).then((response)=>{
+            await axios.get('http://3.34.45.236:3001/api/user/IBCF/'+ID).then((response)=>{
               console.log('IBCFLIST', response.data);
               if(!response.data){
                 setIBCFitems()
