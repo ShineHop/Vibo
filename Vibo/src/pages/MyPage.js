@@ -42,19 +42,19 @@ function MyPage({route, navigation}) {
         const eData = route.params;
         console.log('eData: ', eData);
         if (typeof(eData) != 'undefined'){
-                editName = route.params.eName;
-                editProfile = route.params.eProfile;
-                editTaste = route.params.eTaste;
-                editTexture = route.params.eTexture;
-                editRepurchase = route.params.eRepurchase;
-                editFunction = route.params.eFunction;
-                console.log("eName: ", editName, "eProfile: ", editProfile, "eTaste: ", editTaste, "eTexture: ", editTexture, "editRepurchase: ", editRepurchase, "eFunction: ", editFunction);
+            editName = route.params.eName;
+            editProfile = route.params.eProfile;
+            editTaste = route.params.eTaste;
+            editTexture = route.params.eTexture;
+            editRepurchase = route.params.eRepurchase;
+            editFunction = route.params.eFunction;
+            console.log("eName: ", editName, "eProfile: ", editProfile, "eTaste: ", editTaste, "eTexture: ", editTexture, "editRepurchase: ", editRepurchase, "eFunction: ", editFunction);
 
-                userData[item].userProfile = editProfile;   //modal에서 변경되면 값 지정
-                userData[item].userTasteDetail = editTaste;
-                userData[item].userTexture = editTexture;
-                userData[item].userRebuy = editRepurchase;
-                userData[item].userFunction = editFunction;
+            userData[item].userProfile = editProfile;   //modal에서 변경되면 값 지정
+            userData[item].userTasteDetail = editTaste;
+            userData[item].userTexture = editTexture;
+            userData[item].userRebuy = editRepurchase;
+            userData[item].userFunction = editFunction;
 
         } else {editName = ''}
 
