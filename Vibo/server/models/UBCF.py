@@ -7,9 +7,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 # mysql에서 db 불러오기
 conn = pymysql.connect(
-    user = 'root',
-    passwd = '',
-    host = 'localhost',
+    user = 'user1',
+    passwd = '0000',
+    host = '3.34.45.236',
     db = 'itemdb',
     charset = 'utf8',
     autocommit=True, 
