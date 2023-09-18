@@ -21,7 +21,7 @@ const All=()=>{
       console.log("userID 1: ", userID);
 
         try{              // userinfo의 회원가입한 사람 수 받아오기
-          axios.get('http://3.34.45.236:3001/api/user/'+userID+'/recommend/count').then((num_res)=>{
+          axios.get('http://3.39.226.198:3001/api/user/'+userID+'/recommend/count').then((num_res)=>{
             console.log(num_res.data);
             // 15명 미만이면 contents-based - server: /userID/recommend
             // 15명 이상이면 ubcf - server: /userID/recommned/ubcf
@@ -29,7 +29,7 @@ const All=()=>{
               console.log("cold-start");
               // Cold Start : contents-based
               try{
-                axios.get('http://3.34.45.236:3001/api/user/'+userID+'/recommend').then((response)=>{
+                axios.get('http://3.39.226.198:3001/api/user/'+userID+'/recommend').then((response)=>{
                     console.log("Cold-Start: ", response.data);
                     setTimeout(()=>{
                       setItems(response.data);
@@ -45,7 +45,7 @@ const All=()=>{
             } else {
               console.log("post cold-start");
               try{
-                axios.get('http://3.34.45.236:3001/api/user/'+userID+'/recommend/ubcf').then((response)=>{
+                axios.get('http://3.39.226.198:3001/api/user/'+userID+'/recommend/ubcf').then((response)=>{
                   console.log("UBCF: ", response.data);
                   setTimeout(()=>{
                     setItems(response.data);

@@ -8,8 +8,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 # mysql에서 db 불러오기
 conn = pymysql.connect(
     user = 'user1',
-    passwd = '0000',
-    host = '3.34.45.236',
+    passwd = '12345678',
+    host = '3.39.226.198',
     db = 'itemdb',
     charset = 'utf8',
     autocommit=True, 

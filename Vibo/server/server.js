@@ -17,8 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 
 const itemdb = mysql.createConnection({
     user:"user1",
-    host : "3.34.45.236",
-    password:'0000',
+    host : "3.39.226.198",
+    password:'12345678',
     database:"itemdb"
 });
 const spawn = require('child_process').spawn;
@@ -791,8 +791,8 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
   let userID = Number(UID);
   let k = 0;
 
-  console.log("fire: ", req);
-  console.log('what: ', res);
+  //console.log("fire: ", req);
+  //console.log('what: ', res);
 
     const query = 'SELECT * FROM collabdb WHERE UID = ? ;';
     const query2 = 'SELECT `?` FROM collabdb;'
@@ -848,7 +848,7 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
 app.get('/api/user/IBCF/:itemID', (req, res) => {
   const { itemID } = req.params;
   
- const IBCFList = spawn('python',['./models/IBCF.py',itemID]);
+ const IBCFList = spawn('python3',['./models/IBCF.py',itemID]);
  const query = 'Select ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능  From itemdb WHERE ItemID in (?);';
  IBCFList.stdout.on('data',function(data){
  //   console.log(data)
