@@ -79,8 +79,6 @@ app.post('/api/join/:joinID/', (req, res) => {
 
     const joinCheckQuery = 'SELECT (userID) from itemdb.userinfo where userID = (?);'
     const joinQuery = 'INSERT INTO itemdb.userinfo (userID, userPwd, userProfile, userName, userBirth, userSex) VALUES (?,?,?,?,?,?);'
-    const joinQuerytolikedb = 'INSERT INTO itemdb.likedb (UID) VALUES (?);'
-    const joinQuerytocollabdb = 'INSERT INTO itemdb.collabdb (UID) VALUES (?);'
     if (userProfile!=0 && userName!='' && userID!='' && userPwd!='' && userBirth!='' && userSex!=''){
 
         itemdb.query(joinCheckQuery, [userID], function(err, check_res){
@@ -128,8 +126,6 @@ app.post('/api/join/:joinID/', (req, res) => {
                         'sex':userSex
                     }
                 });
-                itemdb.query(joinQuerytolikedb,[userID]);
-                itemdb.query(joinQuerytocollabdb,[userID]);
             }
 
             if (err){
@@ -179,6 +175,8 @@ app.post('/api/join/:joinID/final', (req, res)=> {
     userVagina = req.body.vagina;
 
     const joinQuery = 'INSERT INTO itemdb.userinfo (userID, userPwd, userProfile, userName, userBirth, userSex, userTaste, userRebuy, userTexture, userTasteDetail, userFunction) VALUES (?,?,?,?,?,?,?,?,?,?,?)'
+    const joinQuerytolikedb = 'INSERT INTO itemdb.likedb (UID) VALUES (?);'
+    const joinQuerytocollabdb = 'INSERT INTO itemdb.collabdb (UID) VALUES (?);'
 
     if (userTaste){
         userTaste = "맛있다"
@@ -243,6 +241,9 @@ app.post('/api/join/:joinID/final', (req, res)=> {
         }
 
     });
+
+    itemdb.query(joinQuerytolikedb,[joinID]);
+    itemdb.query(joinQuerytocollabdb,[joinID]);
     
 });
 
