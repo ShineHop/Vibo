@@ -264,7 +264,8 @@ const RatingUpdated=([scores])=>{
     <View style={styles.container}> 
         <Text style={[stylelist.Title_Bold,stylelist.black,stylelist.line]} >About</Text>
         <View style={styles.imagecontainer}>
-          <Image source={imagePath[itemid]['src']} style = {styles.image}/></View>
+          <Image source={imagePath[itemid]['src']} style = {styles.image}/>
+        </View>
         <View style={styles.itemcontainer}>
           <Text style={[stylelist.Title_SemiBold,stylelist.black,styles.text ]}>{route.params.item.item}</Text>
 

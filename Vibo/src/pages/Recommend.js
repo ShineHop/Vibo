@@ -19,8 +19,7 @@ const All=()=>{
     async function temp(){
       const userID = JSON.parse(await AsyncStorage.getItem("userID"));
       console.log("userID 1: ", userID);
-     
-       
+
         try{              // userinfo의 회원가입한 사람 수 받아오기
           axios.get('http://3.39.226.198:3001/api/user/'+userID+'/recommend/count').then((num_res)=>{
             console.log(num_res.data);
@@ -65,13 +64,7 @@ const All=()=>{
         } catch(err){
           console.log("recommend.js) err: ", err);
         };
-  
       }
-
-      // setTimeout(()=>{
-      //   temp();
-      //   setReady(false)
-      // }, 1000)
       temp();
 
   }, []); // 로그인된 사용자 ID가 변경될 때마다 실행
@@ -86,7 +79,7 @@ const All=()=>{
       <TouchableOpacity onPress={()=>navigation.navigate('DrawerNavigationRoutes',{screen:"DetailPage",params:{item}})}>
       <View style={styles_home.container}>
     <View >
-    <Image source={imagePath[item.ItemID]['src']} style = {styles_home.image}></Image>
+    <Image source={imagePath[item.ItemID]['src']} style = {styles_home.image}></Image>  
     </View>
     <View style={styles_home.text}>
     <Text style={stylelist.Text_Regular}>{item.item}</Text>

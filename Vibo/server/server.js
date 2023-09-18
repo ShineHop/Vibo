@@ -511,6 +511,28 @@ app.use('/api/user/:userID/mypage/edit/function', (req, res) => {
     });
 });
 
+// userinfo의 회원가입한 사람 수 받아오기
+// 15명 미만이면 contents-based - server: /userID/recommend
+// 15명 이상이면 ubcf - server: /userID/recommned/ubcf
+
+// userinfo의 회원가입한 사람 수 받아오기
+app.get('/api/user/:userID/recommend/count', (req, res)=> {
+    const countQuery = 'SELECT userID FROM itemdb.userinfo;';
+    itemdb.query(countQuery, function(err, num_res){
+        console.log(num_res.length);
+        if (err){
+            console.log("count_user_err: ", err);
+        } 
+        else {
+            res.send({
+                message: "Count values successfully!",
+                data : num_res.length
+            });
+        }
+        
+    });
+
+});  
 
 app.get('/api/data', (req,res) => {
     const query = 'SELECT ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능 FROM itemdb;';
@@ -521,9 +543,9 @@ app.get('/api/data', (req,res) => {
             res.json(rows)
             }        
     })});
-    
-app.get('/api/user/:userID/recommend', (req, res) => {
 
+// Cold start : Contents-based
+app.get('/api/user/:userID/recommend', (req, res) => {
       const { userID } = req.params;
       const query = 'SELECT userTaste,userTasteDetail,userRebuy,userTexture,userFunction FROM userinfo WHERE userID = ? ;';
       const query2 = 'SELECT ItemID,item,insta,youtube,맛,맛 상세,목넘김,재구매의사,기능 FROM itemdb WHERE ItemID in (?) ;';
@@ -533,15 +555,16 @@ app.get('/api/user/:userID/recommend', (req, res) => {
         featurelist = featurelist.toString();
         featurelist = featurelist.replace(/\[/g,' ');
         featurelist = featurelist.replace('재구매의사','재구매의사 ');
-      featurelist = featurelist.replace(/\]/g,' ');
-      featurelist = featurelist.replace('\\','');
-      featurelist = featurelist.replace(/\"/g,'');
-      featurelist = featurelist.replace(/\,/g,'');
-      console.log('featurelist[',featurelist)
-      let recommendItemList = [];
+        featurelist = featurelist.replace(/\]/g,' ');
+        featurelist = featurelist.replace('\\','');
+        featurelist = featurelist.replace(/\"/g,'');
+        featurelist = featurelist.replace(/\,/g,'');
+        console.log('featurelist[',featurelist)
 
-      const recommendlist = spawn('python',['./models/CBmodeling_combined.py',featurelist]);
-   
+
+        let recommendItemList = [];
+
+        const recommendlist = spawn('python',['./models/CBmodeling_combined.py',featurelist]);     
 
         recommendlist.stdout.on('data',function(data){
               rs = iconv.decode(data, 'euc-kr');
@@ -577,7 +600,9 @@ app.get('/api/user/:userID/recommend', (req, res) => {
       });
       recommendlist.stderr.on('data', function(data) {
         console.log("222", data.toString());
-    });});
+    });
+    
+    });
 
 });
 
@@ -587,7 +612,7 @@ app.get('/api/user/:userID/recommend/ubcf', (req, res)=> {
 
       let recommendItemList = [];
 
-      const recommendUBCF = spawn('python3',['./models/UBCF.py']);     
+      const recommendUBCF = spawn('python',['./models/UBCF.py']);     
 
       recommendUBCF.stdout.on('data',function(data){
             console.log("hey: ", data.toString());
@@ -608,7 +633,7 @@ app.get('/api/user/:userID/recommend/ubcf', (req, res)=> {
 
             var j = 0;
             itemdb.query(query,[resultarr],function(err,rows){
-              if (err){console.log('Error executing second query:',err);}
+              if (err){console.error('Error executing second query:',err);}
               else{
                   for (i= 0 ; i < resultarr.length; i++) {
                     if (Object.values(rows[i])){
