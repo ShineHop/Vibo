@@ -20,7 +20,7 @@ class HeartButton extends Component{
 //찜 삭제하는 경우
     async callRemoveWishAPI(){
 
-        axios.use('http://3.34.45.236:3001/api/user/${userID}/like/${ItemID}/update')
+        axios.use('http://3.39.226.198:3001/api/user/${userID}/like/${ItemID}/update')
         let response = await manager.start();
         if(response.ok){
             return response.json();

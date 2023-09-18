@@ -17,8 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 
 const itemdb = mysql.createConnection({
     user:"user1",
-    host : "3.34.45.236",
-    password:'0000',
+    host : "3.39.226.198",
+    password:'12345678',
     database:"itemdb"
 });
 const spawn = require('child_process').spawn;
@@ -541,8 +541,9 @@ app.get('/api/user/:userID/recommend', (req, res) => {
       let recommendItemList = [];
 
       const recommendlist = spawn('python',['./models/CBmodeling_combined.py',featurelist]);
+   
 
-      recommendlist.stdout.on('data',function(data){
+        recommendlist.stdout.on('data',function(data){
               rs = iconv.decode(data, 'euc-kr');
               rsarr = rs.split((/, |\]|\[/));
               rsarr = rsarr.slice(1,-1);
@@ -579,6 +580,55 @@ app.get('/api/user/:userID/recommend', (req, res) => {
     });});
 
 });
+
+// Post Cold-Start : UBCF
+app.get('/api/user/:userID/recommend/ubcf', (req, res)=> {   
+    const query = 'SELECT ItemID,item,insta,youtube,맛,맛 상세,목넘김,재구매의사,기능 FROM itemdb WHERE ItemID in (?) ;';
+
+      let recommendItemList = [];
+
+      const recommendUBCF = spawn('python3',['./models/UBCF.py']);     
+
+      recommendUBCF.stdout.on('data',function(data){
+            console.log("hey: ", data.toString());
+
+            rs = data.toString();   // python파일에서의 print 값
+            const searchRegExp1 = new RegExp('\\[', 'g');
+            const searchRegExp2 = new RegExp('\\]', 'g');
+            rs =  rs.replace(searchRegExp1, '');
+            rs =  rs.replace(searchRegExp2, '');
+
+            rsarr = rs.split(/\s+/g);
+            console.log("rsarr: ", rsarr);
+            rsarr = rsarr.slice(0,-1);
+            console.log("rsarr: ", rsarr);
+            resultarr =  rsarr.map(Number);
+
+           console.log("hey2: ", resultarr);
+
+            var j = 0;
+            itemdb.query(query,[resultarr],function(err,rows){
+              if (err){console.log('Error executing second query:',err);}
+              else{
+                  for (i= 0 ; i < resultarr.length; i++) {
+                    if (Object.values(rows[i])){
+                    recommendItemList[j]= Object(rows[i]);
+                    j++;
+                    if (j==resultarr.length){
+                      res.send(recommendItemList);
+                    }
+                  }
+                    else{
+                      j++;
+                    }
+    }}})
+
+    });
+    recommendUBCF.stderr.on('data', function(data) {
+      console.log("222", data.toString());
+  });    
+
+});  
 
 app.use('/api/user/:userID/like/:itemID/update',(req,res,next)=>{
   const UID  = req.params.userID;
@@ -716,8 +766,8 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
   let userID = Number(UID);
   let k = 0;
 
-  console.log("fire: ", req);
-  console.log('what: ', res);
+  //console.log("fire: ", req);
+  //console.log('what: ', res);
 
     const query = 'SELECT * FROM collabdb WHERE UID = ? ;';
     const query2 = 'SELECT `?` FROM collabdb;'
@@ -773,7 +823,7 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
 app.get('/api/user/IBCF/:itemID', (req, res) => {
   const { itemID } = req.params;
   
- const IBCFList = spawn('python',['./models/IBCF.py',itemID]);
+ const IBCFList = spawn('python3',['./models/IBCF.py',itemID]);
  const query = 'Select ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능  From itemdb WHERE ItemID in (?);';
  IBCFList.stdout.on('data',function(data){
  //   console.log(data)

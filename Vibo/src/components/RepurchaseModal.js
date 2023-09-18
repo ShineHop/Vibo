@@ -34,7 +34,7 @@ const RepurchaseModal = (props) => {
             try{
                 const userID = JSON.parse(await AsyncStorage.getItem("userID"));
                 console.log("taste_userid: ", userID);
-                axios.post('http://3.34.45.236:3001/api/user/'+userID+'/mypage/edit/repurchase',
+                axios.post('http://3.39.226.198:3001/api/user/'+userID+'/mypage/edit/repurchase',
                     {'repurchase': repurchaseUpdate})
                 .then((response)=> {
                     if  (response.data.status == 'update_repurchase_success'){

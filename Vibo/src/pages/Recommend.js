@@ -20,20 +20,50 @@ const All=()=>{
       const userID = JSON.parse(await AsyncStorage.getItem("userID"));
       console.log("userID 1: ", userID);
      
-        try{
-          axios.get('http://3.34.45.236:3001/api/user/'+userID+'/recommend').then((response)=>{
-            console.log(response.data);
-              // setItems(response.data);
+       
+        try{              // userinfo의 회원가입한 사람 수 받아오기
+          axios.get('http://3.39.226.198:3001/api/user/'+userID+'/recommend/count').then((num_res)=>{
+            console.log(num_res.data);
+            // 15명 미만이면 contents-based - server: /userID/recommend
+            // 15명 이상이면 ubcf - server: /userID/recommned/ubcf
+            if (num_res.data.data < 15) {
+              console.log("cold-start");
+              // Cold Start : contents-based
+              try{
+                axios.get('http://3.39.226.198:3001/api/user/'+userID+'/recommend').then((response)=>{
+                    console.log("Cold-Start: ", response.data);
+                    setTimeout(()=>{
+                      setItems(response.data);
+                      setReady(false);
+                    }, 1000)
 
-              setTimeout(()=>{
-                setItems(response.data);
-                setReady(false);
-              }, 1000)
+                  console.log('response of recommend', recitems)
+                  }).catch((error)=>{console.error("here:", error);});
+              } catch (err){
+                  console.log("recommend.js) err: ", err);
+              };
 
-            console.log('response of recommend', recitems)
-            }).catch((error)=>{console.error("here:", error);});
-        } catch (err){
-            console.log("recommend.js) err: ", err);
+            } else {
+              console.log("post cold-start");
+              try{
+                axios.get('http://3.39.226.198:3001/api/user/'+userID+'/recommend/ubcf').then((response)=>{
+                  console.log("UBCF: ", response.data);
+                  setTimeout(()=>{
+                    setItems(response.data);
+                    setReady(false);
+                  }, 1000)
+
+                  
+                }).catch((error)=>{console.error("here:", error);});
+              } catch(err){
+                console.log("recommend.js) err: ", err);
+              };
+
+            }
+
+          }).catch((error)=>{console.error("here:", error);});
+        } catch(err){
+          console.log("recommend.js) err: ", err);
         };
   
       }
