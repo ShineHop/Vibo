@@ -137,10 +137,10 @@ function Login({navigation, props}) {
                     text="Sign In"
                 />
                 <View style={styles.otherBtnContainer}>
-                    <Pressable onPress={onFindPasswordPressed}>
+                    {/* <Pressable onPress={onFindPasswordPressed}>
                         <Text style={styles.otherBtnText}>비밀번호 찾기</Text>
                     </Pressable>
-                    <Text> | </Text>
+                    <Text> | </Text> */}
                     <Pressable onPress={() => navigation.navigate('JoinPage')}>
                         <Text style={styles.otherBtnText}>회원가입하기</Text>
                     </Pressable>
