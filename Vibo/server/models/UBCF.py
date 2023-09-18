@@ -9,7 +9,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 conn = pymysql.connect(
     user = 'user1',
     passwd = '12345678',
-    host = '3.39.226.198',
+    host = '54.180.142.26',
     db = 'itemdb',
     charset = 'utf8',
     autocommit=True, 

@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const itemdb = mysql.createConnection({
     user:"user1",
-    host : "3.39.226.198",
+    host : "54.180.142.26",
     password:'12345678',
     database:"itemdb"
 });
@@ -848,7 +848,7 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
 app.get('/api/user/IBCF/:itemID', (req, res) => {
   const { itemID } = req.params;
   
- const IBCFList = spawn('python3',['./models/IBCF.py',itemID]);
+ const IBCFList = spawn('python',['./models/IBCF.py',itemID]);
  const query = 'Select ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능  From itemdb WHERE ItemID in (?);';
  IBCFList.stdout.on('data',function(data){
  //   console.log(data)
