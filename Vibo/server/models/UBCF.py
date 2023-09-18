@@ -36,8 +36,8 @@ collabdb =cursor_collab.fetchall()
 rating_matrix = pd.DataFrame(collabdb)
 rm =rating_matrix.copy()
 rating_matrix.set_index(keys='UID', inplace=True)
-
-#rating_matrix.drop()
+rating_matrix=rating_matrix.drop(0, axis=0)
+#print(rating_matrix)
 
 
 
@@ -49,9 +49,9 @@ user_similarity = pd.DataFrame(user_similarity, index=rating_matrix.index, colum
 
 
 rating_mean = rating_matrix.mean(axis=1)    # 열 기준 평균(제품에 대한 사용자들의 평균)
-print(rating_mean)
+#print(rating_mean)
 rating_bias = (rating_matrix.T - rating_mean).T
-print(rating_bias)
+#print(rating_bias)
 
 
 
@@ -136,7 +136,7 @@ for i in rating_matrix.index:
 
 # 전체 사용자 df) UID별로 예상평점이 높은 제품들부터 보여주기
 recommend_list = recommend_list.sort_values(by=['UID', 'prediction'], ascending=[True, False], ignore_index=True)
-#print(recommend_list)
+print(recommend_list)
 
 
 # 특정 UID에게 추천할 상품 최종 순차목록
