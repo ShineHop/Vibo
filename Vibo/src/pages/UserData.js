@@ -11,7 +11,7 @@ export const storeUserData = async () => {
         if (userID) {
           console.log("userdata.js) userID: ", userID);
           try{
-                axios.get('http://3.34.45.236:3001/api/onLogin/'+ userID +'/mypage')
+                axios.get('http://172.30.1.14:3001/api/onLogin/'+ userID +'/mypage')
                 .then((response) => {
                     if  (response.data.status == 'found_userInfo'){
                         console.log("userdata.js) response.data: ", response.data);

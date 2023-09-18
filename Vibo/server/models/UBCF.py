@@ -36,22 +36,14 @@ collabdb =cursor_collab.fetchall()
 rating_matrix = pd.DataFrame(collabdb)
 rm =rating_matrix.copy()
 rating_matrix.set_index(keys='UID', inplace=True)
-rating_matrix=rating_matrix.drop(0, axis=0)
-#print(rating_matrix)
-
-
 
 matrix_dummy = rating_matrix.copy().fillna(0)
 user_similarity = cosine_similarity(matrix_dummy, matrix_dummy)
 user_similarity = pd.DataFrame(user_similarity, index=rating_matrix.index, columns=rating_matrix.index)
-#print(user_similarity) 
-
 
 
 rating_mean = rating_matrix.mean(axis=1)    # 열 기준 평균(제품에 대한 사용자들의 평균)
-#print(rating_mean)
 rating_bias = (rating_matrix.T - rating_mean).T
-#print(rating_bias)
 
 
 
@@ -59,14 +51,13 @@ rating_binary1 = np.array((rating_matrix > 0).astype(float))
 rating_binary2 = rating_binary1.T
 counts = np.dot(rating_binary1, rating_binary2)
 counts = pd.DataFrame(counts, index=rating_matrix.index, columns=rating_matrix.index).fillna(0)
-#print(counts)
-
 
 
 def CF_knn_bias_sig(user_id, item_id, neighbor_size=0):
     if str(item_id) in rating_bias.columns:
         # 현 user와 다른 사용자 간의 유사도 가져오기
         sim_scores = user_similarity[user_id]
+        #print("sim_scores: \n", sim_scores)
         # 현 movie의 평점편차 가져오기 (여기 코드 바뀜)
         item_ratings = rating_bias.iloc[:,item_id]   # ((((((이건 item_id가 열로 들어가도록, 리스트 형태로 받아옴))))))
         # 현 item에 대한 rating이 없는 사용자 표시
@@ -77,10 +68,13 @@ def CF_knn_bias_sig(user_id, item_id, neighbor_size=0):
         low_significance = common_counts < SIG_LEVEL
         # 평가를 안 하였거나, SIG_LEVEL이 기준 이하인 user 제거
         none_rating_idx = item_ratings[no_rating | low_significance].index
+        #print("none_rating_idx: \n", none_rating_idx)
+        #print("item_ratings: \n", item_ratings)
         item_ratings = item_ratings.drop(none_rating_idx)
+        #print("sim_scores: \n", sim_scores)
         sim_scores = sim_scores.drop(none_rating_idx)
-##### (2) Neighbor size가 지정되지 않은 경우        
-        if neighbor_size == 0:
+##### (2) Neighbor size가 지정되지 않은 경우       
+        if neighbor_size == 0 :
             # 편차로 예측값(편차 예측값) 계산
             prediction = np.dot(sim_scores, item_ratings) / sim_scores.sum()
             # 편차 예측값에 현 사용자의 평균 더하기
@@ -114,29 +108,19 @@ SIG_LEVEL = counts.mean().mean()  #750
 MIN_RATINGS = counts.min().mean()  # 공통 제품 개수의 임계치
 
 
-print(rating_matrix.index)
-print(rating_matrix.columns)
-print(rating_matrix.loc[[2023052702],['1']])
-
-
 recommend_list = pd.DataFrame(columns = ['UID', 'item', 'prediction'])
-print("1: ", recommend_list)
 for i in rating_matrix.index:
     for j in rating_matrix.columns:
-        #if rating_matrix.loc[i][j]==0 :     # ser.iloc[pos]
         if rating_matrix.loc[[i],[j]].values == 0 :     
             pred = CF_knn_bias_sig(i, int(j), neighbor_size=0)
-            #print("UID:", i, "item:" , int(j), "prediction:", pred)
             recommend = pd.DataFrame({'UID':[i], 'item' : [j], 'prediction': [pred]})
             recommend_list = pd.concat([recommend_list, recommend], ignore_index=True)
-#print(recommend_list)
 
 # 하나의 값만 확인
 # CF_knn_bias_sig(2023052701, 0, neighbor_size=0)
 
 # 전체 사용자 df) UID별로 예상평점이 높은 제품들부터 보여주기
 recommend_list = recommend_list.sort_values(by=['UID', 'prediction'], ascending=[True, False], ignore_index=True)
-print(recommend_list)
 
 
 # 특정 UID에게 추천할 상품 최종 순차목록
@@ -146,18 +130,12 @@ def UBCF(user_id):
 
 def UBCF_Recommend(user_id):
     recommend = UBCF(user_id)
-    recommend_num = 0
-    if (round(len(recommend.columns)*0.05)<5):
-        recommend_num = 5
-    
-    # print("recommend_num: ", recommend_num)
-    top_recommend = recommend.head(recommend_num)
+    top_recommend = recommend[recommend['prediction']>3]
     recommend_item = top_recommend['item'].values
     print(recommend_item)
-    return recommend_item
 
 if __name__ == '__main__':
-    UID = 2023052720
+    UID = sys.argv[1]
     UBCF_Recommend(UID)
     
     

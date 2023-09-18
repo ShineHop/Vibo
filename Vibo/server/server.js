@@ -604,47 +604,57 @@ app.get('/api/user/:userID/recommend', (req, res) => {
 
 // Post Cold-Start : UBCF
 app.get('/api/user/:userID/recommend/ubcf', (req, res)=> {   
+    const {userID} = req.params;
+    //console.log(userID);
     const query = 'SELECT ItemID,item,insta,youtube,맛,맛 상세,목넘김,재구매의사,기능 FROM itemdb WHERE ItemID in (?) ;';
 
       let recommendItemList = [];
 
-      const recommendUBCF = spawn('python',['./models/UBCF.py']);     
+      const recommendUBCF = spawn('python',['./models/UBCF.py', userID]);     
 
       recommendUBCF.stdout.on('data',function(data){
             console.log("hey: ", data.toString());
 
             rs = data.toString();   // python파일에서의 print 값
+  
             const searchRegExp1 = new RegExp('\\[', 'g');
             const searchRegExp2 = new RegExp('\\]', 'g');
+            const searchRegExp3 = new RegExp("\\'", 'g');
             rs =  rs.replace(searchRegExp1, '');
             rs =  rs.replace(searchRegExp2, '');
+            rs =  rs.replace(searchRegExp3, '');
+            console.log("RS: ", rs);
 
             rsarr = rs.split(/\s+/g);
             console.log("rsarr: ", rsarr);
             rsarr = rsarr.slice(0,-1);
             console.log("rsarr: ", rsarr);
-            resultarr =  rsarr.map(Number);
+            if (rsarr.includes('')){
+                res.send({status : 'no_recommend'});
+            } else {
+                resultarr =  rsarr.map(Number);
+                console.log("hey2: ", resultarr);
 
-           console.log("hey2: ", resultarr);
-
-            var j = 0;
-            itemdb.query(query,[resultarr],function(err,rows){
-              if (err){console.error('Error executing second query:',err);}
-              else{
-                  for (i= 0 ; i < resultarr.length; i++) {
-                    if (Object.values(rows[i])){
-                    recommendItemList[j]= Object(rows[i]);
-                    j++;
-                    if (j==resultarr.length){
-                      res.send(recommendItemList);
-                    }
-                  }
-                    else{
-                      j++;
-                    }
-    }}})
-
+                var j = 0;
+                itemdb.query(query,[resultarr],function(err,rows){
+                  if (err){console.error('Error executing second query:',err);}
+                  else{
+                      for (i= 0 ; i < resultarr.length; i++) {
+                        if (Object.values(rows[i])){
+                        recommendItemList[j]= Object(rows[i]);
+                        j++;
+                        if (j==resultarr.length){
+                          res.send(recommendItemList);
+                        }
+                      }
+                        else{
+                          j++;
+                        }
+                }}})
+            
+            };
     });
+    
     recommendUBCF.stderr.on('data', function(data) {
       console.log("222", data.toString());
   });    
