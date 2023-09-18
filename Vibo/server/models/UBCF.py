@@ -116,6 +116,7 @@ print(rating_matrix.loc[[2023052702],['1']])
 
 
 recommend_list = pd.DataFrame(columns = ['UID', 'item', 'prediction'])
+print("1: ", recommend_list)
 for i in rating_matrix.index:
     for j in rating_matrix.columns:
         #if rating_matrix.loc[i][j]==0 :     # ser.iloc[pos]
