@@ -95,36 +95,36 @@ const Edit = ({route, navigation, props}) => {
 
 
             if (editInputs.username && editInputs.profile!=0){   //사용자가 username에 입력함 & 프로필 선택함
-                axios.post('http://54.180.142.26:3001/api/user/'+userID+'/mypage/edit/username',
-                    {'username': editInputs.username})
-                .then((response)=> {
-                    if  (response.data.status == 'update_username_success'){
-                        console.log("update_username_success");
+                try{
+                    axios.post('http://54.180.142.26:3001/api/user/'+userID+'/mypage/edit/username',
+                        {'username': editInputs.username})
+                    .then((response)=> {
+                        if  (response.data.status == 'update_username_success'){
+                            console.log("update_username_success");
 
-                        navigation.navigate('MyPage', {eName: editInputs.username, eProfile: editInputs.profile, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction});
-                    }
-                })
-                .catch(error => {
-                    console.log("edit: ", error);
-                });
-
-
+                            navigation.navigate('MyPage', {eName: editInputs.username, eProfile: editInputs.profile, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction});
+                        }
+                    })
+                    .catch(error => {
+                        console.log("edit: ", error);
+                    });
                 } catch (err) {console.log(err)};
 
             }
             else if (editInputs.username && editInputs.profile==0){ //사용자가 username에 입력함 & 프로필 선택 안 함
-                axios.post('http://54.180.142.26:3001/api/user/'+userID+'/mypage/edit/username',
-                    {'username': editInputs.username})
-                .then((response)=> {
-                    if  (response.data.status == 'update_username_success'){
-                        console.log("update_username_success");
+                try{
+                    axios.post('http://54.180.142.26:3001/api/user/'+userID+'/mypage/edit/username',
+                        {'username': editInputs.username})
+                    .then((response)=> {
+                        if  (response.data.status == 'update_username_success'){
+                            console.log("update_username_success");
 
-                        navigation.navigate('MyPage', {eName: editInputs.username, eProfile: editProfile, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction});
-                    }
-                })
-                .catch(error => {
-                    console.log("edit: ", error);
-                });
+                            navigation.navigate('MyPage', {eName: editInputs.username, eProfile: editProfile, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction});
+                        }
+                    })
+                    .catch(error => {
+                        console.log("edit: ", error);
+                    });
 
                 } catch(err){console.log(err)};
 
