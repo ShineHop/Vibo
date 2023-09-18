@@ -90,9 +90,11 @@ function MyPage({route, navigation}) {
         var birth = userData[item].userBirth;
    
         var strBirth = birth.substr(0, 2);
-        if (userData[item].userSex==1 || userData[item].userSex==2){
+        if (Number(strBirth)>=68 && Number(strBirth)<=99){
             intBirth = Number('19'+strBirth);
+            console.log(intBirth);
             userAge = (Math.floor((todayYear-intBirth)/10))*10;
+            console.log(userAge);
         } else{
             intBirth = Number('20'+strBirth);
             userAge = (Math.floor((todayYear-intBirth)/10))*10;
