@@ -1,5 +1,5 @@
 import React ,{useState,useEffect} from "react"
-import {SafeAreaView, View, Image,Text ,TouchableOpacity,Button,StatusBar,StyleSheet,FlatList} from "react-native";
+import {SafeAreaView, View, Image,Text ,TouchableOpacity,Alert,StyleSheet,FlatList} from "react-native";
 import stylelist from '../style';
 import axios from 'axios'
 import { useNavigation } from "@react-navigation/native";
@@ -47,12 +47,31 @@ const All=()=>{
               try{
                 axios.get('http://54.180.142.26:3001/api/user/'+userID+'/recommend/ubcf').then((response)=>{
                   console.log("UBCF: ", response.data);
-                  setTimeout(()=>{
-                    setItems(response.data);
-                    setReady(false);
-                  }, 1000)
+                  if (response.data.status == "no_recommend"){
+                    // 여전히 contents-based
+                    try{
+                      axios.get('http://172.30.1.14:3001/api/user/'+userID+'/recommend').then((response)=>{
+                          console.log("Cold-Start: ", response.data);
+                          setTimeout(()=>{
+                            setItems(response.data);
+                            setReady(false);
+                          }, 1000)
+      
+                        console.log('response of recommend', recitems)
+                        }).catch((error)=>{console.error("here:", error);});
+                    } catch (err){
+                        console.log("recommend.js) err: ", err);
+                    };
 
-                  
+                  } else {
+                    setTimeout(()=>{
+                      setItems(response.data);
+                      setReady(false);
+                    }, 1000)
+                    Alert.alert('참고사항', '더 많은 제품 추천을 원하신다면,\n제품에 대한 평점을 더욱 활발하게 남겨주세요!', [
+                      {text: '확인', onPress: () => console.log('OK Pressed')},
+                    ]);
+                  }                  
                 }).catch((error)=>{console.error("here:", error);});
               } catch(err){
                 console.log("recommend.js) err: ", err);
