@@ -564,7 +564,7 @@ app.get('/api/user/:userID/recommend', (req, res) => {
 
         let recommendItemList = [];
 
-        const recommendlist = spawn('python',['./models/CBmodeling_combined.py',featurelist]);     
+        const recommendlist = spawn('python3',['./models/CBmodeling_combined.py',featurelist]);     
 
         recommendlist.stdout.on('data',function(data){
               rs = iconv.decode(data, 'euc-kr');
@@ -612,7 +612,7 @@ app.get('/api/user/:userID/recommend/ubcf', (req, res)=> {
 
       let recommendItemList = [];
 
-      const recommendUBCF = spawn('python',['./models/UBCF.py']);     
+      const recommendUBCF = spawn('python3',['./models/UBCF.py']);     
 
       recommendUBCF.stdout.on('data',function(data){
             console.log("hey: ", data.toString());
@@ -848,7 +848,7 @@ app.get('/api/user/:userID/ratings/:itemID', (req, res) => {
 app.get('/api/user/IBCF/:itemID', (req, res) => {
   const { itemID } = req.params;
   
- const IBCFList = spawn('python',['./models/IBCF.py',itemID]);
+ const IBCFList = spawn('python3',['./models/IBCF.py',itemID]);
  const query = 'Select ItemID,item,insta,youtube,맛,맛 상세,재구매의사,목넘김,기능  From itemdb WHERE ItemID in (?);';
  IBCFList.stdout.on('data',function(data){
  //   console.log(data)
