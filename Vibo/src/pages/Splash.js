@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     width: wp(30),
     resizeMode: 'contain',
     position: "absolute",
-    top: 250,
+    top: 350,
     left: 140,
     bottom: 0,
     right: 0,
