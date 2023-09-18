@@ -37,6 +37,9 @@ rating_matrix = pd.DataFrame(collabdb)
 rm =rating_matrix.copy()
 rating_matrix.set_index(keys='UID', inplace=True)
 
+#rating_matrix.drop()
+
+
 
 matrix_dummy = rating_matrix.copy().fillna(0)
 user_similarity = cosine_similarity(matrix_dummy, matrix_dummy)
@@ -46,8 +49,9 @@ user_similarity = pd.DataFrame(user_similarity, index=rating_matrix.index, colum
 
 
 rating_mean = rating_matrix.mean(axis=1)    # 열 기준 평균(제품에 대한 사용자들의 평균)
+print(rating_mean)
 rating_bias = (rating_matrix.T - rating_mean).T
-#print(rating_bias)
+print(rating_bias)
 
 
 
