@@ -36,6 +36,7 @@ collabdb =cursor_collab.fetchall()
 rating_matrix = pd.DataFrame(collabdb)
 rm =rating_matrix.copy()
 rating_matrix.set_index(keys='UID', inplace=True)
+rating_matrix=rating_matrix.drop(0, axis=0)
 
 
 matrix_dummy = rating_matrix.copy().fillna(0)
