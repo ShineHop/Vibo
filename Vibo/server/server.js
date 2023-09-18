@@ -614,7 +614,7 @@ app.get('/api/user/:userID/recommend/ubcf', (req, res)=> {
 
       let recommendItemList = [];
 
-      const recommendUBCF = spawn('python3',['./models/UBCF.py']);     
+      const recommendUBCF = spawn('python3',['./models/UBCF.py', userID]);     
 
       recommendUBCF.stdout.on('data',function(data){
             console.log("hey: ", data.toString());

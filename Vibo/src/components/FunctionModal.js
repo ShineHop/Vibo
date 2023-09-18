@@ -50,7 +50,7 @@ const FunctionModal = (props) => {
                         }
 
                         storeUserData();
-                        setModalVisible(!modalVisible)
+                        setModalVisible(!modalVisible);
                     }
                 })
                 .catch(error => {
