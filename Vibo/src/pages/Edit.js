@@ -105,8 +105,11 @@ const Edit = ({route, navigation, props}) => {
                     }
                 })
                 .catch(error => {
-                    console.log("edit: ", err);
+                    console.log("edit: ", error);
                 });
+
+
+                } catch (err) {console.log(err)};
 
             }
             else if (editInputs.username && editInputs.profile==0){ //사용자가 username에 입력함 & 프로필 선택 안 함
@@ -120,8 +123,11 @@ const Edit = ({route, navigation, props}) => {
                     }
                 })
                 .catch(error => {
-                    console.log("edit: ", err);
+                    console.log("edit: ", error);
                 });
+
+                } catch(err){console.log(err)};
+
             }
             else if (editInputs.username=='' && editInputs.profile!=0){ //사용자가 username에 입력 안 함 & 프로필 선택함
                 navigation.navigate('MyPage', {eName: userInfo.user.userName, eProfile: editInputs.profile, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction});

@@ -45,16 +45,16 @@ const FunctionModal = (props) => {
                     {'vita': functionUpdate.vita, 'bio': functionUpdate.bio, 'diet': functionUpdate.diet, 'vagina': functionUpdate.vagina })
                 .then((response)=> {
                     if  (response.data.status == 'update_func_success'){
-                        if (response.data.data.updateFunction == ''){
-                            Alert.alert('유의사항', '기능을 선택하지 않으셨다면 "상관없음"으로 변경됩니다.')
-                        }
-
                         storeUserData();
                         setModalVisible(!modalVisible);
                     }
+                    else if (response.data.status == 'no_detail_pressed'){
+                        Alert.alert('유의사항', '기능을 선택하지 않으셨다면 "상관없음"으로 변경됩니다.')
+                    }
+
                 })
                 .catch(error => {
-                    console.log(err);
+                    console.log(error);
                 });
             } catch (err){
                 console.log(err)
