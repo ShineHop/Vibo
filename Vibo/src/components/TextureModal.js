@@ -43,7 +43,7 @@ const TextureModal = (props) => {
                     }
                 })
                 .catch(error => {
-                    console.log(err);
+                    console.log(error);
                 });
             } catch (err){
                 console.log(err)

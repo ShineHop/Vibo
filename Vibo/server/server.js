@@ -96,7 +96,7 @@ app.post('/api/join/:joinID/', (req, res) => {
                     status: 'no_1_digit'
                 });
             }
-            else if (Number(userBirth.substr(0,2))>=68 && (Number(userSex)!=1 && Number(userSex)!=2)){       // 태어난 연도와 주민번호 뒷자리가 맞지 않을 때
+            else if ((Number(userBirth.substr(0,2))>=68 && Number(userBirth.substr(0,2))<=89) && (Number(userSex)!=1 && Number(userSex)!=2)){       // 태어난 연도와 주민번호 뒷자리가 맞지 않을 때
                 res.send({
                     status: 'no_1_digit'
                 });
@@ -496,6 +496,12 @@ app.use('/api/user/:userID/mypage/edit/function', (req, res) => {
     itemdb.query(updateQuery, [JSON.stringify(updateFuncDetail), userID], function(err, update_res){
         if (err) {
             console.log("update_func_err: ", err);
+        }
+        else if (JSON.stringify(updateFuncDetail)=='[]'){
+            res.send({
+                message: "No detail pressed",
+                status: 'no_detail_pressed'
+            });
         }
         else {
             console.log("Update func values successfully!");

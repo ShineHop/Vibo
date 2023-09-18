@@ -95,6 +95,7 @@ const Edit = ({route, navigation, props}) => {
 
 
             if (editInputs.username && editInputs.profile!=0){   //사용자가 username에 입력함 & 프로필 선택함
+                try{
                 axios.post('http://172.30.1.14:3001/api/user/'+userID+'/mypage/edit/username',
                     {'username': editInputs.username})
                 .then((response)=> {
@@ -105,11 +106,15 @@ const Edit = ({route, navigation, props}) => {
                     }
                 })
                 .catch(error => {
-                    console.log("edit: ", err);
+                    console.log("edit: ", error);
                 });
+
+
+                } catch (err) {console.log(err)};
 
             }
             else if (editInputs.username && editInputs.profile==0){ //사용자가 username에 입력함 & 프로필 선택 안 함
+                try{
                 axios.post('http://172.30.1.14:3001/api/user/'+userID+'/mypage/edit/username',
                     {'username': editInputs.username})
                 .then((response)=> {
@@ -120,8 +125,11 @@ const Edit = ({route, navigation, props}) => {
                     }
                 })
                 .catch(error => {
-                    console.log("edit: ", err);
+                    console.log("edit: ", error);
                 });
+
+                } catch(err){console.log(err)};
+
             }
             else if (editInputs.username=='' && editInputs.profile!=0){ //사용자가 username에 입력 안 함 & 프로필 선택함
                 navigation.navigate('MyPage', {eName: userInfo.user.userName, eProfile: editInputs.profile, eTaste: editModalTaste, eTexture: editModalTexture, eRepurchase: editModalRepurchase, eFunction: editModalFunction});
