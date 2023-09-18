@@ -50,7 +50,7 @@ const All=()=>{
                   if (response.data.status == "no_recommend"){
                     // 여전히 contents-based
                     try{
-                      axios.get('http://172.30.1.14:3001/api/user/'+userID+'/recommend').then((response)=>{
+                      axios.get('http://54.180.142.26:3001/api/user/'+userID+'/recommend').then((response)=>{
                           console.log("Cold-Start: ", response.data);
                           setTimeout(()=>{
                             setItems(response.data);
