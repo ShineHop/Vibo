@@ -59,7 +59,7 @@ const All=()=>{
             <Image source={imagePath[item.itemID]['src']} style = {styles_home.image} ></Image>
           </View>
           <View >
-            <Text style={styles_home.item}  key={item.id}> {item.item} </Text>
+            <Text style={styles_home.item}  key={item.id}> {item.title} </Text>
           </View>
           <View>
           
