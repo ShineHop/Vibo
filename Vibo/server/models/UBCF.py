@@ -36,7 +36,7 @@ collabdb =cursor_collab.fetchall()
 rating_matrix = pd.DataFrame(collabdb)
 rm =rating_matrix.copy()
 rating_matrix.set_index(keys='UID', inplace=True)
-rating_matrix=rating_matrix.drop(0, axis=0)
+#rating_matrix=rating_matrix.drop(0, axis=0)
 
 matrix_dummy = rating_matrix.copy().fillna(0)
 user_similarity = cosine_similarity(matrix_dummy, matrix_dummy)
@@ -113,7 +113,7 @@ recommend_list = pd.DataFrame(columns = ['UID', 'item', 'prediction'])
 for i in rating_matrix.index:
     for j in rating_matrix.columns:
         if rating_matrix.loc[[i],[j]].values == 0 :     
-            pred = CF_knn_bias_sig(i, int(j), neighbor_size=0)
+            pred = CF_knn_bias_sig(i, int(j), neighbor_size=3) 
             recommend = pd.DataFrame({'UID':[i], 'item' : [j], 'prediction': [pred]})
             recommend_list = pd.concat([recommend_list, recommend], ignore_index=True)
 
