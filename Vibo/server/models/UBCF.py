@@ -113,7 +113,7 @@ recommend_list = pd.DataFrame(columns = ['UID', 'item', 'prediction'])
 for i in rating_matrix.index:
     for j in rating_matrix.columns:
         if rating_matrix.loc[[i],[j]].values == 0 :     
-            pred = CF_knn_bias_sig(i, int(j), neighbor_size=3) 
+            pred = CF_knn_bias_sig(i, int(j), neighbor_size=2) 
             recommend = pd.DataFrame({'UID':[i], 'item' : [j], 'prediction': [pred]})
             recommend_list = pd.concat([recommend_list, recommend], ignore_index=True)
 
