@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const itemdb = mysql.createConnection({
     user:"user1",
-    host : "54.180.142.26", //54.180.142.26
+    host : "52.79.237.117", //52.79.237.117
     password:'12345678',
     database:"itemdb"
 });

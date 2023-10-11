@@ -22,7 +22,7 @@ const All=()=>{
       setUserID(user)
       
         try{
-        axios.get('http://54.180.142.26:3001/api/user/'+user+'/like').then((response)=>{
+        axios.get('http://52.79.237.117:3001/api/user/'+user+'/like').then((response)=>{
           setItems(response.data);
     //  console.log('likeitems',useritems)
     })
@@ -40,7 +40,7 @@ const All=()=>{
       setState(true);
     }
     
-    axios.post('http://54.180.142.26:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
+    axios.post('http://52.79.237.117:3001/api/user/'+userID+'/like/'+ itemid +'/update').then((response)=>
     {    
       //console.log(response);
         if(response.ok){
