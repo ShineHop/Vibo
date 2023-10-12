@@ -42,7 +42,7 @@ const TasteModal = (props) => {
             try{
                 const userID = JSON.parse(await AsyncStorage.getItem("userID"));
                 console.log("taste_userid: ", userID);
-                axios.post('http://52.79.237.117:3001/api/user/'+userID+'/mypage/edit/taste',
+                axios.post('http://13.209.98.133:3001/api/user/'+userID+'/mypage/edit/taste',
                     {'taste': tasteUpdate.taste,
                     'sweet': tasteUpdate.sweet, 'sour': tasteUpdate.sour, 'fruit': tasteUpdate.fruit, 'milk': tasteUpdate.milk })
                 .then((response)=> {

@@ -34,7 +34,7 @@ const TextureModal = (props) => {
             try{
                 const userID = JSON.parse(await AsyncStorage.getItem("userID"));
                 console.log("texture_userid: ", userID);
-                axios.post('http://52.79.237.117:3001/api/user/'+userID+'/mypage/edit/texture',
+                axios.post('http://13.209.98.133:3001/api/user/'+userID+'/mypage/edit/texture',
                     {'texture': textureUpdate})
                 .then((response)=> {
                     if  (response.data.status == 'update_texture_success'){
